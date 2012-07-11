@@ -254,14 +254,19 @@
 		**/
 		public static function endsWith($tcSearchIn, $tcSearchFor, $tlCaseInsensitive = false)
 		{
-			if ($tlCaseInsensitive)
-			{
-				$tcSearchFor = strtolower($tcSearchFor);
-				$tcSearchIn = strtolower($tcSearchIn);
-			}
-			$lnLength = strlen($tcSearchFor);
-			$lnStart = $lnLength * -1;
-			return (substr($tcSearchIn, $lnStart) === $tcSearchFor);
+			return Utilities::startsWith(strrev($tcSearchIn), strrev($tcSearchFor), $tlCaseInsensitive);
+		}
+
+		/**
+		* Checks if a string starts with the specified string
+		* returns true if the string starts with the specified string, false otherwise
+		**/
+		public static function startsWith($tcSearchIn, $tcSearchFor, $tlCaseInsensitive = false)
+		{
+			return strpos(
+				$tlCaseInsensitive ? strtolower($tcSearchIn) : $tcSearchIn,
+				$tlCaseInsensitive ? strtolower($tcSearchFor) : $tcSearchFor
+				) === 0;
 		}
 
 		/**
@@ -273,21 +278,6 @@
 			// or convert the time to the users region
 
 			return $tnMillis <= 0 ? '' : strftime('%d %b %Y %I:%M:%m %Z', $tnMillis / 1000);
-		}
-
-		/**
-		* Checks if a string starts with the specified string
-		* returns true if the string starts with the specified string, false otherwise
-		**/
-		public static function startsWith($tcSearchIn, $tcSearchFor, $tlCaseInsensitive = false)
-		{
-			if ($tlCaseInsensitive)
-			{
-				$tcSearchFor = strtolower($tcSearchFor);
-				$tcSearchIn = strtolower($tcSearchIn);
-			}
-			$lnLength = strlen($tcSearchFor);
-			return (substr($tcSearchIn, 0, $lnLength) === $tcSearchFor);
 		}
 
 		/**

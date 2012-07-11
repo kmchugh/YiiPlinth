@@ -1,5 +1,6 @@
 <?php
-	require_once( dirname(__FILE__) . '/protected/components/Utilities.php');
+
+	require_once( dirname(__FILE__) . '/components/Utilities.php');
 
 	class YIIPlinth
 	{
@@ -23,7 +24,7 @@
 			// If we are in development mode, include the development config
 			if (Utilities::isDevelopment())
 			{
-				$laConfig[]=dirname(__FILE__).'/protected/config/development.php';
+				$laConfig[]=$taOptions['root'].'/protected/config/development.php';
 			}
 
 			// Finally include the custom config for the user
@@ -31,6 +32,12 @@
 
 			// Include the YII Framework
 			require_once($lcYII);
+
+			// Setup an alias for YIIPlinth
+			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
+
+			// Set up imports
+			Yii::import('YIIPlinth.components.*');
 
 			// Merge the arrays for the configuration
 			$loConfiguration = Utilities::mergeIncludedArray($laConfig);
