@@ -223,16 +223,6 @@
 			return @trim(file_get_contents($tcURL));
 		}
 
-
-
-		/**
-		* Returns the encrypted value with the email seed
-		**/
-		public static function getPasswordValue($tcEmail, $tcPassword)
-		{
-			return md5(strtolower($tcEmail).'|'.$tcPassword);
-		}
-	
 		/**
 		* returns the first non null parameter
 		**/

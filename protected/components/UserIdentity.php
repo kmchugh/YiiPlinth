@@ -21,7 +21,7 @@ class UserIdentity extends CUserIdentity
 		}
 		else 
 		{
-			if ($loUser->Password !==Utilities::getPasswordValue($loUser->Email, $this->password))
+			if (!$loUser->validatePassword(this->password))
 			{
 				$this->errorCode=self::ERROR_PASSWORD_INVALID;
 			}
@@ -53,6 +53,7 @@ class UserIdentity extends CUserIdentity
 
 	/**
 	* Retrieves the users ID
+	* @return the user id
 	**/
 	public function getId()
 	{
@@ -61,6 +62,7 @@ class UserIdentity extends CUserIdentity
 
 	/**
 	* Retrieves the users GUID
+	* @return the user GUID
 	**/
 	public function getGUID()
 	{
@@ -69,6 +71,7 @@ class UserIdentity extends CUserIdentity
 
 	/**
 	* Retrieves the users Display Name
+	* @return the user display name
 	**/
 	public function getDisplayName()
 	{

@@ -36,8 +36,9 @@
 			// Setup an alias for YIIPlinth
 			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
 
-			// Set up imports
+			// Set up imports for class auto loading
 			Yii::import('YIIPlinth.components.*');
+			Yii::import('YIIPlinth.models.*');
 
 			// Merge the arrays for the configuration
 			$loConfiguration = Utilities::mergeIncludedArray($laConfig);
