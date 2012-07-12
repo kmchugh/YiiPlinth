@@ -25,6 +25,10 @@
 			if (Utilities::isDevelopment())
 			{
 				$laConfig[]=$taOptions['root'].'/protected/config/development.php';
+
+				defined('YII_DEBUG') or define('YII_DEBUG',true);
+				defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+				error_reporting(E_ALL);
 			}
 
 			// Finally include the custom config for the user

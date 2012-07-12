@@ -137,9 +137,9 @@ class User extends PlinthModel
 	* @var the password
 	* @return the hash of the password, NULL if $tcPassword is NULL
 	**/
-	private function getPasswordHash($tcSalt, $tcPassword)
+	private function getPasswordHash($tcPassword)
 	{
-		return $tcPassword == NULL ? NULL : md5(strtolower($tcSalt).'|'.$tcPassword);
+		return $tcPassword === NULL ? NULL : md5(strtolower($this->Email).'|'.$tcPassword);
 	}
 
 	/**
@@ -151,9 +151,9 @@ class User extends PlinthModel
 	* @var tcNewPassword the password to change to
 	* @return true if the password was reset, otherwise false
 	**/
-	public function resetPassword($tcPassword, $tcNewPassword)
+	public function changePassword($tcPassword, $tcNewPassword)
 	{
-		if (validatePassword($tcPassword))
+		if ($this->validatePassword($tcPassword))
 		{
 			$this->Password = $this->getPasswordHash($tcNewPassword);
 			return true;
@@ -167,9 +167,9 @@ class User extends PlinthModel
 	* to the data store.
 	* @var tcPassword the password to change to
 	**/
-	public function changePassword($tcPassword)
+	public function resetPassword($tcPassword)
 	{
-		$this->Password = $this->getPasswordHash($tcNewPassword);
+		$this->Password = $this->getPasswordHash($tcPassword);
 	}
 
 	/**
@@ -179,6 +179,6 @@ class User extends PlinthModel
 	**/
 	public function validatePassword($tcPassword)
 	{
-		return $this->getPasswordHash($this->Email, $tcPassword) === $this->Password;
+		return $this->getPasswordHash($tcPassword) === $this->Password;
 	}
 }

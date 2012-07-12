@@ -14,21 +14,20 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
 		$loUser = User::model()->findByAttributes(array('Email'=>$this->username));
-
 		if ($loUser===null)
 		{
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		}
 		else 
 		{
-			if (!$loUser->validatePassword(this->password))
+			if (!$loUser->validatePassword($this->password))
 			{
 				$this->errorCode=self::ERROR_PASSWORD_INVALID;
 			}
 			else
 			{
 				$this->m_cUserID = $loUser->UserID;
-				$this->m_cUserGUID = $loUser->UserGUID;
+				$this->m_cUserGUID = $loUser->GUID;
 				$this->m_cDisplayName = $loUser->DisplayName;
 
 				$this->setState('lastLoginTime', (null===$loUser->LastLoginDate) ? 
@@ -37,9 +36,10 @@ class UserIdentity extends CUserIdentity
 
 				// Now that the user has been authenticated, update the login time
 				$loUser->setAttributes(
-					'LastLoginDate' => Utilities::getTimeStamp(),
-    				'LoginCount' => $loUser->LoginCount +1,
-					);
+					array(
+						'LastLoginDate' => Utilities::getTimeStamp(),
+	    				'LoginCount' => $loUser->LoginCount +1,
+						));
 				$loUser->save();
 	
 				$this->setState('GUID', $loUser->GUID);
