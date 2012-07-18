@@ -1,0 +1,3 @@
+[submodule "selenium/php-webdriver"]
+	path = selenium/php-webdriver
+	url = git@github.com:facebook/php-webdriver.git
