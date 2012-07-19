@@ -104,7 +104,6 @@ class UserProfile extends CFormModel
 				}
 				else
 				{
-					Utilities::printVar($this->profileImageURI);
 					$this->m_oUserInfo->ProfileImageURI = '/images/profiles/defaultProfile.png';
 				}
 				$this->profileImageURI = $this->m_oUserInfo->ProfileImageURI;
