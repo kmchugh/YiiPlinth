@@ -42,7 +42,7 @@
 					$loReturn = include($laFile);
 					if (gettype($loReturn) === 'array')
 					{
-						$loConfig = CMap::mergeArray($loConfig, $loReturn);
+						$loConfig = CMap::mergeArray($loReturn, $loConfig);
 					}
 				}
 			}

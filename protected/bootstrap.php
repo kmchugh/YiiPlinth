@@ -18,8 +18,9 @@
 			}
 			$lcYII=$taOptions['yii'];
 
-			// Include the application configuration
+			// Include the application configuration files
 			$laConfig[]=$taOptions['root'].'/protected/config/main.php';
+			$laConfig[]=dirname(__FILE__).'/config/main.php';
 
 			// If we are in development mode, include the development config
 			if (Utilities::isDevelopment())
@@ -43,6 +44,8 @@
 			// Set up imports for class auto loading
 			Yii::import('YIIPlinth.components.*');
 			Yii::import('YIIPlinth.models.*');
+			Yii::import('YIIPlinth.extensions.*');
+			Yii::import('YIIPlinth.extensions.Session.*');
 
 			// Merge the arrays for the configuration
 			$loConfiguration = Utilities::mergeIncludedArray($laConfig);

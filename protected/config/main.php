@@ -1,10 +1,7 @@
 <?php
-
-// uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
-
-// This is the main Web application configuration. Any writable
-// CWebApplication properties can be configured here.
+/**
+* This is the default configuration for a YiiPlinth application.
+*/
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'YiiPlinth',
@@ -16,7 +13,7 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.helpers.*',
-		'application.components.*'
+		'application.components.*',
 	),
 
 	'modules'=>array(
@@ -25,7 +22,18 @@ return array(
 
 	// application components
 	'components'=>array(
-
+		'db'=>array(
+			'connectionString'=>'mysql:host=127.0.0.1;dbname=YiiPlinth',
+			'emulatePrepare'=>true,
+			'charset'=>'utf8',
+			'tablePrefix'=> '',
+			),
+		'session'=>array(
+			'sessionName'=>'PHPSESSID',
+			'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
+			'connectionID'=>'db',
+			'sessionTableName'=>'Session',
+			),
 	),
 
 	// application-level parameters that can be accessed
