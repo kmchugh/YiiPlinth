@@ -13,7 +13,7 @@ return array(
 	'import'=>array(
 		'YIIPlinth.models.*',
 		'YIIPlinth.components.*',
-		'YIIPlinth.extensions.Session.*'
+		'YIIPlinth.extensions.Session.*',
 	),
 
 	'modules'=>array(

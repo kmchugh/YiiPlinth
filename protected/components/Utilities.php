@@ -11,7 +11,7 @@
 			if (!isset($GLOBALS[$lcKey]))
 			{
 				// Assume that a server with localhost or ending with .dev is a dev machine
-				$GLOBALS[$lcKey] = preg_match('/^localhost(.+)?|\.dev$/i', $_SERVER['SERVER_NAME']) > 0;
+				$GLOBALS[$lcKey] = preg_match('/^(http:\/\/)?localhost(.+)?|\.dev$/i', $_SERVER['SERVER_NAME']) > 0;
 
 				if ($GLOBALS[$lcKey])
 				{
