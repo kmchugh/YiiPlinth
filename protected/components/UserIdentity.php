@@ -39,7 +39,7 @@ class UserIdentity extends CUserIdentity
 					array(
 						'LastLoginDate' => Utilities::getTimeStamp(),
 	    				'LoginCount' => $loUser->LoginCount +1,
-						));
+						), false);
 				$loUser->save();
 	
 				$this->setState('GUID', $loUser->GUID);
