@@ -312,10 +312,10 @@
 
 		/**
 		* Retrieves a timestamp based on the current time.
+		* @return float the current time as milliseconds.microseconds
 		**/
 		public static function getTimestamp()
 		{
-			// Update the tracking fields if they exist
 			list($laUsec, $laSec) = explode(" ", microtime());
    			return ((float)$laUsec + ((float)$laSec * 1000.00));
 		}
@@ -343,7 +343,34 @@
 				}
 			}
 			return $loReturn;
+		}
+
+		/**
+		* Checks if the specified entity exists in the db specified by the connection.
+		* This check is case insensitive.
+		* @param $toConnection the database connection to check
+		* @param $tcTableName the name of the table to check for
+		**/
+		public static function entityExists($toConnection, $tcTableName)
+		{
+			return Utilities::in_arrayi($tcTableName, $toConnection->Schema->TableNames);
 		} 
+
+		/**
+		* Checks if a value exists in an array, this is case insensitive
+		**/
+		public static function in_arrayi($tcNeedle, $taHaystack)
+		{
+			$tcNeedle = strtolower($tcNeedle);
+			foreach ($taHaystack as $lcValue)
+			{
+				if (strtolower($lcValue) === $tcNeedle)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
 		/**
 		* Recursively merges two arrays, this will alter the value of $taArray

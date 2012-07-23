@@ -11,9 +11,9 @@ return array(
 
 	// autoloading model and component classes
 	'import'=>array(
-		'application.models.*',
-		'application.helpers.*',
-		'application.components.*',
+		'YIIPlinth.models.*',
+		'YIIPlinth.components.*',
+		'YIIPlinth.extensions.Session.*'
 	),
 
 	'modules'=>array(
@@ -33,6 +33,7 @@ return array(
 			'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
 			'connectionID'=>'db',
 			'sessionTableName'=>'Session',
+			'timeout'=>1440,
 			),
 	),
 
