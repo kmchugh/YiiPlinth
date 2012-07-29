@@ -13,6 +13,7 @@ return array(
 	'import'=>array(
 		'YIIPlinth.models.*',
 		'YIIPlinth.components.*',
+		'YIIPlinth.controllers.*',
 		'YIIPlinth.extensions.Session.*',
 	),
 
@@ -35,7 +36,31 @@ return array(
 			'sessionTableName'=>'Session',
 			'timeout'=>1440,
 			),
+		'urlManager'=>array(
+			'urlFormat'=>'path',
+			'showScriptName'=>false,
+			'rules'=>array(
+				// TODO: Make 'WS' configurable
+				// Web Service Interface
+				array('WS/list', 'pattern'=>'WS/<model:\w+>', 'verb'=>'GET'),
+				array('WS/view', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
+				array('WS/view', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'GET'),
+				array('WS/update', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'PUT'),
+				array('WS/update', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'PUT'),
+				array('WS/create', 'pattern'=>'WS/<model:\w+>/', 'verb'=>'POST'),
+				array('WS/delete', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'DELETE'),
+				array('WS/delete', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'DELETE'),
+
+				// Default action
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				'caseSensitive'=>false,
+				),
+			),
 	),
+	
+	'controllerMap'=>array(
+		'WS'=>'YIIPlinth.controllers.WSController',
+		),
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
