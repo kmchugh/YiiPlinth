@@ -186,7 +186,6 @@ class WSController extends Controller
 			}
 			else if ($lcModelName === 'streamlistener')
 			{
-
 			}
 			else
 			{
@@ -211,7 +210,34 @@ class WSController extends Controller
 	}
 	public function actionUpdate()
 	{
-
+		if (isset($_GET['model']) && (isset($_GET['id']) || isset($_GET['guid'])))
+		{
+			$lcModelName = $_GET['model'];
+			$loModel = NULL;
+			$lcID = isset($_GET['id']) ? $_GET['id'] : $_GET['guid'];
+			$lcModelName = strtolower($lcModelName);
+			if ($lcModelName === 'streamlistenerlist')
+			{
+				$loStream = Stream::model()->findByAttributes(array('GUID'=>$_GET['guid']));
+				$loModel = Yii::app()->db->createCommand()
+						->update('StreamListener',
+								array('EndDate'=> Utilities::getTimestamp()),
+								'EndDate IS NULL AND StreamID=:streamID AND ListenerGUID=:listenerGUID',
+								array(':streamID'=>$loStream->StreamID,
+									':listenerGUID'=>!Yii::app()->user->isGuest ? 
+								Yii::app()->user->getState('GUID') : 
+								Yii::app()->getSession()->sessionID));
+			}
+			else
+			{
+				$loModel = Yii::app()->db->createCommand()
+						->select('*')
+						->from('v'.$lcModelName)
+						->queryAll();
+			}
+			$this->sendResponse(200, $loModel, 'application/json');
+		}
+		$this->sendResponse(500, NULL, 'application/json');
 	}
 
 	public function actionDelete()
