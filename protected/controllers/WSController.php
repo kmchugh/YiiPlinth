@@ -149,7 +149,7 @@ class WSController extends Controller
 				$loStream->setAttributes(array(
 					'EventID' => $loEvent->EventID,
 					'StartDate' => $_POST['startdate'],
-					'IsPrivate' => isset($_POST['isprivate'] ? $_POST['isprivate'] : false)));
+					'IsPrivate' => isset($_POST['isprivate']) ? $_POST['isprivate'] : false)));
 
 				if (!$loStream->save())
 				{
