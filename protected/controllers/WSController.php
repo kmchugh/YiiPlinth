@@ -177,13 +177,16 @@ class WSController extends Controller
 							->where('StreamGUID=:streamGUID', array(':streamGUID'=>$loStream->GUID))
 							->queryRow();
 
-				// If the user has linked their Twitter account, TWEET!
-				$lcTweet = "I'm live on @YouCommentate, check me out at ".Utilities::shortenURL('http://www.youcommentate.com/Stream/View/guid/'.$loStream->GUID).' - '.$loEvent->Title;
-				if (strlen($lcTweet) >= 140)
+				if (!$loStream->IsPrivate)
 				{
-					$lcTweet = substr($lcTweet, 0, 137).'...';
+					// If the user has linked their Twitter account, TWEET!
+					$lcTweet = "I'm live on @YouCommentate, check me out at ".Utilities::shortenURL('http://www.youcommentate.com/Stream/View/guid/'.$loStream->GUID).' - '.$loEvent->Title;
+					if (strlen($lcTweet) >= 140)
+					{
+						$lcTweet = substr($lcTweet, 0, 137).'...';
+					}
+					Utilities::sendTweet($lcTweet);
 				}
-				Utilities::sendTweet($lcTweet);
 			}
 			else if ($lcModelName === 'streamlistener')
 			{
