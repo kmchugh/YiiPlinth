@@ -239,6 +239,21 @@
 		}
 
 		/**
+		* Returns the first non null non empty (for strings) parameter
+		**/
+		public static function ISNULLOREMPTY()
+		{
+			foreach (func_get_args() as $loArg)
+			{
+				if (!is_null($loArg) && (is_string($loArg) && (!strlen($loArg) == 0)))
+				{
+					return $loArg;
+				}
+			}
+			return NULL;
+		}
+
+		/**
 		* Checks if a string ends with the specified string
 		* returns true if the string ends with the specified string, false otherwise
 		**/
@@ -370,6 +385,20 @@
 				}
 			}
 			return false;
+		}
+
+		/**
+		* Checks if the specified module is installed, if so $toCallback is called.
+		* If not and if $toFailure is not null, $toFailure is called.  
+		* This will return the result of $toCallback or $toFailure
+		**/
+		public static function ifModuleExists($tcModuleName, $toCallback, $toFailure = NULL)
+		{
+			return (Yii::app()->hasModule($tcModuleName)) ? 
+				$toCallback() : 
+				!is_null($toFailure) ? 
+					$toFailure() :
+					NULL;
 		}
 
 		/**

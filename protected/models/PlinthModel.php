@@ -10,6 +10,10 @@
 **/
 abstract class PlinthModel extends CActiveRecord
 {
+	/**
+	* Occurs before validation happens on the record.  This method ensures the GUID and modified/created properties
+	* are populated correctly.
+	**/
 	protected function beforeValidate()
 	{
 		$loUser = Yii::app()->user;
@@ -33,6 +37,20 @@ abstract class PlinthModel extends CActiveRecord
 		}
 
 		return parent::beforeValidate();
+	}
+
+	// TODO: Override this to make use of multiple connections/dbs.  
+	public function getDbConnection()
+	{
+		return parent::getDbConnection();
+	}
+
+	/**
+	* Checks if the current user is the owner of this record
+	**/
+	public function isOwner()
+	{
+		return is_null($this->CreatedBy) || $this->CreatedBy === Yii::app()->user->GUID;
 	}
 }
 ?>

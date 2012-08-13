@@ -7,6 +7,9 @@ class UserProfile extends CFormModel
 	public $country;
 	public $profileImageURI;
 	public $description;
+	public $notifyUpdates;
+	public $firstName;
+	public $lastName;
 
 	//public $fbUserName;
 	//public $twitterUserName;
@@ -49,6 +52,9 @@ class UserProfile extends CFormModel
 					$this->country = $this->m_oUserInfo->Country;
 					$this->profileImageURI = $this->m_oUserInfo->ProfileImageURI;
 					$this->description = $this->m_oUserInfo->Description;
+					$this->notifyUpdates = $this->m_oUserInfo->notifyUpdates;
+					$this->firstName = $this->m_oUserInfo->FirstName;
+					$this->lastName = $this->m_oUserInfo->LastName;
 
 					if ($this->country === null || $this->country === '')
 					{
@@ -180,7 +186,8 @@ class UserProfile extends CFormModel
 	{
 		return array(
 			array('displayName', 'required'),
-			array('email, country', 'length', 'max'=>255),
+			array('notifyUpdates', 'boolean'),
+			array('email, country, firstName, lastName', 'length', 'max'=>255),
 			array('displayName', 'length', 'max'=>150),
 			array('description', 'safe'),
 			array('profileImageURI', 'file', 
@@ -202,7 +209,10 @@ class UserProfile extends CFormModel
 			'displayName' => 'Display Name',
 			'country' => 'Country',
 			'profileImageURI' => 'Profile Image',
-			'description' => 'Description'
+			'description' => 'Description',
+			'firstName' => 'First Name',
+			'lastName' => 'Last Name',
+			'notifyUpdate' => 'Keep up to Date',
 		);
 	}
 

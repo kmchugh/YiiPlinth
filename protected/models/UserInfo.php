@@ -7,7 +7,10 @@
  * @property string $UserInfoID
  * @property string $UserID
  * @property string $Country
+ * @property integer $NotifyUpdates
  * @property string $ProfileImageURI
+ * @property string $FirstName
+ * @property string $LastName
  * @property string $Description
  * @property string $CreatedDate
  * @property string $CreatedBy
@@ -38,6 +41,12 @@ class UserInfo extends PlinthModel
 		return 'UserInfo';
 	}
 
+	public function afterFind()
+	{
+		parent::afterFind();
+		$this->NotifyUpdates = ord($this->NotifyUpdates);
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -47,7 +56,8 @@ class UserInfo extends PlinthModel
 		// will receive user inputs.
 		return array(
 			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
-			array('Country', 'length', 'max'=>255),
+			array('Country, FirstName, LastName', 'length', 'max'=>255),
+			array('NotifyUpdates', 'boolean'),
 			array('CreatedBy, ModifiedBy', 'length', 'max'=>40),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 

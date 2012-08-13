@@ -32,9 +32,6 @@
 				error_reporting(E_ALL);
 			}
 
-			// Finally include the custom config for the user
-			$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."/config/customConfig.php";
-
 			// Include the YII Framework
 			require_once($lcYII);
 
@@ -43,9 +40,47 @@
 
 			// Merge the arrays for the configuration
 			$loConfiguration = Utilities::mergeIncludedArray($laConfig);
+			// Merge any installed module config files
+			if (isset($loConfiguration['modules']))
+			{
+				self::extractModuleConfig($loConfiguration['modules'], YiiBase::getPathOfAlias('YIIPlinth'), $laConfig);
+			}
+
+			// Finally include the custom config for the user, this is included last so that it is possible to override any settings
+			$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."/config/customConfig.php";
+			$loConfiguration = Utilities::mergeIncludedArray($laConfig);
 
 			// And off we go...
 			Yii::createWebApplication($loConfiguration)->run();
+		}
+
+		/**
+		* Adds the config file for the specified module if it exists, otherwise a no op
+		* @param $taModule the module configuration
+		* @param $taConfig the configuration file list
+		**/
+		private function extractModuleConfig($taModule, $tcPath, &$taConfigList)
+		{
+			if (is_array($taModule))
+			{
+				foreach ($taModule as $lcName => $laConfig) 
+				{
+					$lcName = is_array($laConfig) ? $lcName : $laConfig;
+					// Extract this module config, for now this only supports YIIPlinth modules
+					$lcConfigFile = $tcPath.'/modules/'.$lcName.'/config/main.php';
+
+					if (file_exists($lcConfigFile))
+					{
+						$taConfigList[] = $lcConfigFile;
+					}
+
+					// Extract any child modules
+					if (isset($laConfig['modules']))
+					{
+						self::extractModuleConfig($laConfig['modules'], $tcPath."/modules/$lcName", $taConfigList);
+					}
+				}
+			}
 		}
 	}
 	return new YIIPlinth();

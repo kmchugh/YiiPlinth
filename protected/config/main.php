@@ -19,6 +19,19 @@ return array(
 
 	'modules'=>array(
 		// Note gii should not be available in the runtime environment
+		'UserManagement'=>array(
+			'class'=>'YIIPlinth.modules.UserManagement.UserManagementModule',
+			'modules'=>array(
+				'OAuth'=>array(
+					'modules'=>array(
+						'Twitter',
+						'Facebook',
+						),
+					),
+				),
+			),
+		'Messaging',
+		'MailChimp',
 	),
 
 	// application components
