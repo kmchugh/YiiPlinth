@@ -26,9 +26,9 @@
 		/**
 		* Includes the files specified, and if the return value from the
 		* file specified is an array, merges the results in the order given
-		* in the array.  
+		* in the array.
 		* If the file does not exist it is skipped over
-		* If the file does not return an array, the result of that specific 
+		* If the file does not return an array, the result of that specific
 		* file is not merged, but the process continues to attempt the remaining
 		* files.
 		**/
@@ -65,7 +65,7 @@
 		// TODO: Refactor Twitter to separate class
 		// TODO: Add an expiry time to OAuthUser which will force a recheck of the connection
 		/**
-		* Gets the Twitter oAuth object.  if tlConnectAsConsumer is true this will attempt to 
+		* Gets the Twitter oAuth object.  if tlConnectAsConsumer is true this will attempt to
 		* connect as the consumer, otherwise it will connect as the client
 		**/
 		private static function getTwitterObject($tcCallbackURL = NULL, $tlConnectAsConsumer = TRUE)
@@ -89,7 +89,7 @@
 
 			// TODO: Consume TwitterOAuth can probably be cached globally, client may be able to be cached in the session
 			$loTwitterObject = new TwitterOAuth(
-				Yii::app()->params['twitter']['consumerKey'], 
+				Yii::app()->params['twitter']['consumerKey'],
 				Yii::app()->params['twitter']['consumerSecret'],
 				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token'],
 				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token_secret']);
@@ -109,8 +109,8 @@
 		**/
 		public static function handleTwitterCallback()
 		{
-			if( !empty($_GET['oauth_verifier']) && 
-				!empty($_SESSION['twitter_token']) && 
+			if( !empty($_GET['oauth_verifier']) &&
+				!empty($_SESSION['twitter_token']) &&
 				!empty($_SESSION['twitter_token_secret']))
 			{
 				$loTwitter = self::getTwitterObject(NULL, FALSE);
@@ -141,7 +141,7 @@
 				$loTwitter = self::getTwitterObject(NULL, FALSE);
 				if (!is_null($loTwitter))
 				{
-					$loTwitter->post('statuses/update', array('status' => $tcMessage)); 
+					$loTwitter->post('statuses/update', array('status' => $tcMessage));
 				}
 			}
 		}
@@ -176,7 +176,7 @@
 			}
 			return $loAuthUser;
 		}
-		
+
 		public static function tweet($tcMessage, $tcAuthToken)
 		{
 			$loTwitter = self::getTwitterObject();
@@ -301,7 +301,7 @@
 		public static function array_implode($tcGlue = '=', $tcValueSeparator = ', ' , array $taArray)
 		{
 			$laReturn = array();
-			foreach ($taArray as $lcKey => $lcValue) 
+			foreach ($taArray as $lcKey => $lcValue)
 			{
 				$laReturn[] = "{$lcKey}{$tcGlue}{$lcValue}";
 			}
@@ -309,7 +309,7 @@
 		}
 
 		/**
-		* Gets the date in a format suitable for HTTP, 
+		* Gets the date in a format suitable for HTTP,
 		* tnTimestamp is the numeric long representation of a date
 		**/
 		public static function getRFC1123Date($tnTimestamp)
@@ -342,14 +342,14 @@
 			 0;
 		}
 
-		function array_change_key_case_recursive(array $taInput, $tnCase = CASE_LOWER) 
-		{ 
+		function array_change_key_case_recursive(array $taInput, $tnCase = CASE_LOWER)
+		{
 			$loReturn = array();
 			foreach($taInput as $lcKey=>$loValue)
 			{
 				if (!is_array($taInput[$lcKey]))
 				{
-					$loReturn[$tnCase === CASE_UPPER ? mb_strtoupper($lcKey) : mb_strtolower($lcKey)] = 
+					$loReturn[$tnCase === CASE_UPPER ? mb_strtoupper($lcKey) : mb_strtolower($lcKey)] =
 						$loValue;
 				}
 				else
@@ -369,7 +369,7 @@
 		public static function entityExists($toConnection, $tcTableName)
 		{
 			return Utilities::in_arrayi($tcTableName, $toConnection->Schema->TableNames);
-		} 
+		}
 
 		/**
 		* Checks if a value exists in an array, this is case insensitive
@@ -389,14 +389,14 @@
 
 		/**
 		* Checks if the specified module is installed, if so $toCallback is called.
-		* If not and if $toFailure is not null, $toFailure is called.  
+		* If not and if $toFailure is not null, $toFailure is called.
 		* This will return the result of $toCallback or $toFailure
 		**/
 		public static function ifModuleExists($tcModuleName, $toCallback, $toFailure = NULL)
 		{
-			return (Yii::app()->hasModule($tcModuleName)) ? 
-				$toCallback() : 
-				!is_null($toFailure) ? 
+			return (Yii::app()->hasModule($tcModuleName)) ?
+				$toCallback() :
+				!is_null($toFailure) ?
 					$toFailure() :
 					NULL;
 		}
@@ -406,7 +406,7 @@
 		**/
 		public static function inline_array_merge_recursive(&$taArray, $taMerge)
 		{
-			foreach ($taMerge as $lcKey => $loValue) 
+			foreach ($taMerge as $lcKey => $loValue)
 			{
 				if (isset($taArray[$lcKey]))
 				{

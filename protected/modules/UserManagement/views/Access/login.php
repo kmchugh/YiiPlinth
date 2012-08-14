@@ -5,39 +5,32 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 <h1>Login</h1>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'login-form',
+	'id'=>$tcFormName,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
 	),
 )); ?>
 
-<style type="text/css">
-	.forgottenPassword, .rememberMe
-	{
-		margin: 1em 0 .5em 0;
-	}
-</style>
-
 	<fieldset>
 		<p class="note">Fields with <span class="required">*</span> are required.</p>
 
-		<div>
-			<?php echo $form->labelEx($model,'username'); ?>
-			<?php echo $form->textField($model,'username'); ?>
-			<?php echo $form->error($model,'username'); ?>
+		<div class="field">
+			<?php echo $form->labelEx($toModel,'username'); ?>
+			<?php echo $form->textField($toModel,'username'); ?>
+			<?php echo $form->error($toModel,'username'); ?>
 			<p class="hint">
 				Hint: Your user name is your email address.
 			</p>
 		</div>
 
-		<div>
-			<?php echo $form->labelEx($model,'password'); ?>
-			<?php echo $form->passwordField($model,'password'); ?>
-			<?php echo $form->error($model,'password'); ?>
+		<div class="field">
+			<?php echo $form->labelEx($toModel,'password'); ?>
+			<?php echo $form->passwordField($toModel,'password'); ?>
+			<?php echo $form->error($toModel,'password'); ?>
 		</div>
 
-		<div class="forgottenPassword">
+		<div class="field">
 			<?php echo CHtml::link("Forgot your password?",array('PasswordReset')) ?>
 		</div>
 

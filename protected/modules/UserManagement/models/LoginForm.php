@@ -1,9 +1,8 @@
 <?php
 
 /**
- * LoginForm class.
- * LoginForm is the data structure for keeping
- * user login form data. It is used by the 'login' action of 'SiteController'.
+ * LoginForm Class handles the data structures and processes for 
+ * interaction with the login form
  */
 class LoginForm extends CFormModel
 {
@@ -23,6 +22,7 @@ class LoginForm extends CFormModel
 		return array(
 			// username and password are required
 			array('username, password', 'required'),
+
 			// rememberMe needs to be a boolean
 			array('rememberMe', 'boolean'),
 			// password needs to be authenticated
@@ -72,8 +72,8 @@ class LoginForm extends CFormModel
 		}
 		if($this->m_oUserIdentity->errorCode===UserIdentity::ERROR_NONE)
 		{
-			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
-			Yii::app()->user->login($this->m_oUserIdentity,$duration);
+			$lnDuration=$this->rememberMe ? 3600*24*30 : 0;
+			Yii::app()->user->login($this->m_oUserIdentity,$lnDuration);
 
 			return true;
 		}

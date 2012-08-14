@@ -104,7 +104,6 @@ class PlinthDBSession extends CDbHttpSession
 
 			// Set the expiry time as a number of milliseconds
 			$loSession->Expires = Utilities::scientificToLong(Utilities::getTimestamp() + ($this->getTimeout() * 1000));
-
 			if (!$loSession->save())
 			{
 				if(YII_DEBUG)
