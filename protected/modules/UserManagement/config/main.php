@@ -7,8 +7,8 @@ return array(
 		'urlManager'=>array(
 			'rules'=>array(
 
-				'/login'=>'UserManagement/access/Login',
-				'/logout'=>'UserManagement/access/Logout',
+				'/(site/)?login'=>'UserManagement/access/Login',
+				'/(site/)?logout'=>'UserManagement/access/Logout',
 				'/passwordReset'=>'UserManagement/access/PasswordReset',
 				
 				),
