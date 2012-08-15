@@ -282,7 +282,7 @@
 			// TODO: Allow this to output javascript code for converting timestamp for local time,
 			// or convert the time to the users region
 
-			return $tnMillis <= 0 ? '' : strftime('%d %b %Y %I:%M:%m %Z', $tnMillis / 1000);
+			return $tnMillis <= 0 ? '' : @strftime('%d %b %Y %I:%M:%m %Z', $tnMillis / 1000);
 		}
 
 		/**
