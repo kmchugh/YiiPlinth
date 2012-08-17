@@ -342,7 +342,35 @@
 			 0;
 		}
 
-		function array_change_key_case_recursive(array $taInput, $tnCase = CASE_LOWER)
+		/**
+		 * Checks if the file exists, if the file does exist returns the case
+		 * insensitive name of the file.  If the file does not exist this function
+		 * will return null
+		 * @param  String  $tcFileName      The name of the file to get
+		 * @param  boolean $tcCaseSensitive if true check case insensitively
+		 * @return String the proper case filename or null if the file could not be found
+		 */
+		public static function fileExists($tcFileName, $tcCaseSensitive = true)
+		{
+			if (file_exists($tcFileName))
+			{
+				return $tcFileName;
+			}
+			
+			if (!$tcCaseSensitive)
+			{
+				$lcDir = dirname($tcFileName);
+				$laFiles = glob($dir.'/*');
+				$lcFileName = strtolower($tcFileName);
+				foreach ($laFiles as $lcFile)
+				{
+					return $lcFile;
+				}
+			}
+			return NULL;
+		}
+
+		public static function array_change_key_case_recursive(array $taInput, $tnCase = CASE_LOWER)
 		{
 			$loReturn = array();
 			foreach($taInput as $lcKey=>$loValue)
@@ -399,6 +427,28 @@
 				!is_null($toFailure) ?
 					$toFailure() :
 					NULL;
+		}
+
+		/**
+		 * Recursively removes the specified directory.  This will delete the directory and all containing
+		 * files/folders.
+		 * @param  String the directory to remove
+		 * @return Boolean true on success
+		 */
+		public static function rrmdir($tcDirectory)
+		{
+			foreach (glob($tcDirectory.'/*') as $lcFile) 
+			{
+				if (is_dir($lcFile))
+				{
+					Utilities::rrmdir($lcFile);
+				}
+				else
+				{
+					unlink($lcFile);
+				}
+			}
+			return rmdir($tcDirectory);
 		}
 
 		/**

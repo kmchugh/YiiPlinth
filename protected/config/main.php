@@ -17,6 +17,8 @@ return array(
 		'YIIPlinth.extensions.Session.*',
 	),
 
+	'theme'=>'classic',
+
 	'modules'=>array(
 		// Note gii should not be available in the runtime environment
 		'UserManagement'=>array(
@@ -29,6 +31,9 @@ return array(
 						),
 					),
 				),
+			),
+		'LessCSS'=>array(
+			'class'=>'YIIPlinth.modules.LessCSS.LessCSSModule',
 			),
 		'Messaging',
 		'MailChimp',
