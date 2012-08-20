@@ -19,8 +19,8 @@
 			$lcYII=$taOptions['yii'];
 
 			// Include the application configuration files
-			$laConfig[]=$taOptions['root'].'/protected/config/main.php';
 			$laConfig[]=dirname(__FILE__).'/config/main.php';
+			$laConfig[]=$taOptions['root'].'/protected/config/main.php';
 
 			// If we are in development mode, include the development config
 			if (Utilities::isDevelopment())
