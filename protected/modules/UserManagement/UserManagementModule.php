@@ -11,6 +11,7 @@ class UserManagementModule extends CWebModule
 		$this->setImport(array(
 			'UserManagement.models.*',
 			'UserManagement.components.*',
+			'UserManagement.widgets.accessControl.*',
 		));
 	}
 

@@ -2,8 +2,6 @@
 $this->pageTitle=Yii::app()->name . ' - Login';
 ?>
 
-<h1>Login</h1>
-
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>$tcFormName,
 	'enableClientValidation'=>true,
@@ -11,8 +9,8 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 		'validateOnSubmit'=>true,
 	),
 )); ?>
-
 	<fieldset>
+		<legend><h1>Sign in</h1></legend>
 		<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 		<div class="field">

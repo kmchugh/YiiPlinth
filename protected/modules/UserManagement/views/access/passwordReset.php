@@ -2,8 +2,6 @@
 $this->pageTitle=Yii::app()->name . ' - Reset Password';
 ?>
 
-<h1>Reset Password</h1>
-
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>$tcFormName,
 	'enableClientValidation'=>true,
@@ -11,26 +9,26 @@ $this->pageTitle=Yii::app()->name . ' - Reset Password';
 		'validateOnSubmit'=>true,
 	),
 )); ?>
-
 	<fieldset>
+		<legend><h1>Reset Password</h1></legend>
 		<p class="note">Fields with <span class="required">*</span> are required.</p>
 
-		<div>
+		<div class="field">
 			<?php echo $form->labelEx($toModel,'email'); ?>
 			<?php echo $form->textField($toModel,'email'); ?>
 			<?php echo $form->error($toModel,'email'); ?>
 		</div>
 
 		<?php if(CCaptcha::checkRequirements()): ?>
-			<div>
+			<div class="field captcha">
 				<div><?php $this->widget('CCaptcha'); ?></div>
-				<div>
+				<div class="field">
 					<?php echo $form->labelEx($toModel,'verifyCode'); ?>
 					<?php echo $form->textField($toModel,'verifyCode'); ?>
+					<?php echo $form->error($toModel,'verifyCode'); ?>
+					<div class="hint">Please enter the letters as they are shown in the image above.
+					<br/>Letters are not case-sensitive.</div>
 				</div>
-				<div class="note">Please enter the letters as they are shown in the image above.
-				<br/>Letters are not case-sensitive.</div>
-				<?php echo $form->error($toModel,'verifyCode'); ?>
 			</div>
 		<?php endif; ?>
 
@@ -45,6 +43,5 @@ $this->pageTitle=Yii::app()->name . ' - Reset Password';
 		<?php endif; ?>
 
 	</fieldset>
-
 <?php $this->endWidget(); ?>
 

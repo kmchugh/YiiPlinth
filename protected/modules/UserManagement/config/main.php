@@ -10,6 +10,7 @@ return array(
 				'/(site/)?login'=>'UserManagement/access/Login',
 				'/(site/)?logout'=>'UserManagement/access/Logout',
 				'/passwordReset'=>'UserManagement/access/PasswordReset',
+				'/register'=>'UserManagement/access/Register',
 				
 				),
 			),
