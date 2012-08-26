@@ -4,20 +4,24 @@
  * The PlinthDBSchema extends some of the rules and generations
  * from the CDbSchema class
  */
-abstract class PlinthDBSchema extends CMysqlSchema
+class PlinthMySQLSchema extends CMysqlSchema
 {
-	/**
-	 * @var array the abstract column types mapped to physical column types.
-	 * @since 1.1.6
-	 */
+    /**
+     * @var array the abstract column types mapped to physical column types.
+     * @since 1.1.6
+     */
     public $columnTypes=array(
-        'pk' => 'bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY',
-        'title'=>'varchar(150) NOT NULL',
-        'title_null'=>'varchar(150) NULL',
+        'pk' => 'bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY',
+        'id' => 'bigint(20) NOT NULL',
+        'id_null' => 'bigint(20) NULL',
+        'guid'=> 'varchar(40) NOT NULL',
+        'guild_null'=>'varchar(40) NULL',
+        'title' => 'varchar(150) NOT NULL',
         'description'=>'varchar(500) NULL',
-        'string' => 'varchar(255)',
-        'guid'=>'varchar(40) NOT NULL',
-        'guid_null'=>'varchar(40) NULL',
+        'string' => 'varchar(255) NOT NULL',
+        'string_null'=>'varchar(255) NULL',
+        'uri'=>'varchar(1024) NOT NULL',
+        'uri_null'=>'varchar(1024) NULL',
         'text' => 'text',
         'integer' => 'int(11)',
         'float' => 'float',
@@ -28,8 +32,7 @@ abstract class PlinthDBSchema extends CMysqlSchema
         'time' => 'time',
         'date' => 'date',
         'binary' => 'blob',
-        'boolean' => "bit(1) NOT NULL default b'0'",
-        'boolean_null' => "bit(1) NULL",
+        'boolean' => "bit(1) NOT NULL DEFAULT b'0'",
         'money' => 'decimal(19,4)',
     );
 }

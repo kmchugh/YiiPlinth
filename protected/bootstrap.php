@@ -33,9 +33,12 @@
 			$laConfig[]=$taOptions['root']."/protected/config/common.php";
 			$laConfig[]=$taOptions['root']."/protected/config/$tcConfigType.php";
 
-			// Custom Installation Config
-			$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/common.php";
-			$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/$tcConfigType.php";
+			if (isset($_ENV['HOME']))
+			{
+				// Custom Installation Config
+				$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/common.php";
+				$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/$tcConfigType.php";
+			}
 
 			// Build the config array
 			$loConfig = Utilities::mergeIncludedArray($laConfig);

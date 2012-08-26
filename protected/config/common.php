@@ -42,7 +42,7 @@ return array(
             'emulatePrepare'=>true,
             'charset'=>'utf8',
             'driverMap' => array(
-                'mysql'=> 'YiiPlinth.components.db.mysql.PlinthMySQLSchema',
+                'mysql'=> 'YIIPlinth.components.db.mysql.PlinthMySQLSchema',
                 ),
             'tablePrefix'=> '',
             ),
