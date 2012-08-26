@@ -42,11 +42,48 @@
 					$loReturn = include($laFile);
 					if (gettype($loReturn) === 'array')
 					{
-						$loConfig = CMap::mergeArray($loConfig,$loReturn);
+						$loConfig = self::override($loConfig, $loReturn);
 					}
 				}
 			}
 			return $loConfig;
+		}
+
+		/**
+		 * Override merge two arrays, if elements exist in the taBase those elements will be overridden
+		 * by the equivalent elements in $taOverride.  this is a recursive function
+		 * @param  array $taBase  the base values
+		 * @param  array $taOverride the values to override with
+		 * @return array an array where all of the values from taOverride have been incorporated
+		 */
+		public static function override($taBase, $taOverride)
+		{
+			if (!is_array($taBase))
+			{
+				return $taOverride;
+			}
+			if (!is_array($taOverride))
+			{
+				$taBase[] = $taOverride;
+			}
+
+			foreach ($taOverride as $lcKey => $lcValue)
+			{
+				if (is_numeric($lcKey))
+				{
+					if (!in_array($lcValue, $taBase))
+					{
+						$taBase[] = $lcValue;
+					}
+				}
+				else
+				{
+					$taBase[$lcKey] = isset($taBase[$lcKey]) ?
+						self::override($taBase[$lcKey], $taOverride[$lcKey]) :
+						$taOverride[$lcKey];
+				}
+			}
+			return $taBase;
 		}
 
 		/**
