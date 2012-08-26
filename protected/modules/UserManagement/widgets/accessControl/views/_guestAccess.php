@@ -1,12 +1,13 @@
 <?php 
 
     echo Chtml::link(
-        'Sign in', '/login',
+        Utilities::getString('Sign in'), '/login',
         array());
 
     echo Chtml::link(
-        'Register', '/register',
+        Utilities::getString('Register'), '/register',
         array());
+
 /*
 
     if (Yii::app()->user()-isGuest)

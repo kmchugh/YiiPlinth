@@ -10,8 +10,8 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 	),
 )); ?>
 	<fieldset>
-		<legend><h1>Sign in</h1></legend>
-		<p class="note">Fields with <span class="required">*</span> are required.</p>
+		<legend><h1><?php echo Utilities::getString('Sign in'); ?></h1></legend>
+		<p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
 
 		<div class="field">
 			<?php echo $form->labelEx($toModel,'username'); ?>
@@ -34,7 +34,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 
 		<div class="buttons">
 			<?php
-			 echo CHtml::htmlButton('Login', array('type'=>'submit')); 
+			 echo CHtml::htmlButton(Utilities::getString('Sign in'), array('type'=>'submit')); 
 			 ?>
 		</div>
 

@@ -10,8 +10,8 @@ $this->pageTitle=Yii::app()->name . ' - Reset Password';
 	),
 )); ?>
 	<fieldset>
-		<legend><h1>Reset Password</h1></legend>
-		<p class="note">Fields with <span class="required">*</span> are required.</p>
+		<legend><h1><?php echo Utilities::getString('Reset Password'); ?></h1></legend>
+		<p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
 
 		<div class="field">
 			<?php echo $form->labelEx($toModel,'email'); ?>
@@ -33,7 +33,7 @@ $this->pageTitle=Yii::app()->name . ' - Reset Password';
 		<?php endif; ?>
 
 		<div class="buttons">
-			<?php echo CHtml::htmlButton('Reset', array('type'=>'submit')); ?>
+			<?php echo CHtml::htmlButton(Utilities::getString('Reset'), array('type'=>'submit')); ?>
 		</div>
 
 		<?php if(Yii::app()->user->hasFlash('formMessage')): ?> 

@@ -49,180 +49,6 @@
 			return $loConfig;
 		}
 
-
-
-		private static $g_oTwitter = NULL;
-
-		/**
-		* Authenticates in as the application and attempts to get the Authentication URL
-		**/
-		public static function getTwitterAuthenticationURL($tcCallbackURL = NULL)
-		{
-			$loTwitterObject = self::getTwitterObject($tcCallbackURL, TRUE);
-			return $loTwitterObject->getAuthorizeUrl($_SESSION['twitter_token']);
-		}
-
-		// TODO: Refactor Twitter to separate class
-		// TODO: Add an expiry time to OAuthUser which will force a recheck of the connection
-		/**
-		* Gets the Twitter oAuth object.  if tlConnectAsConsumer is true this will attempt to
-		* connect as the consumer, otherwise it will connect as the client
-		**/
-		private static function getTwitterObject($tcCallbackURL = NULL, $tlConnectAsConsumer = TRUE)
-		{
-			if (is_null($tcCallbackURL))
-			{
-				$tcCallbackURL = Yii::app()->params['twitter']['callbackURL'];
-			}
-
-
-			if (!$tlConnectAsConsumer)
-			{
-				// Update the user information
-				$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
-				if (!is_null($loAuthUser))
-				{
-					$_SESSION['twitter_token'] = $loAuthUser->Token;
-					$_SESSION['twitter_token_secret'] = $loAuthUser->Secret;
-				}
-			}
-
-			// TODO: Consume TwitterOAuth can probably be cached globally, client may be able to be cached in the session
-			$loTwitterObject = new TwitterOAuth(
-				Yii::app()->params['twitter']['consumerKey'],
-				Yii::app()->params['twitter']['consumerSecret'],
-				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token'],
-				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token_secret']);
-
-			if ($tlConnectAsConsumer)
-			{
-				// TODO: Add in error handling
-				Yii::app()->params['oauth_twitter'] = $loTwitterObject->getRequestToken($tcCallbackURL);
-				$_SESSION['twitter_token']=Yii::app()->params['oauth_twitter']['oauth_token'];
-				$_SESSION['twitter_token_secret']=Yii::app()->params['oauth_twitter']['oauth_token_secret'];
-			}
-			return $loTwitterObject;
-		}
-
-		/**
-		* Handles the callback from Twitter and creates any records required
-		**/
-		public static function handleTwitterCallback()
-		{
-			if( !empty($_GET['oauth_verifier']) &&
-				!empty($_SESSION['twitter_token']) &&
-				!empty($_SESSION['twitter_token_secret']))
-			{
-				$loTwitter = self::getTwitterObject(NULL, FALSE);
-				if (!is_null($loTwitter))
-				{
-					$_SESSION['twitter_access_token'] = $loTwitter->getAccessToken($_GET['oauth_verifier']);
-
-					$loAuthUser = self::getTwitterUser($loTwitter);
-					if (!is_null($loAuthUser))
-					{
-						$loAuthUser->Token=$_SESSION['twitter_access_token']['oauth_token'];
-						$loAuthUser->Secret=$_SESSION['twitter_access_token']['oauth_token_secret'];
-						$loAuthUser->save();
-					}
-				}
-				return $loAuthUser;
-			}
-			unset($_SESSION['twitter_token']);
-			return NULL;
-		}
-
-		public static function sendTweet($tcMessage)
-		{
-			// Only if the user is linked to a twitter account
-			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
-			if (!is_null($loAuthUser))
-			{
-				$loTwitter = self::getTwitterObject(NULL, FALSE);
-				if (!is_null($loTwitter))
-				{
-					$loTwitter->post('statuses/update', array('status' => $tcMessage));
-				}
-			}
-		}
-
-		public static function getTwitterUser($toTwitterObject = NULL)
-		{
-			// Update the user information
-			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
-
-			if (is_null($loAuthUser) && !is_null($toTwitterObject))
-			{
-				$loUserInfo = $toTwitterObject->get('account/verify_credentials');
-
-				if (isset($loUserInfo->error))
-				{
-					echo $loUserInfo->error;
-					$loUserInfo = null;
-				}
-
-				if ($loUserInfo != NULL)
-				{
-					$loUser = User::model()->findByAttributes(array('GUID'=>Yii::app()->user->getState('GUID')));
-
-					$loAuthUser = new OAuthUser();
-					$loAuthUser->Provider='Twitter';
-					$loAuthUser->UserID=$loUser->UserID;
-					$loAuthUser->UserGUID=$loUser->GUID;
-					$loAuthUser->UID=$loUserInfo->id;
-					$loAuthUser->DisplayName=$loUserInfo->screen_name;
-					$loAuthUser->UserName=$loUserInfo->name;
-				}
-			}
-			return $loAuthUser;
-		}
-
-		public static function tweet($tcMessage, $tcAuthToken)
-		{
-			$loTwitter = self::getTwitterObject();
-		}
-
-		/**
-		* Gets the current URL
-		**/
-		public static function getURL()
-		{
-			return Yii::app()->createAbsoluteUrl(str_replace(
-						Yii::app()->request->baseUrl, '',
-						Yii::app()->request->requestURI));
-		}
-
-		// TODO: Refactor Bit.ly to separate class
-		/**
-		* Shortens the specified URL using bit.ly
-		**/
-		public static function shortenURL($tcURL, $tcLogin = NULL, $tcAppKey = NULL)
-		{
-			// TODO: Cache and return cached if it exists
-			if ($tcLogin === NULL)
-			{
-				$tcLogin = Yii::app()->params['bit.ly']['login'];
-			}
-			if ($tcAppKey === NULL)
-			{
-				$tcAppKey = Yii::app()->params['bit.ly']['key'];
-			}
-			if (!Utilities::endsWith($tcURL, '/'))
-			{
-				$tcURL.='/';
-			}
-			if (Utilities::startsWith($tcURL, '/'))
-			{
-				$tcURL = substr($tcURL, 1);
-			}
-			if (!Utilities::startsWith($tcURL, 'http'))
-			{
-				$tcURL = Yii::app()->getBaseUrl(true).$tcURL;
-			}
-			$tcURL = 'http://api.bit.ly/v3/shorten?login='.$tcLogin.'&apiKey='.$tcAppKey.'&format=txt&longUrl='.urlencode($tcURL);
-			return @trim(file_get_contents($tcURL));
-		}
-
 		/**
 		* returns the first non null parameter
 		**/
@@ -251,6 +77,18 @@
 				}
 			}
 			return NULL;
+		}
+
+		/**
+		 * Gets the specified String translated in the current context.  If the string does not exist, then the
+		 * key will be returned
+		 * @param  string $tcKey      The key or string to translate
+		 * @param  string $tcCategory The category of the string to retrieve
+		 * @return string the translated string, or $tcKey if the translation did not exist
+		 */
+		public static function getString($tcKey, $tcCategory = 'app')
+		{
+			return Yii::t($tcCategory, Yii::t($tcCategory, $tcKey, NULL, NULL, 'default'));
 		}
 
 		/**
@@ -489,6 +327,182 @@
 			}
 			return $taArray;
 		}
+
+
+
+		private static $g_oTwitter = NULL;
+
+		/**
+		* Authenticates in as the application and attempts to get the Authentication URL
+		**/
+		public static function getTwitterAuthenticationURL($tcCallbackURL = NULL)
+		{
+			$loTwitterObject = self::getTwitterObject($tcCallbackURL, TRUE);
+			return $loTwitterObject->getAuthorizeUrl($_SESSION['twitter_token']);
+		}
+
+		// TODO: Refactor Twitter to separate class
+		// TODO: Add an expiry time to OAuthUser which will force a recheck of the connection
+		/**
+		* Gets the Twitter oAuth object.  if tlConnectAsConsumer is true this will attempt to
+		* connect as the consumer, otherwise it will connect as the client
+		**/
+		private static function getTwitterObject($tcCallbackURL = NULL, $tlConnectAsConsumer = TRUE)
+		{
+			if (is_null($tcCallbackURL))
+			{
+				$tcCallbackURL = Yii::app()->params['twitter']['callbackURL'];
+			}
+
+
+			if (!$tlConnectAsConsumer)
+			{
+				// Update the user information
+				$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+				if (!is_null($loAuthUser))
+				{
+					$_SESSION['twitter_token'] = $loAuthUser->Token;
+					$_SESSION['twitter_token_secret'] = $loAuthUser->Secret;
+				}
+			}
+
+			// TODO: Consume TwitterOAuth can probably be cached globally, client may be able to be cached in the session
+			$loTwitterObject = new TwitterOAuth(
+				Yii::app()->params['twitter']['consumerKey'],
+				Yii::app()->params['twitter']['consumerSecret'],
+				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token'],
+				$tlConnectAsConsumer ? NULL : $_SESSION['twitter_token_secret']);
+
+			if ($tlConnectAsConsumer)
+			{
+				// TODO: Add in error handling
+				Yii::app()->params['oauth_twitter'] = $loTwitterObject->getRequestToken($tcCallbackURL);
+				$_SESSION['twitter_token']=Yii::app()->params['oauth_twitter']['oauth_token'];
+				$_SESSION['twitter_token_secret']=Yii::app()->params['oauth_twitter']['oauth_token_secret'];
+			}
+			return $loTwitterObject;
+		}
+
+		/**
+		* Handles the callback from Twitter and creates any records required
+		**/
+		public static function handleTwitterCallback()
+		{
+			if( !empty($_GET['oauth_verifier']) &&
+				!empty($_SESSION['twitter_token']) &&
+				!empty($_SESSION['twitter_token_secret']))
+			{
+				$loTwitter = self::getTwitterObject(NULL, FALSE);
+				if (!is_null($loTwitter))
+				{
+					$_SESSION['twitter_access_token'] = $loTwitter->getAccessToken($_GET['oauth_verifier']);
+
+					$loAuthUser = self::getTwitterUser($loTwitter);
+					if (!is_null($loAuthUser))
+					{
+						$loAuthUser->Token=$_SESSION['twitter_access_token']['oauth_token'];
+						$loAuthUser->Secret=$_SESSION['twitter_access_token']['oauth_token_secret'];
+						$loAuthUser->save();
+					}
+				}
+				return $loAuthUser;
+			}
+			unset($_SESSION['twitter_token']);
+			return NULL;
+		}
+
+		public static function sendTweet($tcMessage)
+		{
+			// Only if the user is linked to a twitter account
+			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+			if (!is_null($loAuthUser))
+			{
+				$loTwitter = self::getTwitterObject(NULL, FALSE);
+				if (!is_null($loTwitter))
+				{
+					$loTwitter->post('statuses/update', array('status' => $tcMessage));
+				}
+			}
+		}
+
+		public static function getTwitterUser($toTwitterObject = NULL)
+		{
+			// Update the user information
+			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+
+			if (is_null($loAuthUser) && !is_null($toTwitterObject))
+			{
+				$loUserInfo = $toTwitterObject->get('account/verify_credentials');
+
+				if (isset($loUserInfo->error))
+				{
+					echo $loUserInfo->error;
+					$loUserInfo = null;
+				}
+
+				if ($loUserInfo != NULL)
+				{
+					$loUser = User::model()->findByAttributes(array('GUID'=>Yii::app()->user->getState('GUID')));
+
+					$loAuthUser = new OAuthUser();
+					$loAuthUser->Provider='Twitter';
+					$loAuthUser->UserID=$loUser->UserID;
+					$loAuthUser->UserGUID=$loUser->GUID;
+					$loAuthUser->UID=$loUserInfo->id;
+					$loAuthUser->DisplayName=$loUserInfo->screen_name;
+					$loAuthUser->UserName=$loUserInfo->name;
+				}
+			}
+			return $loAuthUser;
+		}
+
+		public static function tweet($tcMessage, $tcAuthToken)
+		{
+			$loTwitter = self::getTwitterObject();
+		}
+
+		/**
+		* Gets the current URL
+		**/
+		public static function getURL()
+		{
+			return Yii::app()->createAbsoluteUrl(str_replace(
+						Yii::app()->request->baseUrl, '',
+						Yii::app()->request->requestURI));
+		}
+
+		// TODO: Refactor Bit.ly to separate class
+		/**
+		* Shortens the specified URL using bit.ly
+		**/
+		public static function shortenURL($tcURL, $tcLogin = NULL, $tcAppKey = NULL)
+		{
+			// TODO: Cache and return cached if it exists
+			if ($tcLogin === NULL)
+			{
+				$tcLogin = Yii::app()->params['bit.ly']['login'];
+			}
+			if ($tcAppKey === NULL)
+			{
+				$tcAppKey = Yii::app()->params['bit.ly']['key'];
+			}
+			if (!Utilities::endsWith($tcURL, '/'))
+			{
+				$tcURL.='/';
+			}
+			if (Utilities::startsWith($tcURL, '/'))
+			{
+				$tcURL = substr($tcURL, 1);
+			}
+			if (!Utilities::startsWith($tcURL, 'http'))
+			{
+				$tcURL = Yii::app()->getBaseUrl(true).$tcURL;
+			}
+			$tcURL = 'http://api.bit.ly/v3/shorten?login='.$tcLogin.'&apiKey='.$tcAppKey.'&format=txt&longUrl='.urlencode($tcURL);
+			return @trim(file_get_contents($tcURL));
+		}
+
+		
 	}
 
 ?>

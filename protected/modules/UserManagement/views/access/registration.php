@@ -11,8 +11,8 @@ $this->pageTitle=Yii::app()->name . ' - Register';
 )); ?>
 
     <fieldset>
-        <legend><h1>Register</h1></legend>
-        <p class="note">Fields with <span class="required">*</span> are required.</p>
+        <legend><h1><?php echo Utilities::getString('Register'); ?></h1></legend>
+        <p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
 
         <div class="field">
             <?php echo $form->labelEx($toModel,'email'); ?>
@@ -28,12 +28,12 @@ $this->pageTitle=Yii::app()->name . ' - Register';
         
         <div class="buttons">
             <?php
-             echo CHtml::htmlButton('Register', array('type'=>'submit')); 
+             echo CHtml::htmlButton(Utilities::getString('Register'), array('type'=>'submit')); 
              ?>
         </div>
         <div class="field">
             <label class="note">
-                Clicking 'Register' means that you agree to the<a target="_blank" href="/site/TandC">terms of service</a> and <a href="/site/Privacy" target="_blank">privacy statement</a>.
+                <?php echo Utilities::getString('registration agreement'); ?>
         </label>
 
         <?php if(Yii::app()->user->hasFlash('formMessage')): ?> 

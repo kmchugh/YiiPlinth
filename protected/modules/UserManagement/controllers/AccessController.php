@@ -1,6 +1,6 @@
 <?php
 
-class AccessController extends Controller
+class AccessController extends PlinthController
 {
 	/**
 	 * Declares class-based actions.

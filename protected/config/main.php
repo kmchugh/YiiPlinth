@@ -5,6 +5,9 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'YiiPlinth',
+	'charset'=>'utf-8',
+	'sourceLanguage'=>'00',		// Force translation lookups
+	'language'=>'en',			// Default language is English
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -45,6 +48,7 @@ return array(
 			'connectionString'=>'mysql:host=127.0.0.1;dbname=YiiPlinth',
 			'emulatePrepare'=>true,
 			'charset'=>'utf8',
+			'driverName'=>'PlinthMySQLSchema',
 			'tablePrefix'=> '',
 			),
 		'session'=>array(
