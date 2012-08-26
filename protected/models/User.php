@@ -9,12 +9,11 @@
  * @property string $Email
  * @property string $DisplayName
  * @property string $Password
- * @property integer $Locked
+ * @property boolean $Locked
  * @property string $StartDate
  * @property string $EndDate
  * @property string $LoginCount
  * @property string $LastLoginDate
- * @property integer $Anonymous
  * @property string $CreatedDate
  * @property string $CreatedBy
  * @property string $ModifiedDate
@@ -22,7 +21,7 @@
  * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property UserInfo[] $userInfos
+ * @property UserInfo[] $profile
  * @property Membership[] $memberships
  * @property Session[] $sessions
  */
@@ -51,8 +50,6 @@ class User extends PlinthModel
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('Email, DisplayName', 'required'),
 			array('Email', 'length', 'max'=>255),
@@ -62,7 +59,7 @@ class User extends PlinthModel
 			array('Email', 'email'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Email, DisplayName', 'safe', 'on'=>'search'),
+			array('DisplayName', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,10 +68,8 @@ class User extends PlinthModel
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'userInfos' => array(self::HAS_MANY, 'UserInfo', 'UserID'),
+			'profile' => array(self::HAS_ONE, 'UserInfo', 'UserID'),
 			'memberships' => array(self::HAS_MANY, 'Membership', 'MemberUserID'),
 			'sessions' => array(self::HAS_MANY, 'Session', 'UserID'),
 		);
@@ -111,20 +106,8 @@ class User extends PlinthModel
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('GUID',$this->GUID,true);
-		$criteria->compare('Email',$this->Email,true);
 		$criteria->compare('DisplayName',$this->DisplayName,true);
-		$criteria->compare('Password',$this->Password,true);
-		$criteria->compare('Locked',$this->Locked);
-		$criteria->compare('StartDate',$this->StartDate,true);
-		$criteria->compare('EndDate',$this->EndDate,true);
-		$criteria->compare('LoginCount',$this->LoginCount,true);
-		$criteria->compare('LastLoginDate',$this->LastLoginDate,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

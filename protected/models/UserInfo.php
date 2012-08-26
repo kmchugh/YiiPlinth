@@ -6,8 +6,8 @@
  * The followings are the available columns in table 'UserInfo':
  * @property string $UserInfoID
  * @property string $UserID
+ * @property boolean $NotifyUpdates
  * @property string $Country
- * @property integer $NotifyUpdates
  * @property string $ProfileImageURI
  * @property string $FirstName
  * @property string $LastName
@@ -52,8 +52,6 @@ class UserInfo extends PlinthModel
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
 			array('Country, FirstName, LastName', 'length', 'max'=>255),
@@ -66,9 +64,8 @@ class UserInfo extends PlinthModel
 					'wrongType' => 'Only .png, .gif, .jpg, and .jpeg are allowed',
 					'allowEmpty' => true),
 			array('Description', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('UserInfoID, UserID, Country, ProfileImageURI, Description, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, Rowversion', 'safe', 'on'=>'search'),
+
+			array('Country, Description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,8 +82,6 @@ class UserInfo extends PlinthModel
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
 			'user' => array(self::BELONGS_TO, 'User', 'UserID'),
 		);
@@ -117,21 +112,10 @@ class UserInfo extends PlinthModel
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('UserInfoID',$this->UserInfoID,true);
-		$criteria->compare('UserID',$this->UserID,true);
 		$criteria->compare('Country',$this->Country,true);
-		$criteria->compare('ProfileImageURI',$this->ProfileImageURI,true);
 		$criteria->compare('Description',$this->Description,true);
-		$criteria->compare('CreatedDate',$this->CreatedDate,true);
-		$criteria->compare('CreatedBy',$this->CreatedBy,true);
-		$criteria->compare('ModifiedDate',$this->ModifiedDate,true);
-		$criteria->compare('ModifiedBy',$this->ModifiedBy,true);
-		$criteria->compare('Rowversion',$this->Rowversion,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -1,4 +1,8 @@
 <?php 
+    
+    echo Chtml::link(
+        Utilities::getString('Sign out'), '/logout',
+        array());
 /*
 
     if (Yii::app()->user()-isGuest)

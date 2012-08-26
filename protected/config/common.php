@@ -13,6 +13,7 @@ return array(
         'YIIPlinth.components.*',
         'YIIPlinth.controllers.*',
         'YIIPlinth.extensions.Session.*',
+        'YIIPlinth.extensions.Mail.*',
     ),
 
     'modules'=>array(
@@ -45,6 +46,18 @@ return array(
                 'mysql'=> 'YIIPlinth.components.db.mysql.PlinthMySQLSchema',
                 ),
             'tablePrefix'=> '',
+            ),
+        'mail'=>array(
+            'class'=>'YIIPlinth.extensions.Mail.YiiMail',
+            'transportType' => 'smtp',
+            'transportOptions' => array(
+                'host'=>'smtp.gmail.com',
+                'encryption'=>'ssl',
+                'port'=>465,
+                ),
+            'viewPath'=>'application.views.mail',
+            'logging'=>true,
+            'dryRun' => false,
             ),
         'urlManager'=>array(
             'urlFormat'=>'path',

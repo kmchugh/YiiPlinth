@@ -19,16 +19,11 @@ class RegistrationForm extends CFormModel
     {
         return array(
             // username and password are required
-            array('email, email_repeat', 'required'),
-            array('email, email_repeat', 'length', 'max'=>255),
-            array('email', 'compare'),
             array('email', 'email'),
+            array('email, email_repeat', 'required'),
+            array('email', 'length', 'max'=>255),
+            array('email_repeat', 'compare', 'compareAttribute'=>'email'),
             array('email', 'unique', 'className'=>'User', 'attributeName'=>'Email'),
-
-
-            
-            // User name must be formatted as an email address
-            //array('email', 'email'),
         );
     }
 
@@ -59,7 +54,7 @@ class RegistrationForm extends CFormModel
                 'Email' => $this->email, 
                 'DisplayName' => substr($this->email, 0, strpos($this->email, '@')), 
                 'StartDate' => Utilities::getTimeStamp(),
-                ));
+                ), false);
             $loUser->resetPassword($lcPassword);
             if ($loUser->save())
             {
