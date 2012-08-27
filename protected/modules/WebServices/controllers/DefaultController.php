@@ -1,10 +1,5 @@
 <?php
-
-
-// TODO: Refactor all of this.  Possibly create a model over a view?
-
-
-class WSController extends PlinthController
+class DefaultController extends PlinthController
 {
 	private $format = 'json';
 

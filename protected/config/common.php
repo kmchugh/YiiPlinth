@@ -34,6 +34,9 @@ return array(
             ),
         'Messaging',
         'MailChimp',
+        'WS'=>array(
+            'class'=>'YIIPlinth.modules.WebServices.WebServiceModule',
+            ),
     ),
 
     // application components
@@ -65,16 +68,18 @@ return array(
             'rules'=>array(
                 // TODO: Make 'WS' configurable
                 // Web Service Interface
-                array('WS/list', 'pattern'=>'WS/<model:\w+>', 'verb'=>'GET'),
-                array('WS/view', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
-                array('WS/view', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'GET'),
-                array('WS/update', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'PUT'),
-                array('WS/update', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'PUT'),
-                array('WS/create', 'pattern'=>'WS/<model:\w+>/', 'verb'=>'POST'),
-                array('WS/delete', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'DELETE'),
-                array('WS/delete', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'DELETE'),
+                array('WS/default/list', 'pattern'=>'WS/<model:\w+>', 'verb'=>'GET'),
+                array('WS/default/view', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
+                array('WS/default/view', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'GET'),
+                array('WS/default/update', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'PUT'),
+                array('WS/default/update', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'PUT'),
+                array('WS/default/create', 'pattern'=>'WS/<model:\w+>/', 'verb'=>'POST'),
+                array('WS/default/delete', 'pattern'=>'WS/<model:\w+>/<id:\d+>', 'verb'=>'DELETE'),
+                array('WS/default/delete', 'pattern'=>'WS/<model:\w+>/<guid:\w+>', 'verb'=>'DELETE'),
 
                 // Default action
+                //'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
                 'caseSensitive'=>false,
                 ),
