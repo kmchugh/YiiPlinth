@@ -114,7 +114,7 @@ class DefaultController extends PlinthController
 			$loModel = NULL;
 
 			$loUser = Yii::app()->user;
-			$lcUser = Yii::app()->user->getState('GUID');
+			$lcUser = Yii::app()->user->GUID;
 
 			$lcModelName = strtolower($lcModelName);
 			if ($lcModelName === 'stream')
@@ -224,7 +224,7 @@ class DefaultController extends PlinthController
 								'EndDate IS NULL AND StreamID=:streamID AND ListenerGUID=:listenerGUID',
 								array(':streamID'=>$loStream->StreamID,
 									':listenerGUID'=>!Yii::app()->user->isGuest ? 
-								Yii::app()->user->getState('GUID') : 
+								Yii::app()->user->GUID: 
 								Yii::app()->getSession()->sessionID));
 			}
 			else

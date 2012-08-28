@@ -395,7 +395,7 @@
 			if (!$tlConnectAsConsumer)
 			{
 				// Update the user information
-				$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+				$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 				if (!is_null($loAuthUser))
 				{
 					$_SESSION['twitter_token'] = $loAuthUser->Token;
@@ -451,7 +451,7 @@
 		public static function sendTweet($tcMessage)
 		{
 			// Only if the user is linked to a twitter account
-			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 			if (!is_null($loAuthUser))
 			{
 				$loTwitter = self::getTwitterObject(NULL, FALSE);
@@ -465,7 +465,7 @@
 		public static function getTwitterUser($toTwitterObject = NULL)
 		{
 			// Update the user information
-			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->getState('GUID'), 'Provider'=>'Twitter'));
+			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 
 			if (is_null($loAuthUser) && !is_null($toTwitterObject))
 			{
@@ -479,7 +479,7 @@
 
 				if ($loUserInfo != NULL)
 				{
-					$loUser = User::model()->findByAttributes(array('GUID'=>Yii::app()->user->getState('GUID')));
+					$loUser = User::model()->findByAttributes(array('GUID'=>Yii::app()->user->GUID));
 
 					$loAuthUser = new OAuthUser();
 					$loAuthUser->Provider='Twitter';
