@@ -16,25 +16,24 @@ class PlinthDBSession extends CDbHttpSession
 	**/
 	protected function createSessionTable($toDB, $tcTableName)
 	{
-	   $lcSQL="CREATE TABLE IF NOT EXISTS `{$tcTableName}` (
-          `SessionID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-		  `GUID` varchar(40) NOT NULL,
-		  `IPAddress` varchar(40) NOT NULL,
-		  `Data` text,
-		  `UserAgent` varchar(512) NOT NULL,
-		  `UserID` bigint(20) unsigned DEFAULT NULL,
-		  `Expires` bigint(20) unsigned NOT NULL,
-		  `CreatedDate` bigint(20) unsigned NOT NULL,
-		  `CreatedBy` varchar(40) NOT NULL,
-		  `ModifiedDate` bigint(20) unsigned NOT NULL,
-		  `ModifiedBy` varchar(40) NOT NULL,
-		  `Rowversion` bigint(20) unsigned NOT NULL,
-		  PRIMARY KEY (`SessionID`),
-		  UNIQUE KEY `guid` (`GUID`),
-		  KEY `FK_Session_UserID` (`UserID`),
-		  CONSTRAINT `FK_Session_UserID` FOREIGN KEY (`UserID`) REFERENCES `User` (`UserID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-		$toDB->createCommand($lcSQL)->execute();
+
+		$toDB->createTable("{{$tcTableName}}",
+			array(
+				'SessionID'=>'pk',
+				'GUID'=>'guid',
+				'IPAddress'=>'string',
+				'Data'=>'text',
+				'UserAgent'=>'long_string',
+				'UserID'=>'id',
+				'Expires'=>'datetime',
+				'CreatedDate'=>'datetime',
+				'CreatedBy'=>'guid',
+				'ModifiedDate'=>'datetime',
+				'ModifiedBy'=>'guid',
+				'Rowversion'=>'datetime',
+				));
+		$this->addForeignKey('FK_{{$tcTableName}}_UserID', '{{tcTableName}}', 'UserID',
+					'{{User}}', 'UserID', 'NO ACTION', 'NO ACTION');
 	}
 
 	/**
@@ -60,6 +59,7 @@ class PlinthDBSession extends CDbHttpSession
 		$loSession = null;
 		try
 		{
+			$loSession = NULL;
 			// The session is being read which means it is active, so set the timeout appropriately
 			$loSession = Session::model()->findByAttributes(array('GUID' => $tcSessionID));
 			$loSession->Expires = Utilities::scientificToLong(Utilities::getTimestamp() + ($this->getTimeout() * 1000));
