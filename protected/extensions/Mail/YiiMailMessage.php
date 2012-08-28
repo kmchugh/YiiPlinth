@@ -139,8 +139,33 @@ class YiiMailMessage extends CComponent {
 			// renderPartial won't work with CConsoleApplication, so use 
 			// renderInternal - this requires that we use an actual path to the 
 			// view rather than the usual alias
-			$viewPath = Yii::getPathOfAlias(Yii::app()->mail->viewPath.'.'.$this->view).'.php';
-			$body = $controller->renderInternal($viewPath, array_merge($body, array('mail'=>$this)), true);	
+			
+			// TODO: Make all of this configurable
+			$lcLayout = 'mail';
+			if (!is_null(Yii::app()->getTheme()))
+			{
+				$lcThemeLayout = Yii::app()->getTheme()->getBasePath().DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'layouts'.DIRECTORY_SEPARATOR.$lcLayout.'.php';
+				$lcThemeView = Yii::app()->getTheme()->getBasePath().DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'mail'.DIRECTORY_SEPARATOR.$this->view.'.php';
+			}
+			$lcAppLayout = Yii::getPathOfAlias('application.views.layouts').DIRECTORY_SEPARATOR.$lcLayout.'.php';
+			$lcAppView = Yii::getPathOfAlias('application.views.mail').DIRECTORY_SEPARATOR.$this->view.'.php';
+			$lcPlinthLayout = Yii::getPathOfAlias('YIIPlinth.views.layouts').DIRECTORY_SEPARATOR.$lcLayout.'.php';
+			$lcPlinthView = Yii::getPathOfAlias('YIIPlinth.views.mail').DIRECTORY_SEPARATOR.$this->view.'.php';
+
+			$lcLayoutFile = file_exists($lcThemeLayout) ? $lcThemeLayout :
+				(file_exists($lcAppLayout) ? $lcAppLayout : (
+					file_exists($lcPlinthLayout) ? $lcPlinthLayout : NULL));
+
+			$lcViewFile = file_exists($lcThemeView) ? $lcThemeView :
+				(file_exists($lcAppView) ? $lcAppView : (
+					file_exists($lcPlinthView) ? $lcPlinthView : NULL));
+
+			$laData =  array_merge(array('subject'=>$this->subject),
+					$body,
+					array('mail'=>$this));
+
+			$laData['content'] = $controller->renderInternal($lcViewFile, $laData, true);
+			$body = $controller->renderInternal($lcLayoutFile, $laData, true);
 		}
 		return $this->message->setBody($body, $contentType, $charset);
 	}

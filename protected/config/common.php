@@ -58,9 +58,20 @@ return array(
                 'encryption'=>'ssl',
                 'port'=>465,
                 ),
-            'viewPath'=>'application.views.mail',
+            'viewPath'=>'mail',
             'logging'=>true,
             'dryRun' => false,
+            ),
+        'authManager'=>array(
+            'class'=>'CDbAuthManager',
+            'connectionID'=>'db',
+            ),
+        'session'=>array(
+            'sessionName'=>'PHPSESSID',
+            'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
+            'connectionID'=>'db',
+            'sessionTableName'=>'Session',
+            'timeout'=>1440,
             ),
         'urlManager'=>array(
             'urlFormat'=>'path',

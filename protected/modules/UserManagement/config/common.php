@@ -4,12 +4,16 @@
 */
 return array(
 	'components'=>array(
+		'user'=>array(
+			'class'=>'UserManagement.components.PlinthWebUser',
+			'loginUrl'=>'/login',
+			),
 		'urlManager'=>array(
 			'rules'=>array(
 				'/(site/)?login'=>'UserManagement/access/Login',
 				'/(site/)?logout'=>'UserManagement/access/Logout',
-				'/passwordReset'=>'UserManagement/access/PasswordReset',
-				'/register'=>'UserManagement/access/Register',
+				'/(site/)?passwordReset'=>'UserManagement/access/PasswordReset',
+				'/(site/)?register'=>'UserManagement/access/Register',
 				),
 			),
 	),

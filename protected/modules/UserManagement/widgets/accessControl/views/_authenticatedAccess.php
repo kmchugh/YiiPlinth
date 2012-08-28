@@ -1,33 +1,21 @@
-<?php 
-    
-    echo Chtml::link(
-        Utilities::getString('Sign out'), '/logout',
-        array());
-/*
-
-    if (Yii::app()->user()-isGuest)
-    {
-
-    }
-    else
-    {
-
-    }
-    array('label'=>'sign in', 
-                        'url'=>array('/login'),
-                        'visible'=>Yii::app()->user->isGuest),
-                array('label'=>Yii::app()->user->getState('DisplayName'),
-                        'template'=>'<div class="thumbMenu"><img class="thumb" src="'.$lcUserProfile.'"/>{menu}</div>',
-                        'items'=>array(
-                            array('label'=>'profile', 'url'=>'/userProfile/update/guid/'.Yii::app()->user->getState('GUID')),
-                            array('label'=>'my streams', 'url'=>'/stream/index'),
-                            array('label'=>'sign out', 'url'=>'/logout'),
-                            ), 
-                        'visible'=>!Yii::app()->user->isGuest),
-                array('label'=>'register', 
-                        'url'=>array('/site/registration'),
-                        'visible'=>Yii::app()->user->isGuest),
-                         */
-
-?>
-AUTHENTICATED
+<ul>
+    <li>
+        <a href="<?php echo Yii::app()->controller->createURL('/userProfile/update/guid/'.Yii::app()->user->GUID); ?>">
+            <img class="thumb" src="<?php echo Yii::app()->user->getProfileImageURI(); ?>"/>
+            <span class="userProfile"><?php echo Yii::app()->user->DisplayName; ?></span>
+        </a>
+        <?php
+            if (isset($this->submenu))
+            {
+                echo '<ul>';
+                foreach ($this->submenu as $lcText => $lcLink) 
+                {
+                    echo '<li>';
+                    echo Chtml::link(Utilities::getString($lcText), $lcLink, array());
+                    echo '</li>';
+                }
+                echo '</ul>';
+            }
+         ?>
+    </li>
+</ul>

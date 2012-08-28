@@ -1,6 +1,6 @@
 <?php
 
-class UserProfile extends CFormModel
+class UserProfileForm extends CFormModel
 {
 	public $email;
 	public $displayName;
@@ -24,6 +24,7 @@ class UserProfile extends CFormModel
 
 		$loReturn->setUser(User::model()->findByAttributes(array('GUID' => $tcGUID)));
 
+		
 		// The user model is required
 		return $loReturn->m_oUser === null ? null : $loReturn;
 	}

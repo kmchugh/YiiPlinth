@@ -53,13 +53,6 @@ return array(
 				),
 			'tablePrefix'=> '',
 			),
-		'session'=>array(
-			'sessionName'=>'PHPSESSID',
-			'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
-			'connectionID'=>'db',
-			'sessionTableName'=>'Session',
-			'timeout'=>1440,
-			),
 	),
 
 	'controllerMap'=>array(
