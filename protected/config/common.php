@@ -3,6 +3,9 @@
 * This is the default configuration for a YiiPlinth application.
 */
 return array(
+
+    'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name'=>'YiiPlinth',
     'charset'=>'utf-8',
     'sourceLanguage'=>'00',     // Force translation lookups
     'language'=>'en',           // Default language is English
@@ -96,4 +99,5 @@ return array(
                 ),
             ),
     ),
+
 );
