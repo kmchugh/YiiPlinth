@@ -40,7 +40,7 @@ class AccessController extends PlinthController
 				// If this is a mobile request, don't sent do the page
 				if (isset($_REQUEST['requestType']) && $_REQUEST['requestType'] === 'mobile')
 				{
-					$this->redirect(array('/','requestType'=>'mobile'));
+					$this->redirect('/?requestType=mobile');
 				}
 				$this->redirect(Yii::app()->user->returnUrl);
 			}

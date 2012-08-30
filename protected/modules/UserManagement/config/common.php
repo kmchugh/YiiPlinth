@@ -10,10 +10,17 @@ return array(
 			),
 		'urlManager'=>array(
 			'rules'=>array(
-				'/(site/)?login'=>'UserManagement/access/Login',
-				'/(site/)?logout'=>'UserManagement/access/Logout',
-				'/(site/)?passwordReset'=>'UserManagement/access/PasswordReset',
-				'/(site/)?register'=>'UserManagement/access/Register',
+				'/login'=>'UserManagement/access/Login',
+				'/site/login'=>'UserManagement/access/Login',
+
+				'/logout'=>'UserManagement/access/Logout',
+				'/site/logout'=>'UserManagement/access/Logout',
+
+				'/passwordReset'=>'UserManagement/access/PasswordReset',
+				'/site/passwordReset'=>'UserManagement/access/PasswordReset',
+
+				'/register'=>'UserManagement/access/Register',
+				'/site/register'=>'UserManagement/access/Register',
 				),
 			),
 	),
