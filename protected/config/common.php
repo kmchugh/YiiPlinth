@@ -38,6 +38,12 @@ return array(
 
     // application components
     'components'=>array(
+        'session'=>array(
+            'sessionName'=>'PHPSESSID',
+            'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
+            'connectionID'=>'db',
+            'sessionTableName'=>'Session'
+            ),
         'db'=>array(
             'connectionString'=>'mysql:host=127.0.0.1;dbname=YiiPlinth',
             'emulatePrepare'=>true,
