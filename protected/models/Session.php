@@ -116,10 +116,7 @@ class Session extends PlinthModel
 	{
 		$this->IPAddress = Yii::app()->request->getUserHostAddress();
 		$this->UserAgent = Yii::app()->request->getUserAgent();
-
 		$loUser = Yii::app()->user;
-
-
 		$this->UserID = !is_null($loUser) ? $loUser->id : NULL;
 
 		return parent::beforeValidate();

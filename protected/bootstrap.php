@@ -54,7 +54,6 @@
 				$loModuleConfig = Utilities::mergeIncludedArray($laModuleConfig);
 				$loConfig = Utilities::override($loConfig, $loModuleConfig);
 			}
-
 			if ($llConsole)
 			{
 				self::startConsole($lcYII, $loConfig);

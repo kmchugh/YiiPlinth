@@ -20,6 +20,8 @@ class PlinthMySQLSchema extends CMysqlSchema
         'description'=>'varchar(500) NULL',
         'string' => 'varchar(255) NOT NULL',
         'string_null'=>'varchar(255) NULL',
+        'long_string' => 'varchar(1024) NOT NULL',
+        'long_string_null'=>'varchar(1024) NULL',
         'uri'=>'varchar(1024) NOT NULL',
         'uri_null'=>'varchar(1024) NULL',
         'text' => 'text',

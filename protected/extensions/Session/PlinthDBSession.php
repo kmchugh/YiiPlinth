@@ -14,17 +14,19 @@ class PlinthDBSession extends CDbHttpSession
 	/**
 	* Creates the session table if it does not already exist
 	**/
-	protected function createSessionTable($toDB, $tcTableName)
+	protected function createSessionTable()
 	{
-
-		$toDB->createTable("{{$tcTableName}}",
+		$loDB = $this->getDbConnection();
+		$lcTableName = $this->sessionTableName;
+		$loCommand = $loDB->createCommand();
+		$loCommand->createTable("{$lcTableName}",
 			array(
 				'SessionID'=>'pk',
 				'GUID'=>'guid',
 				'IPAddress'=>'string',
 				'Data'=>'text',
 				'UserAgent'=>'long_string',
-				'UserID'=>'id',
+				'UserID'=>'id_null',
 				'Expires'=>'datetime',
 				'CreatedDate'=>'datetime',
 				'CreatedBy'=>'guid',
@@ -32,8 +34,9 @@ class PlinthDBSession extends CDbHttpSession
 				'ModifiedBy'=>'guid',
 				'Rowversion'=>'datetime',
 				));
-		$this->addForeignKey('FK_{{$tcTableName}}_UserID', '{{tcTableName}}', 'UserID',
-					'{{User}}', 'UserID', 'NO ACTION', 'NO ACTION');
+
+		$loCommand->addForeignKey('FK_'.$lcTableName.'_UserID',  "{$lcTableName}", 'UserID',
+					"{{User}}", 'UserID', 'NO ACTION', 'NO ACTION');
 	}
 
 	/**
@@ -60,9 +63,13 @@ class PlinthDBSession extends CDbHttpSession
 		try
 		{
 			$loSession = NULL;
-			// The session is being read which means it is active, so set the timeout appropriately
-			$loSession = Session::model()->findByAttributes(array('GUID' => $tcSessionID));
-			$loSession->Expires = Utilities::scientificToLong(Utilities::getTimestamp() + ($this->getTimeout() * 1000));
+			if (Utilities::entityExists($this->getDbConnection(), $this->sessionTableName))
+			{
+				// The session is being read which means it is active, so set the timeout appropriately
+				$loSession = Session::model()->findByAttributes(array('GUID' => $tcSessionID));
+				$loSession->Expires = Utilities::scientificToLong(Utilities::getTimestamp() + ($this->getTimeout() * 1000));
+			}
+
 		}
 		catch(Exception $ex)
 		{
@@ -78,7 +85,7 @@ class PlinthDBSession extends CDbHttpSession
 	{
 		if ($this->autoCreateSessionTable && !Utilities::entityExists($this->getDbConnection(), $this->sessionTableName))
 		{
-			$this->createSessionTable($loDB,$this->sessionTableName);
+			$this->createSessionTable($this->getDbConnection(),$this->sessionTableName);
 		}
 		return $this->autoCreateSessionTable;
 	}
@@ -94,6 +101,7 @@ class PlinthDBSession extends CDbHttpSession
 		if($this->ensureTableExists())
 		{
 			$loSession = Session::model()->findByAttributes(array('GUID' => $tcSessionID));
+
 			if (is_null($loSession))
 			{
 				$loSession = new Session;
