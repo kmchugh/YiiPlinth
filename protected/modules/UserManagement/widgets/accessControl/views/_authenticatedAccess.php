@@ -11,7 +11,7 @@
                 foreach ($this->submenu as $lcText => $lcLink) 
                 {
                     echo '<li>';
-                    echo Chtml::link(Utilities::getString($lcText), $lcLink, array());
+                    echo PlinthHTML::link(Utilities::getString($lcText), $lcLink, array());
                     echo '</li>';
                 }
                 echo '</ul>';

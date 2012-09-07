@@ -508,6 +508,16 @@
 						Yii::app()->request->requestURI));
 		}
 
+		/**
+		 * Checks if the current url is the same as tcURL
+		 * @param  String the url to compare
+		 * @return boolean        true if $tcURL points to the currently processing page
+		 */
+		public static function isCurrentURL($tcURL)
+		{
+			return Yii::app()->createUrl(Yii::app()->getController()->getRoute()) === $tcURL;
+		}
+
 		// TODO: Refactor Bit.ly to separate class
 		/**
 		* Shortens the specified URL using bit.ly

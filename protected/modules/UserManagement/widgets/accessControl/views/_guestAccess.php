@@ -1,11 +1,19 @@
 <?php 
+    $lcLoginURL = "/login";
+    $lcRegisterURL = "/register";
 
-    echo Chtml::link(
-        //Utilities::getString('Sign in'), '/login',
-        Utilities::getString('Sign in'), '/login',
-        array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
+    if (!Utilities::isCurrentURL($lcLoginURL))
+    {
+	    echo PlinthHTML::link(
+	        Utilities::getString('Sign in'), $lcLoginURL,
+	        array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
+    }
 
-    echo Chtml::link(
-        Utilities::getString('Register'), '/register',
-        array());
+    if (!Utilities::isCurrentURL($lcRegisterURL))
+    {
+    	echo PlinthHTML::link(
+        	Utilities::getString('Register'), $lcRegisterURL,
+        	array());
+    }
+     
 ?>

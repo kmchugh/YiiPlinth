@@ -69,6 +69,8 @@ return array(
             'urlFormat'=>'path',
             'showScriptName'=>false,
             'rules'=>array(
+                '/'=>'site/index',
+
                 // Default action
                 //'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
                 ),
