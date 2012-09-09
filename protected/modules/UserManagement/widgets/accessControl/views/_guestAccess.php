@@ -13,7 +13,7 @@
     {
     	echo PlinthHTML::link(
         	Utilities::getString('Register'), $lcRegisterURL,
-        	array());
+        	array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
     }
      
 ?>
