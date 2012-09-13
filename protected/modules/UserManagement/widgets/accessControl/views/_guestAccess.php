@@ -6,14 +6,14 @@
     {
 	    echo PlinthHTML::link(
 	        Utilities::getString('Sign in'), $lcLoginURL,
-	        array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
+	        array());//array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
     }
 
     if (!Utilities::isCurrentURL($lcRegisterURL))
     {
     	echo PlinthHTML::link(
         	Utilities::getString('Register'), $lcRegisterURL,
-        	array());
+        	array('dromos-module'=>'ajaxLink/dromos.ajaxLink'));
     }
      
 ?>
