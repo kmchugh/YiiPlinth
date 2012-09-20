@@ -6,17 +6,18 @@
  */
 class AccessControl extends CWidget
 {
-	public $submenu;
+    public $submenu;
+    public $ajaxLink = true;
 
-	public function init()
-	{
+    public function init()
+    {
 
-	}
+    }
 
-	public function run()
-	{
-		$this->render('accessControl');
-	}
+    public function run()
+    {
+    	$this->render('accessControl');
+    }
 }
 
 ?>

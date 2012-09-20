@@ -231,7 +231,7 @@
 			{
 				return $tcFileName;
 			}
-			
+
 			if (!$tcCaseSensitive)
 			{
 				$lcDir = dirname($tcFileName);
@@ -515,7 +515,7 @@
 		 */
 		public static function isCurrentURL($tcURL)
 		{
-			return Yii::app()->createUrl(Yii::app()->getController()->getRoute()) === $tcURL;
+			return Yii::app()->request->requestURI === $tcURL || Yii::app()->createUrl(Yii::app()->getController()->getRoute()) === $tcURL;
 		}
 
 		// TODO: Refactor Bit.ly to separate class

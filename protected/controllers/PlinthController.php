@@ -6,6 +6,8 @@
  */
 class PlinthController extends Controller
 {
+	private $m_aProperties;
+
 	/**
 	 * Initialises the Controller and sets the user language for this controller
 	 */
@@ -21,11 +23,67 @@ class PlinthController extends Controller
 		Yii::app()->language = isset(Yii::app()->session['_lang']) ?  Yii::app()->session['_lang'] : Yii::app()->request->getPreferredLanguage();
 	}
 
+	/**
+	 * Sets the property specified by tcName to the value taValue.  This value
+	 * can only be retrieved by getProeprty
+	 * @param String $tcName the property to set
+	 * @param String $toValue the value of the property
+	 */
+	public function setProperty($tcName, $toValue)
+	{
+		if (!isset($this->m_aProperties))
+		{
+			$this->m_aProperties = array();
+		}
+		$this->m_aProperties[$tcName] = $toValue;
+	}
+
+	/**
+	 * Checks if a property has been set
+	 * @param  String $tcName the property to check
+	 * @return boolean   true if the property has been set
+	 */
+	public function hasProperty($tcName)
+	{
+		return isset($this->m_aProperties) && isset($this->m_aProperties[$tcName]);
+	}
+
+	/**
+	 * Gets the value that has been set, if a value has not been set then this will
+	 * return null
+	 * @param  String $tcName the property to retrieve the value for
+	 * @return variable the value that had been stored
+	 */
+	public function getProperty($tcName)
+	{
+		return isset($this->m_aProperties[$tcName]) ?  $this->m_aProperties[$tcName] : NULL;
+	}
+
+	/**
+	 * Clears a property, this will unset the property 
+	 * @param  String $tcName the name of the property to clear
+	 */
+	public function clearProperty($tcName)
+	{
+		if (isset($this->m_aProperties))
+		{
+			unset($this->m_aProperties[$tcName]);
+		}
+	}
+
+	/**
+	 * Checks if this request was an ajax request
+	 * @return boolean true if this is an ajax request, false otherwise
+	 */
 	protected function isAjaxRequest()
 	{
 		return Yii::app()->request->isAjaxRequest;
 	}
 
+	/**
+	 * Checks if this Controller can support ajax requests
+	 * @return boolean true if this controller can support an ajax request
+	 */
 	protected function supportsAjaxRequest()
 	{
 		return true;
