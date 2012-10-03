@@ -44,16 +44,6 @@
     <script type="text/javascript" charset="UTF-8" async="true">
         document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
     </script>
-
-    <!-- TODO: Make the Google Analytics module -->
-    <script type="text/javascript">
-        /*
-            var _gaq=[['_setAccount','UA-31055791-1'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-         */
-    </script>
 </body>
 
 </html>
