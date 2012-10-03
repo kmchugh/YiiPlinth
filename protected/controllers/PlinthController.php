@@ -123,6 +123,82 @@ class PlinthController extends Controller
 			return parent::render($tcView, $taData, $tlReturn);
 		}
 	}
+
+	/**
+	 * Finds a view file based on its name.
+	 * The view name can be in one of the following formats:
+	 * <ul>
+	 * <li>absolute view within a module: the view name starts with a single slash '/'.
+	 * In this case, the view will be searched for under the currently active module's view path.
+	 * If there is no active module, the view will be searched for under the application's view path.</li>
+	 * <li>absolute view within the application: the view name starts with double slashes '//'.
+	 * In this case, the view will be searched for under the application's view path.
+	 * This syntax has been available since version 1.1.3.</li>
+	 * <li>aliased view: the view name contains dots and refers to a path alias.
+	 * The view file is determined by calling {@link YiiBase::getPathOfAlias()}. Note that aliased views
+	 * cannot be themed because they can refer to a view file located at arbitrary places.</li>
+	 * <li>relative view: otherwise. Relative views will be searched for under the currently active
+	 * controller's view path.</li>
+	 * </ul>
+	 * For absolute view and relative view, the corresponding view file is a PHP file
+	 * whose name is the same as the view name. The file is located under a specified directory.
+	 * This method will call {@link CApplication::findLocalizedFile} to search for a localized file, if any.
+	 * @param string $viewName the view name
+	 * @param string $viewPath the directory that is used to search for a relative view name
+	 * @param string $basePath the directory that is used to search for an absolute view name under the application
+	 * @param string $moduleViewPath the directory that is used to search for an absolute view name under the current module.
+	 * If this is not set, the application base view path will be used.
+	 * @return mixed the view file path. False if the view file does not exist.
+	*/
+	public function resolveViewFile($tcViewName,$tcViewPath,$tcBasePath,$tcModuleViewPath=null)
+	{
+		if(empty($tcViewName))
+		{
+			return false;
+		}
+
+		if($tcModuleViewPath===null)
+		{
+			$tcModuleViewPath=$tcBasePath;
+		}
+
+		$lcExtension = (($lcRenderer=Yii::app()->getViewRenderer())!==null) ?
+			$lcExtension=$lcRenderer->fileExtension :
+			$lcExtension='.php';
+
+		if($tcViewName[0]==='/')
+		{
+			$lcViewFile = (strncmp($tcViewName,'//',2)===0) ?
+				(($lcExtension==='.php' ?
+						!is_file($tcBasePath.$tcViewName.$lcExtension) :
+						!is_file($tcBasePath.$tcViewName.'.php')) ?
+							YiiBase::getPathOfAlias('YIIPlinth.views.'.$tcViewName) :
+							$tcBasePath.$tcViewName) :
+			$tcModuleViewPath.$tcViewName;
+		}
+		else if(strpos($tcViewName,'.'))
+		{
+			$lcViewFile=Yii::getPathOfAlias($tcViewName);
+		}
+		else
+		{
+			$lcViewFile=$tcViewPath.DIRECTORY_SEPARATOR.$tcViewName;
+		}
+
+
+		if(is_file($lcViewFile.$lcExtension))
+		{
+			return Yii::app()->findLocalizedFile($lcViewFile.$lcExtension);
+		}
+		else if($lcExtension!=='.php' && is_file($lcViewFile.'.php'))
+		{
+			return Yii::app()->findLocalizedFile($lcViewFile.'.php');
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 ?>
