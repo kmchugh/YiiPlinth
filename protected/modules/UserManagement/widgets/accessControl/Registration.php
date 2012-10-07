@@ -37,6 +37,7 @@ class Registration extends CWidget
                 $this->redirect('login');
             }
         }
+
         // display the login form
         $this->render('registration',array('toModel'=>$loModel, 'tcFormName'=>$lcFormName));
     }

@@ -95,6 +95,6 @@ class AccessController extends PlinthController
 	 */
 	public function actionRegister()
 	{
-		$this->widget('UserManagement.widgets.accessControl.Registration');
+		$this->render('registration');
 	}
 }
