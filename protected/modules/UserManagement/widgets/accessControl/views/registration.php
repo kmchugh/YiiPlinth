@@ -1,7 +1,3 @@
-<?php
-$this->pageTitle=Yii::app()->name . ' - Register';
-?>
-
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id'=>$tcFormName,
     'enableClientValidation'=>true,
@@ -25,7 +21,7 @@ $this->pageTitle=Yii::app()->name . ' - Register';
             <?php echo $form->textField($toModel,'email_repeat'); ?>
             <?php echo $form->error($toModel,'email_repeat'); ?>
         </div>
-        
+
         <div class="buttons">
             <?php
              echo CHtml::htmlButton(Utilities::getString('Register'), array('type'=>'submit')); 
