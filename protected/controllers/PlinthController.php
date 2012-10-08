@@ -24,6 +24,18 @@ class PlinthController extends Controller
 	}
 
 	/**
+	 * This method is invoked right before an action is to be executed (after all possible filters.)
+	 * You may override this method to do last-minute preparation for the action.
+	 * @param CAction $action the action to be executed.
+	 * @return boolean whether the action should be executed.
+	 */
+	protected function beforeAction($action)
+	{
+		$this->layout = LayoutMapManager::getLayout($this);
+		return true;
+	}
+
+	/**
 	 * Sets the property specified by tcName to the value taValue.  This value
 	 * can only be retrieved by getProeprty
 	 * @param String $tcName the property to set
