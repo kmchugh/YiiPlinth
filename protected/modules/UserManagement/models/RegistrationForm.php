@@ -52,7 +52,7 @@ class RegistrationForm extends CFormModel
             $loUser->setAttributes(
                 array(
                 'Email' => $this->email, 
-                'DisplayName' => substr($this->email, 0, strpos($this->email, '@')), 
+                'DisplayName' => substr($this->email, 0, strpos($this->email, '@')),
                 'StartDate' => Utilities::getTimeStamp(),
                 ), false);
             $loUser->resetPassword($lcPassword);
@@ -60,9 +60,10 @@ class RegistrationForm extends CFormModel
             {
                 // Send the user an email
                 $loEmail = new YiiMailMessage;
-                $loEmail->view = 'userRegistration';
+                $loEmail->view = '//mail/userRegistration';
+                $loEmail->layout = '//layouts/mail';
                 $loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-                $loEmail->subject = 'YouCommentate - Call it as you see it.';
+                $loEmail->subject = 'Welcome to YouCommentate.  Time to start calling it as you see it!';
                 $loEmail->addTo($loUser->Email);
                 $loEmail->from = Yii::app()->params['adminEmail'];
                 Yii::app()->mail->send($loEmail);

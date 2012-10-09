@@ -34,7 +34,7 @@ class Registration extends CWidget
             if($loModel->validate() && $loModel->register())
             {
                 Yii::app()->user->setFlash('formMessage', 'An email has been sent to '.$loModel->email.' with your account details');
-                $this->redirect('login');
+                Yii::app()->getController()->redirect('/login');
             }
         }
 

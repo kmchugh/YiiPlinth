@@ -33,8 +33,8 @@
 * 	<li>attach(Swift_Attachment::fromPath('my-document.pdf'))</li>
 * </ul>
 */
-class YiiMailMessage extends CComponent {
-	
+class YiiMailMessage extends CComponent 
+{
 	/**
 	* @var string the view to use for rendering the body, null if no view is 
 	* used.  An extra variable $mail will be passed to the view .which you may 
@@ -46,6 +46,12 @@ class YiiMailMessage extends CComponent {
 	* @var Swift_Mime_Message
 	*/
 	public $message;
+
+	/**
+	 * Default layout to use for email messages
+	 * @var string the layout to use
+	 */
+	public $layout = 'email';
 
 	/**
 	* Any requests to set or get attributes or call methods on this class that 
@@ -77,7 +83,7 @@ class YiiMailMessage extends CComponent {
 			if(method_exists($this->message, $setter))
 				$this->message->$setter($value);
 			else
-				throw $e;		
+				throw $e;
 		}
 	}
 
@@ -125,48 +131,100 @@ class YiiMailMessage extends CComponent {
 	* @param string content type optional. For html, set to 'html/text'
 	* @param string charset optional
 	*/
-	public function setBody($body = '', $contentType = null, $charset = null) {
-		if ($this->view !== null) {
-			if (!is_array($body)) $body = array('body'=>$body);
-			
-			// if Yii::app()->controller doesn't exist create a dummy 
-			// controller to render the view (needed in the console app)
-			if(isset(Yii::app()->controller))
-				$controller = Yii::app()->controller;
-			else
-				$controller = new CController('YiiMail');
-			
+	public function setBody($tcBody = '', $tcContentType = null, $tcCharset = null)
+	{
+		if ($this->view !== null)
+		{
+			if (!is_array($tcBody)) 
+			{
+				$tcBody = array('body'=>$tcBody);
+			}
+
+			// Create a dummy controller if needed
+			$loController = isset(Yii::app()->controller) ?
+						Yii::app()->controller :
+						new PlinthController('YiiMail');
+
+			$lcLayoutFile = $loController->getLayoutFile($this->layout);
+			$lcViewFile = $this->resolveViewFile($loController, $this->view);
+
+			$laData =  array_merge(array('subject'=>$this->subject),
+					$tcBody,
+					array('mail'=>$this));
+
 			// renderPartial won't work with CConsoleApplication, so use 
 			// renderInternal - this requires that we use an actual path to the 
 			// view rather than the usual alias
-			
-			// TODO: Make all of this configurable
-			$lcLayout = 'mail';
-			if (!is_null(Yii::app()->getTheme()))
-			{
-				$lcThemeLayout = Yii::app()->getTheme()->getBasePath().DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'layouts'.DIRECTORY_SEPARATOR.$lcLayout.'.php';
-				$lcThemeView = Yii::app()->getTheme()->getBasePath().DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'mail'.DIRECTORY_SEPARATOR.$this->view.'.php';
-			}
-			$lcAppLayout = Yii::getPathOfAlias('application.views.layouts').DIRECTORY_SEPARATOR.$lcLayout.'.php';
-			$lcAppView = Yii::getPathOfAlias('application.views.mail').DIRECTORY_SEPARATOR.$this->view.'.php';
-			$lcPlinthLayout = Yii::getPathOfAlias('YIIPlinth.views.layouts').DIRECTORY_SEPARATOR.$lcLayout.'.php';
-			$lcPlinthView = Yii::getPathOfAlias('YIIPlinth.views.mail').DIRECTORY_SEPARATOR.$this->view.'.php';
-
-			$lcLayoutFile = file_exists($lcThemeLayout) ? $lcThemeLayout :
-				(file_exists($lcAppLayout) ? $lcAppLayout : (
-					file_exists($lcPlinthLayout) ? $lcPlinthLayout : NULL));
-
-			$lcViewFile = file_exists($lcThemeView) ? $lcThemeView :
-				(file_exists($lcAppView) ? $lcAppView : (
-					file_exists($lcPlinthView) ? $lcPlinthView : NULL));
-
-			$laData =  array_merge(array('subject'=>$this->subject),
-					$body,
-					array('mail'=>$this));
-
-			$laData['content'] = $controller->renderInternal($lcViewFile, $laData, true);
-			$body = $controller->renderInternal($lcLayoutFile, $laData, true);
+			$laData['content'] = $loController->renderInternal($lcViewFile, $laData, true);
+			$tcBody = $loController->renderInternal($lcLayoutFile, $laData, true);
 		}
-		return $this->message->setBody($body, $contentType, $charset);
+		return $this->message->setBody($tcBody, $tcContentType, $tcCharset);
+	}
+
+	public function resolveViewFile($toController, $tcView)
+	{
+		if(empty($tcView))
+		{
+			return false;
+		}
+
+		$lcBasePath = !is_null(Yii::app()->getTheme()) ?
+			Yii::app()->getTheme()->getBasePath().DIRECTORY_SEPARATOR.'views':
+			Yii::getPathOfAlias('application.views');
+
+		$lcExtension = (($lcRenderer=Yii::app()->getViewRenderer())!==null) ?
+			$lcExtension=$lcRenderer->fileExtension :
+			$lcExtension='.php';
+
+		if($tcView[0]==='/')
+		{
+			if  (strncmp($tcView,'//',2)===0)
+			{
+				if (is_file($lcBasePath.$tcView.$lcExtension))
+				{
+					// Check Theme
+					$lcViewFile = $lcBasePath.$tcView;
+				}
+				else if (is_file(YiiBase::getPathOfAlias('application.views.'.$tcView).$lcExtension))
+				{
+					// Check Application
+					$lcViewFile = YiiBase::getPathOfAlias('application.views.'.$tcView);
+				}
+				else if (is_file(YiiBase::getPathOfAlias('YIIPlinth.views.'.$tcView).$lcExtension))
+				{
+					// Check YIIPlinth
+					$lcViewFile = YiiBase::getPathOfAlias('YIIPlinth.views.'.$tcView);
+				}
+				else
+				{
+					$lcViewFile = $lcBasePath.$tcView;
+				}
+			}
+			else
+			{
+				$lcViewFile = $lcBasePath.$tcView;
+			}
+		}
+		else if(strpos($tcView,'.'))
+		{
+			$lcViewFile=Yii::getPathOfAlias($tcView);
+		}
+		else
+		{
+			$lcViewFile=$lcBasePath.DIRECTORY_SEPARATOR.$tcView;
+		}
+
+		if(is_file($lcViewFile.$lcExtension))
+		{
+			return Yii::app()->findLocalizedFile($lcViewFile.$lcExtension);
+		}
+		else if($lcExtension!=='.php' && is_file($lcViewFile.'.php'))
+		{
+			return Yii::app()->findLocalizedFile($lcViewFile.'.php');
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

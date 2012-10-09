@@ -49,9 +49,10 @@ class PasswordResetForm extends CFormModel
 				{
 					// Send the user an email
 					$loEmail = new YiiMailMessage;
-					$loEmail->view = 'resetPassword';
+					$loEmail->view = '//mail/resetPassword';
+                				$loEmail->layout = '//layouts/mail';
 					$loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-					$loEmail->subject = 'YouCommentate - Account Retrieval.';
+					$loEmail->subject = 'BOOM!  Your account, retrieved.';
 					$loEmail->addTo($loUser->Email);
 					$loEmail->from = Yii::app()->params['adminEmail'];
 					Yii::app()->mail->send($loEmail);
