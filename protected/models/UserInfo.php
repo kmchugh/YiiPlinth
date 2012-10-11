@@ -12,6 +12,7 @@
  * @property string $FirstName
  * @property string $LastName
  * @property string $Description
+ * @property string $UserURL
  * @property string $CreatedDate
  * @property string $CreatedBy
  * @property string $ModifiedDate
@@ -55,8 +56,9 @@ class UserInfo extends PlinthModel
 		return array(
 			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
 			array('Country, FirstName, LastName', 'length', 'max'=>255),
+			array('UserURL', 'length', 'max'=>40),
+			array('UserURL', 'required'),
 			array('NotifyUpdates', 'boolean'),
-			array('CreatedBy, ModifiedBy', 'length', 'max'=>40),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 
 					'maxSize'=>1024 * 200,
@@ -64,7 +66,7 @@ class UserInfo extends PlinthModel
 					'wrongType' => 'Only .png, .gif, .jpg, and .jpeg are allowed',
 					'allowEmpty' => true),
 			array('Description', 'safe'),
-
+			array('UserURL', 'unique'),
 			array('Country, Description', 'safe', 'on'=>'search'),
 		);
 	}
@@ -74,6 +76,8 @@ class UserInfo extends PlinthModel
 		// Purify the description
 		$loPurify = new CHtmlPurifier();
 		$this->Description = $loPurify->purify($this->Description);
+
+		$this->UserURL = strtolower(preg_replace("/[^A-Za-z0-9]/", '', $this->user->DisplayName));
 		return parent::beforeValidate();
 	}
 
@@ -98,6 +102,7 @@ class UserInfo extends PlinthModel
 			'Country' => 'Country',
 			'ProfileImageURI' => 'Profile Image Uri',
 			'Description' => 'Description',
+			'UserURL' => 'User URL',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'ModifiedDate' => 'Modified Date',

@@ -55,7 +55,7 @@ class User extends PlinthModel
 			array('Email', 'length', 'max'=>255),
 			array('DisplayName', 'length', 'max'=>150),
 			array('Password', 'length', 'max'=>32),
-			array('Email', 'unique'),
+			array('Email, DisplayName', 'unique'),
 			array('Email', 'email'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -69,9 +69,11 @@ class User extends PlinthModel
 	public function relations()
 	{
 		return array(
+			// TODO: Remove the profile relation
 			'profile' => array(self::HAS_ONE, 'UserInfo', 'UserID'),
 			'memberships' => array(self::HAS_MANY, 'Membership', 'MemberUserID'),
 			'sessions' => array(self::HAS_MANY, 'Session', 'UserID'),
+			'userInfo' => array(self::HAS_ONE, 'UserInfo', 'UserID'),
 		);
 	}
 

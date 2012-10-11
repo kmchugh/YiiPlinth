@@ -5,7 +5,7 @@
 return array(
 	'components'=>array(
 		'user'=>array(
-			'class'=>'UserManagement.components.PlinthWebUser',
+			'class'=>'YIIPlinth.modules.UserManagement.components.PlinthWebUser',
 			'loginUrl'=>'/login',
 			),
 		'urlManager'=>array(

@@ -25,6 +25,7 @@ class m120824_134421_UserManagement extends CDbMigration
 			'Rowversion'=>'datetime',
 			));
 		$this->createIndex('UQ_{{User}}_GUID', "{{User}}", 'GUID', true);
+		$this->createIndex('UQ_{{User}}_DisplayName', "{{User}}", 'DisplayName', true);
 
 		$this->createTable('{{UserInfo}}', array(
 			'UserInfoID'=>'pk',

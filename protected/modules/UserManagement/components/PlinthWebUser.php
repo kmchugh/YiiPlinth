@@ -14,6 +14,19 @@ class PlinthWebUser extends CWebUser
 	}
 
 	/**
+	 * Initializes the application component.
+	 * This method overrides the parent implementation by starting session,
+	 * performing cookie-based authentication if enabled, and updating the flash variables.
+	 */
+	public function init()
+	{
+		if (method_exists(Yii::app(), 'getSession'))
+		{
+			parent::init();
+		}
+	}
+
+	/**
 	 * Returns the unique identifier for the user (e.g. username).
 	 * This is the unique identifier that is mainly used for display purpose.
 	 * @return string the user name. If the user is not logged in, this will be {@link guestName}.
