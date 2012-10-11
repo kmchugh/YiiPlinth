@@ -87,6 +87,16 @@ class DefaultController extends PlinthController
 							->queryRow();
 					$loModel = $loModel['ListenerCount'];
 				}
+				else if ($lcModelName === 'commentatorlistenerlist')
+				{
+					$loModel = Yii::app()->db->createCommand()
+							->select('COUNT(DISTINCT `ListenerGUID`) as ListenerCount')
+							->from('StreamListener')
+							->join('StreamCommentator', 'StreamCommentator.StreamID = StreamListener.StreamID')
+							->where('StreamCommentator.CommentatorGUID=:streamGUID', array(':streamGUID'=>$lcID))
+							->queryRow();
+					$loModel = $loModel['ListenerCount'];
+				}
 				else
 				{
 					$loModel = Yii::app()->db->createCommand()
