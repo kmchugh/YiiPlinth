@@ -6,7 +6,8 @@ class GoogleAnalytics
 
 	public function init()
 	{
-		if (method_exists(Yii::app(), 'clientScript'))
+
+		if (isset(Yii::app()->clientScript))
 		{
 			Yii::app()->clientScript->registerScript(Yii::app()->name.'_googleAnalytics',
 				"var _gaq=[['_setAccount','".$this->key."'],['_trackPageview']];
