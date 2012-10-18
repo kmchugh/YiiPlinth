@@ -13,3 +13,5 @@ in the "<?php echo $this->module->id; ?>" module.
 <p>
 You may customize this page by editing <tt><?php echo __FILE__; ?></tt>
 </p>
+
+TEST

@@ -16,9 +16,9 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link href="/images/logos/logo_57x57.png" rel="apple-touch-icon" type="image/png">
-        <link href="/images/logos/logo_32x32.png" rel="icon" type="image/png">
-        <link href="/images/logos/logo_32x32.png" rel="shortcut icon" type="image/png">
+        <link href="/images/icons/logo_57x57.png" rel="apple-touch-icon" type="image/png">
+        <link href="/images/icons/logo_32x32.png" rel="icon" type="image/png">
+        <link href="/images/icons/logo_32x32.png" rel="shortcut icon" type="image/png">
         <link href="/sitemap.xml" rel="sitemap" title="Sitemap" type="application/xml">
 
         <?php /*

@@ -148,7 +148,19 @@ class PlinthDBSession extends CDbHttpSession
 	**/
 	public function openSession($tcSavePath,$tcSessionID)
 	{
-		// We don't actually need to do anything here
+		if($this->autoCreateSessionTable)
+		{
+			try
+			{
+				Session::model()->deleteAll(
+					'`expires` < :expiry',
+					array(':expiry' => Utilities::getTimeStamp()));
+			}
+			catch(Exception $e)
+			{
+				$this->createSessionTable($db,$this->sessionTableName);
+			}
+		}
 		return true;
 	}
 
