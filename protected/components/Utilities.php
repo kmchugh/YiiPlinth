@@ -92,7 +92,7 @@
 		 */
 		public static function updateCallbackURL()
 		{
-			$_SESSION['forwardToURL'] = !isset($_SESSION['forwardToURL']) || is_null($_SESSION['forwardToURL']) ? $_SERVER['HTTP_REFERER'] : $_SESSION['forwardToURL'];
+			$_SESSION['forwardToURL'] = !isset($_SESSION['forwardToURL']) || is_null($_SESSION['forwardToURL']) ? (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL ) : $_SESSION['forwardToURL'];
 		}
 
 		/**
