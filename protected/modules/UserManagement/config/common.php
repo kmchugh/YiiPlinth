@@ -6,6 +6,7 @@ return array(
 	'components'=>array(
 		'user'=>array(
 			'class'=>'YIIPlinth.modules.UserManagement.components.PlinthWebUser',
+			'allowAutoLogin'=>true,
 			'loginUrl'=>'/login',
 			),
 		'urlManager'=>array(

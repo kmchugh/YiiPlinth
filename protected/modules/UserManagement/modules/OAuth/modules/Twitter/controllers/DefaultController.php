@@ -19,20 +19,34 @@ class DefaultController extends Controller
 			if (!is_null($loAuthUser))
 			{
 				// Determine if this is a new user or an old user
-				if (isset($loAuthUser->UserID))
+				if (!isset($loAuthUser->UserID))
 				{
-					echo "Old User";
-				}
-				else
-				{
+					// retrieve new user email address
 					echo "New User";
+				}
+				// User has just "authenticated" with twitter
+				if ($this->loginUser($loAuthUser->user))
+				{
+					// TODO: Redirect to where we came from
+					Yii::app()->getController()->redirect('/');
 				}
 			}
 			else
 			{
 				// No OAuth User, redirect to login
-				Yii::app()->getController()->redirect('/Login');
+				Yii::app()->getController()->redirect('/login');
 			}
 		}
+	}
+
+	private function loginUser($toUser)
+	{
+		if (!is_null($toUser))
+		{
+			$loUserIdentity=new PlinthUserIdentity($toUser->Email,$toUser->Password);
+			Yii::app()->user->login($loUserIdentity,3600*24*30);
+			return true;
+		}
+		return false;
 	}
 }

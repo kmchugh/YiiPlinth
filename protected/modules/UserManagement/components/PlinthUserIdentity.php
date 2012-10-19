@@ -10,9 +10,14 @@ class PlinthUserIdentity extends CUserIdentity
 	private $m_cUserID;
 	private $m_oUser;
 
+	public function __construct($tcUserName, $tcPassword)
+	{
+		$this->m_oUser = User::model()->findByAttributes(array('Email'=>$tcUserName));
+		parent::__construct($tcUserName, $tcPassword);
+	}
+
 	public function authenticate()
 	{
-		$this->m_oUser = User::model()->findByAttributes(array('Email'=>$this->username));
 		if ($this->m_oUser===null)
 		{
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
