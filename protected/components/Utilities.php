@@ -1,5 +1,4 @@
 <?php
-
 	abstract class Utilities
 	{
 		/**
@@ -413,6 +412,8 @@
 		**/
 		private static function getTwitterObject($tcCallbackURL = NULL, $tlConnectAsConsumer = TRUE)
 		{
+			// TODO: Remove this after all twitter functionality has been refactored
+			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			if (is_null($tcCallbackURL))
 			{
 				$tcCallbackURL = Yii::app()->params['twitter']['callbackURL'];
@@ -452,6 +453,8 @@
 		**/
 		public static function handleTwitterCallback()
 		{
+			// TODO: Remove this after all twitter functionality has been refactored
+			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			if( !empty($_GET['oauth_verifier']) &&
 				!empty($_SESSION['twitter_token']) &&
 				!empty($_SESSION['twitter_token_secret']))
@@ -477,6 +480,8 @@
 
 		public static function sendTweet($tcMessage)
 		{
+			// TODO: Remove this after all twitter functionality has been refactored
+			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			// Only if the user is linked to a twitter account
 			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 			if (!is_null($loAuthUser))
@@ -491,6 +496,7 @@
 
 		public static function getTwitterUser($toTwitterObject = NULL)
 		{
+			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			// Update the user information
 			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
