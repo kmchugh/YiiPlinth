@@ -30,7 +30,7 @@ class DefaultController extends Controller
 				// User has just "authenticated" with twitter
 				else if ($this->loginUser($loAuthUser->user))
 				{
-					Yii::app()->getController()->redirect(Utilities::getCallbackURL());
+					Yii::app()->getController()->redirect(preg_match('/.+?\/login/', Utilities::getCallbackURL()) ? '/' : Utilities::getCallbackURL());
 				}
 			}
 			else
