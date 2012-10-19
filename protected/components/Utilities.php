@@ -482,15 +482,15 @@
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
+
 			// Only if the user is linked to a twitter account
 			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 			if (!is_null($loAuthUser))
 			{
-				$loTwitter = self::getTwitterObject(NULL, FALSE);
-				if (!is_null($loTwitter))
-				{
-					$loTwitter->post('statuses/update', array('status' => $tcMessage));
-				}
+				$loOAuth = new Twitter();
+				$loOAuth->postTweet($loAuthUser, $tcMessage);
 			}
 		}
 

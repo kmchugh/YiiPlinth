@@ -137,7 +137,7 @@ class OAuth
 	 * @param  array  $toParameters The list of parameters
 	 * @return array a response object
 	 */
-	protected function makeRequest($tcURL, $tcMethod='GET', $toParameters = array(), $toOAuthUser = NULL)
+	protected function makeRequest($tcURL, $tcMethod='GET', $toParameters = array(), $toOAuthUser = NULL, $tlReturnError = FALSE)
 	{
 		$toParameters = $this->addParameters($tcMethod, $tcURL, $toParameters, $toOAuthUser);
 
@@ -192,7 +192,7 @@ class OAuth
 		curl_close($loCurl);
 		$this->m_oHTTPHeader = array();
 
-		return $loReturn['responseCode'] === 200 ? $loReturn : null;
+		return $loReturn['responseCode'] === 200 || $tlReturnError ? $loReturn : null;
 	}
 
 

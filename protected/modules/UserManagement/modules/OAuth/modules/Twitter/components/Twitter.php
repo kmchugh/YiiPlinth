@@ -34,6 +34,21 @@ class Twitter extends OAuth
 		return NULL;
 	}
 
+	public function postTweet($toAuthUser, $tcTweet)
+	{
+		$loResponse = $this->makeRequest('https://api.twitter.com/1.1/statuses/update.json', 'POST', array(
+			'status'=>$tcTweet,
+			'include_entities'=>'true'), $toAuthUser, true);
+
+		Utilities::printVar($loResponse);
+
+		if ($loResponse != null)
+		{
+			return json_decode($loResponse['response']);
+		}
+		return NULL;
+	}
+
 
 }
 
