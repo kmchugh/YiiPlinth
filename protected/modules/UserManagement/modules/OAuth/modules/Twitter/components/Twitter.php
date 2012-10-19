@@ -40,8 +40,6 @@ class Twitter extends OAuth
 			'status'=>$tcTweet,
 			'include_entities'=>'true'), $toAuthUser, true);
 
-		Utilities::printVar($loResponse);
-
 		if ($loResponse != null)
 		{
 			return json_decode($loResponse['response']);
