@@ -166,4 +166,35 @@ class User extends PlinthModel
 	{
 		return $this->getPasswordHash($tcPassword) === $this->Password;
 	}
+
+	/**
+	 * Creates a new user entity from the email address provided.
+	 * @param  string $tcEmail the email address to create the user from
+	 * @return the newly created user, it is possible the user could not be saved so may be in an error state
+	 */
+	public static function create($tcEmail)
+	{
+		$lcPassword = substr(Utilities::getStringGUID(), 0, 10);
+            	$loUser = new User;
+	           $loUser->setAttributes(
+	                array(
+	                'Email' => $tcEmail,
+	                'DisplayName' => substr($tcEmail, 0, strpos($tcEmail, '@')),
+	                'StartDate' => Utilities::getTimeStamp(),
+	                ), false);
+            	$loUser->resetPassword($lcPassword);
+	            if ($loUser->save())
+	            {
+	                // Send the user an email
+	                $loEmail = new YiiMailMessage;
+	                $loEmail->view = '//mail/userRegistration';
+	                $loEmail->layout = '//layouts/mail';
+	                $loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
+	                $loEmail->subject = 'Welcome to YouCommentate.  Time to start calling it as you see it!';
+	                $loEmail->addTo($loUser->Email);
+	                $loEmail->from = Yii::app()->params['adminEmail'];
+	                Yii::app()->mail->send($loEmail);
+	            }
+	            return $loUser;
+	}
 }

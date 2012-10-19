@@ -87,6 +87,33 @@
 		}
 
 		/**
+		 * Updates the callback url if one has not already been set.  This will set the callback url
+		 * to be the referrer
+		 */
+		public static function updateCallbackURL()
+		{
+			$_SESSION['forwardToURL'] = !isset($_SESSION['forwardToURL']) || is_null($_SESSION['forwardToURL']) ? $_SERVER['HTTP_REFERER'] : $_SESSION['forwardToURL'];
+		}
+
+		/**
+		 * Sets the callback url when a redirect is needed
+		 * @param the callback url
+		 */
+		public static function setCallbackURL($tcURL)
+		{
+			$_SESSION['forwardToURL'] = $tcURL;
+		}
+
+		/**
+		 * Gets the current callback url
+		 * @return the callback url
+		 */
+		public static function getCallbackURL()
+		{
+			return isset($_SESSION['forwardToURL']) ? $_SESSION['forwardToURL'] : NULL;
+		}
+
+		/**
 		* returns the first non null parameter
 		**/
 		public static function ISNULL()
@@ -464,6 +491,7 @@
 
 		public static function getTwitterUser($toTwitterObject = NULL)
 		{
+			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			// Update the user information
 			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 

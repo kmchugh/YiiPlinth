@@ -63,7 +63,7 @@ class OAuth
 	private function getUserForToken($tcToken)
 	{
 		return OAuthUser::model()->findByAttributes(array(
-			'Token' => $_REQUEST['oauth_token'],
+			'Token' => $tcToken,
 			'Provider'=>$this->getProviderName()));
 	}
 
@@ -80,30 +80,36 @@ class OAuth
 		if (!is_null($loOAuthUser))
 		{
 			$loParameters = array();
-			$loParameters['oauth_token']=$tcToken;
+			$loOAuthUser->Token = $tcToken;
 			$loParameters['oauth_verifier']=$tcVerifier;
-			$loRequest = $this->makeRequest($this->getEndpoint('access'), 'POST', $loParameters);
+			$loRequest = $this->makeRequest($this->getEndpoint('access'), 'POST', $loParameters, $loOAuthUser);
 
-			$laParameters = array();
-			parse_str($loRequest['response'], $laParameters);
-
-			// Find if this user already exists
-			$loUser = Utilities::ISNULL(OAuthUser::model()->findByAttributes(array(
-					'UID'=>$laParameters['user_id'],
-					'Provider'=>$this->getProviderName(),)), $loOAuthUser);
-			if ($loUser !== $loOAuthUser)
+			if (!is_null($loRequest))
 			{
-				$loOAuthUser->delete();
-				$loOAuthUser = $loUser;
-			}
+				$laParameters = array();
+				parse_str($loRequest['response'], $laParameters);
 
- 			$loOAuthUser->setAttributes(Array(
-				'Token'=>$laParameters['oauth_token'],
-				'Secret'=>$laParameters['oauth_token_secret'],
-				'UID'=>$laParameters['user_id'],
-				'DisplayName'=>$laParameters['screen_name'],)
-				);
- 			$loOAuthUser->save();
+				// Find if this user already exists
+				$loUser = Utilities::ISNULL(OAuthUser::model()->findByAttributes(array(
+						'UID'=>$laParameters['user_id'],
+						'Provider'=>$this->getProviderName(),)), $loOAuthUser);
+				if ($loUser !== $loOAuthUser)
+				{
+					$loOAuthUser->delete();
+					$loOAuthUser = $loUser;
+				}
+	 			$loOAuthUser->setAttributes(Array(
+					'Token'=>$laParameters['oauth_token'],
+					'Secret'=>$laParameters['oauth_token_secret'],
+					'UID'=>$laParameters['user_id'],
+					'DisplayName'=>$laParameters['screen_name'],)
+					);
+	 			$loOAuthUser->save();
+	 		}
+	 		else
+	 		{
+	 			$loOAuthUser = NULL;
+	 		}
 		}
 		return $loOAuthUser;
 	}
@@ -131,9 +137,9 @@ class OAuth
 	 * @param  array  $toParameters The list of parameters
 	 * @return array a response object
 	 */
-	private function makeRequest($tcURL, $tcMethod='GET', $toParameters = array())
+	protected function makeRequest($tcURL, $tcMethod='GET', $toParameters = array(), $toOAuthUser = NULL)
 	{
-		$toParameters = $this->addParameters($tcMethod, $tcURL, $toParameters);
+		$toParameters = $this->addParameters($tcMethod, $tcURL, $toParameters, $toOAuthUser);
 
 		$loCurl = curl_init();
 		curl_setopt($loCurl, CURLOPT_USERAGENT, $this->userAgent);
@@ -142,14 +148,20 @@ class OAuth
 	    	curl_setopt($loCurl, CURLOPT_RETURNTRANSFER, TRUE);
 
 	    	$lcAuthHeader = 'Authorization: OAuth ';
+	    	$lcQuery = '';
 	    	foreach ($toParameters as $lcKey => $lcValue)
 	    	{
 	    		if (preg_match('/^oauth/', $lcKey))
 	    		{
-	    			$lcAuthHeader.=$lcKey.'="'.$lcValue.'",';
+	    			$lcAuthHeader.=$lcKey.'="'.$lcValue.'", ';
+	    		}
+	    		else
+	    		{
+	    			$lcQuery.=(strpos($tcURL, '?') === FALSE && strpos($lcQuery, '?') === FALSE ? '?' : '&').$lcKey.'='.$lcValue;
 	    		}
 	    	}
-	    	$lcAuthHeader = substr($lcAuthHeader, 0, strlen($lcAuthHeader)-1);
+	    	$lcAuthHeader = substr($lcAuthHeader, 0, strlen($lcAuthHeader)-2);
+
 	    	curl_setopt($loCurl, CURLOPT_HTTPHEADER, array($lcAuthHeader,
 	    		'Expect:'));
 	    	curl_setopt($loCurl, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer);
@@ -165,12 +177,12 @@ class OAuth
 			}
 		}
 
-		curl_setopt($loCurl, CURLOPT_URL, $tcURL);
+		curl_setopt($loCurl, CURLOPT_URL, $tcURL.$lcQuery);
 
 		$this->m_oHTTPHeader = array();
 		$loResponse = curl_exec($loCurl);
 
-    		$loReturn = array(
+		$loReturn = array(
     			'responseCode'=>curl_getinfo($loCurl, CURLINFO_HTTP_CODE),
     			'info'=>curl_getinfo($loCurl),
     			'url'=>$tcURL,
@@ -179,18 +191,15 @@ class OAuth
     			);
 		curl_close($loCurl);
 		$this->m_oHTTPHeader = array();
-		if ($loReturn['responseCode'] !== 200)
-		{
-			Utilities::printVar($loReturn);
-		}
+
 		return $loReturn['responseCode'] === 200 ? $loReturn : null;
 	}
 
 
 
-	private function sign($tcMethod, $tcURL, $toParameters)
+	private function sign($tcMethod, $tcURL, $toParameters, $toOAuthUser = NULL)
 	{
-		return $this->getSignatureMethod()->sign($tcMethod, $tcURL, $toParameters, $this->getConsumerSecret(), $this->getTokenSecret());
+		return $this->getSignatureMethod()->sign($tcMethod, $tcURL, $toParameters, $this->getConsumerSecret(), is_null($toOAuthUser) ? '' : $toOAuthUser->Secret);
 	}
 
 	private function getSignatureMethod()
@@ -202,12 +211,12 @@ class OAuth
 		return $this->m_oSignatureMethod;
 	}
 
-	private function getTimeStamp()
+	protected function getTimeStamp()
 	{
 		return time();
 	}
 
-	private function getNonce()
+	protected function getNonce()
 	{
 		return Utilities::getStringGUID();
 	}
@@ -221,31 +230,28 @@ class OAuth
 		return Yii::app()->params['twitter']['consumerKey'];
 	}
 
-	private function getTokenSecret()
-	{
-		return '';
-	}
-
-
-
 	public function parseParameterString($tcString)
 	{
 		$laReturn = explode('%', $tcString);
 		return $laReturn;
 	}
 
-	private function addParameters($tcMethod, $tcURL, &$toParameters)
+	protected function addParameters($tcMethod, $tcURL, $toParameters, $toOAuthUser = NULL)
 	{
+		if (!is_null($toOAuthUser))
+		{
+			$toParameters['oauth_token']=$toOAuthUser->Token;
+		}
 		$toParameters['oauth_consumer_key']=$this->getConsumerKey();
 		$toParameters['oauth_nonce']=$this->getNonce();
 		$toParameters['oauth_signature_method']=$this->getSignatureMethod()->getName();
 		$toParameters['oauth_timestamp']=$this->getTimeStamp();
 		$toParameters['oauth_version']=$this->version;
 
-		return $this->sign($tcMethod, $tcURL, $toParameters);
+		return $this->sign($tcMethod, $tcURL, $toParameters, $toOAuthUser);
 	}
 
-	private function headerCallback($toCurlSession, $tcData)
+	protected function headerCallback($toCurlSession, $tcData)
 	{
 		$lnIndex = strpos($tcData, ':');
 		if ($lnIndex > 0)

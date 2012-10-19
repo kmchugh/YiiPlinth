@@ -22,6 +22,9 @@ return array(
 
 				'/register'=>'UserManagement/access/Register',
 				'/site/register'=>'UserManagement/access/Register',
+
+				'/retrieveEmail'=>'UserManagement/access/RetrieveEmail',
+				'/site/retrieveEmail'=>'UserManagement/access/RetrieveEmail',
 				),
 			),
 	),

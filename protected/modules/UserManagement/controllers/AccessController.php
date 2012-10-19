@@ -20,6 +20,8 @@ class AccessController extends PlinthController
 	 */
 	public function actionLogin()
 	{
+		Utilities::updateCallbackURL();
+
 		$loModel=new LoginForm;
 		$lcFormName='login-form';
 
@@ -33,6 +35,7 @@ class AccessController extends PlinthController
 		// collect user input data
 		if(isset($_POST['LoginForm']))
 		{
+			$lcURL = Utilities::getCallbackURL();
 			$loModel->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($loModel->validate() && $loModel->login())
@@ -42,9 +45,11 @@ class AccessController extends PlinthController
 				{
 					$this->redirect('/?requestType=mobile');
 				}
-				$this->redirect(Yii::app()->user->returnUrl);
+				Utilities::setCallbackURL(NULL);
+				$this->redirect($lcURL);
 			}
 		}
+
 		// display the login form
 		$this->render('login',array('toModel'=>$loModel, 'tcFormName'=>$lcFormName));
 	}
@@ -95,6 +100,16 @@ class AccessController extends PlinthController
 	 */
 	public function actionRegister()
 	{
+		Utilities::updateCallbackURL();
 		$this->render('registration');
+	}
+
+	/**
+	 * Displays the registration page
+	 */
+	public function actionRetrieveEmail()
+	{
+		Utilities::updateCallbackURL();
+		$this->render('retrieveEmail');
 	}
 }

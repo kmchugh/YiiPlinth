@@ -77,7 +77,7 @@ class UserInfo extends PlinthModel
 		$loPurify = new CHtmlPurifier();
 		$this->Description = $loPurify->purify($this->Description);
 
-		$this->UserURL = strtolower(preg_replace("/[^A-Za-z0-9]/", '', $this->user->DisplayName));
+		$this->UserURL = strtolower(preg_replace("/[^A-Za-z0-9_]/", '', $this->user->DisplayName));
 		return parent::beforeValidate();
 	}
 

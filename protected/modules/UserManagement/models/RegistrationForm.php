@@ -46,32 +46,8 @@ class RegistrationForm extends CFormModel
     {
         if(!$this->hasErrors())
         {
-            $lcPassword = substr(Utilities::getStringGUID(), 0, 10);
-
-            $loUser = new User;
-            $loUser->setAttributes(
-                array(
-                'Email' => $this->email, 
-                'DisplayName' => substr($this->email, 0, strpos($this->email, '@')),
-                'StartDate' => Utilities::getTimeStamp(),
-                ), false);
-            $loUser->resetPassword($lcPassword);
-            if ($loUser->save())
-            {
-                // Send the user an email
-                $loEmail = new YiiMailMessage;
-                $loEmail->view = '//mail/userRegistration';
-                $loEmail->layout = '//layouts/mail';
-                $loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-                $loEmail->subject = 'Welcome to YouCommentate.  Time to start calling it as you see it!';
-                $loEmail->addTo($loUser->Email);
-                $loEmail->from = Yii::app()->params['adminEmail'];
-                Yii::app()->mail->send($loEmail);
-            }
-            else
-            {
-                $this->addErrors($loUser->getErrors());
-            }
+            $loUser = User::create($this->email);
+            $this->addErrors($loUser->getErrors());
         }
         return !$this->hasErrors();
     }
