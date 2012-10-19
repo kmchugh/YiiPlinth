@@ -184,7 +184,7 @@ class DefaultController extends PlinthController
 
 				if (!$loStream->IsPrivate)
 				{
-					$loUserInfo = UserInfo::model()->findByAttributes('UserID', Yii::app()->user->ID);
+					$loUserInfo = UserInfo::model()->findByAttributes(array('UserID'=>Yii::app()->user->id));
 					$lcURL ='http://www.youcommentate.com/'.(is_null($loUserInfo) ? 'Stream/View/guid/'.$loStream->GUID : $loUserInfo->UserURL);
 					// If the user has linked their Twitter account, TWEET!
 					$lcTweet = "I'm live on @YouCommentate, check me out at ".Utilities::shortenURL($lcURL).' - '.$loEvent->Title;
