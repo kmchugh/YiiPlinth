@@ -51,10 +51,16 @@ class DefaultController extends PlinthController
 				}
 				else
 				{
-					$laRows = Yii::app()->db->createCommand()
+					$lcID = 'WS_DATA_'.'v'.$lcModelName;
+					$laRows = Yii::app()->cache->get($lcID);
+					if ($laRows===false)
+					{
+						$laRows = Yii::app()->db->createCommand()
 							->select('*')
 							->from('v'.$lcModelName)
 							->queryAll();
+						Yii::app()->cache->set($lcID, $laRows, 10);
+					}
 				}
 			}
 			$this->sendResponse(200, $laRows, 'application/json');
