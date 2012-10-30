@@ -51,6 +51,8 @@ class m121030_022317_cities extends CDbMigration
 				'RowVersion'=>$lnTimestamp,
 				));
 		}
+		self::$g_oCountryLookup = null;
+		self::$g_oRegionLookup = null;
 	}
 
 	public function safeDown()

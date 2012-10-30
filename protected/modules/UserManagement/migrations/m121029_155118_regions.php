@@ -42,6 +42,7 @@ class m121029_155118_regions extends CDbMigration
 				'RowVersion'=>$lnTimestamp,
 				));
 		}
+		self::$g_oCountryLookup = null;
 	}
 
 	private function getCountryID($tcCountryName)
