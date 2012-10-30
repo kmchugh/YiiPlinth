@@ -10,7 +10,7 @@ class m121030_065617_countryIP extends CDbMigration
 	public function safeUp()
 	{
 		$this->createTable('{{CountryIPv4}}', array(
-			'CountryIPv4'=>'pk',
+			'CountryIPv4ID'=>'pk',
 			'CountryID'=>'id_null',
 			'StartIP'=>'id',
 			'EndIP'=>'id',
