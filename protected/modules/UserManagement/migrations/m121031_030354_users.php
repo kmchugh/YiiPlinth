@@ -18,6 +18,6 @@ class m121031_030354_userTable extends CDbMigration
 			'',
 			array(
 			':Anonymous'=>0
-			));	
+			));
 	}
 }
