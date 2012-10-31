@@ -30,6 +30,8 @@ class PlinthMySQLSchema extends CMysqlSchema
         'long_string_null'=>'varchar(1024) NULL',
         'money' => 'decimal(19,4)',
         'pk' => 'bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY',
+        'short_code' => 'varchar(10) NOT NULL',
+        'short_code_null'=>'varchar(10) NULL',
         'string' => 'varchar(255) NOT NULL',
         'string_null'=>'varchar(255) NULL',
         'text' => 'text',
