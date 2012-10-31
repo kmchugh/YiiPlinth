@@ -1,6 +1,6 @@
 <?php
 
-class m121031_030354_userTable extends CDbMigration
+class m121031_030354_users extends CDbMigration
 {
 	public function safeUp()
 	{

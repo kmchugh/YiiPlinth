@@ -1,6 +1,6 @@
 <?php
 
-class m121031_030340_userTable extends CDbMigration
+class m121031_030340_users extends CDbMigration
 {
 	public function up()
 	{
