@@ -22,21 +22,9 @@ class PlinthUserIdentity extends CUserIdentity
 		{
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		}
-		else 
+		else
 		{
-			if (!$this->m_oUser->validatePassword($this->password))
-			{
-				$this->errorCode=self::ERROR_PASSWORD_INVALID;
-			}
-			else
-			{
-				// Now that the user has been authenticated, update the login time
-				$this->m_oUser->setAttributes(
-					array(
-						'LastLoginDate' => Utilities::getTimeStamp(),
-	    					'LoginCount' => $this->m_oUser->LoginCount +1,), false);
-				$this->m_oUser->save();
-				$this->errorCode=self::ERROR_NONE;
+			$this->errorCode = (!$this->m_oUser->validatePassword($this->password)) ? self::ERROR_PASSWORD_INVALID : self::ERROR_NONE;
 			}
 		}
 		return !$this->errorCode;

@@ -77,7 +77,18 @@ class UserInfo extends PlinthModel
 		$loPurify = new CHtmlPurifier();
 		$this->Description = $loPurify->purify($this->Description);
 
-		$this->UserURL = strtolower(preg_replace("/[^A-Za-z0-9_]/", '', $this->user->DisplayName));
+		// Clean up the User URL
+		if ($this->UserURL === NULL || strlen($this->UserURL) === 0)
+		{
+			$this->UserURL = strtolower(preg_replace("/[^A-Za-z0-9_]/", '', $this->user->DisplayName));
+		}
+
+		// Set a profile URL if needed
+		$laDefaultProfiles = Utilities::printVar(Yii::app()->params['defaults']['profileImages']);
+		if (count($laDefaultProfiles) > 0 && ($this->ProfileImageURI === NULL || strlen($this->ProfileImageURI) === 0))
+		{
+			$this->ProfileImageURI = $laDefaultProfiles[rand(0, count($laDefaultProfiles) -1)];
+		}
 		return parent::beforeValidate();
 	}
 

@@ -78,4 +78,9 @@ return array(
                 ),
             ),
     ),
+    'params'=>array(
+        'defaults'=>array(
+            'profileImages'=>array(),
+            ),
+    ),
 );

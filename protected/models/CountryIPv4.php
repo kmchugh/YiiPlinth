@@ -14,7 +14,7 @@
  * @property string $CreatedBy
  * @property string $ModifiedDate
  * @property string $ModifiedBy
- * @property string $RowVersion
+ * @property string $Rowversion
  *
  * The followings are the available model relations:
  * @property Country $country
@@ -83,7 +83,7 @@ class CountryIPv4 extends PlinthModel
 			'CreatedBy' => 'Created By',
 			'ModifiedDate' => 'Modified Date',
 			'ModifiedBy' => 'Modified By',
-			'RowVersion' => 'Row Version',
+			'Rowversion' => 'Row Version',
 		);
 	}
 

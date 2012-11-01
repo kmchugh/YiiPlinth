@@ -164,7 +164,16 @@ class User extends PlinthModel
 	**/
 	public function validatePassword($tcPassword)
 	{
-		return $this->getPasswordHash($tcPassword) === $this->Password;
+		$llReturn = $this->getPasswordHash($tcPassword) === $this->Password;
+		if ($llReturn === true)
+		{
+			// Now that the user has been authenticated, update the login time
+			$this->setAttributes(
+				array(
+					'LastLoginDate' => Utilities::getTimeStamp(),
+    					'LoginCount' => $this->LoginCount +1,), false);
+			$this->save();
+		}
 	}
 
 	/**
@@ -194,6 +203,8 @@ class User extends PlinthModel
 	                $loEmail->addTo($loUser->Email);
 	                $loEmail->from = Yii::app()->params['adminEmail'];
 	                Yii::app()->mail->send($loEmail);
+
+	                // Once a User record is created, create a User Profile
 	            }
 	            return $loUser;
 	}
