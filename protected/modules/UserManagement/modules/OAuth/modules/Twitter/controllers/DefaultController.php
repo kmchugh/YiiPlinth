@@ -7,8 +7,14 @@ class DefaultController extends Controller
 		Utilities::setCallbackURL(NULL);
 		Utilities::updateCallbackURL();
 		$loOauth = new Twitter();
-		$loToken = $loOauth->getRequestToken(Utilities::getURL().'/default/Callback');
-
+		if ($loOauth->hasAPIKey())
+		{
+			$loToken = $loOauth->getRequestToken(Utilities::getURL().'/default/Callback');
+		}
+		else
+		{
+			echo 'API Keys have not been set for '.$loOauth->getProviderName();
+		}
 	}
 
 	public function actionCallback()

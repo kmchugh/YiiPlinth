@@ -1,7 +1,5 @@
 <?php
 
-//require_once('OAuth.php');
-
 class OAuth
 {
 	public $userAgent;
@@ -22,6 +20,17 @@ class OAuth
 	public function __construct()
 	{
 		$this->userAgent=Yii::app()->name.' HTTP AGENT 1.1';
+	}
+
+	/**
+	 * Checks if an API Key has been set for this provider
+	 * @return boolean true if an API key has been specified for this provider
+	 */
+	public function hasAPIKey()
+	{
+		return isset(Yii::app()->params[strtolower($this->getProviderName())]) &&
+			isset(Yii::app()->params[strtolower($this->getProviderName())]['consumerSecret']) &&
+			isset(Yii::app()->params[strtolower($this->getProviderName())]['consumerKey']);
 	}
 
 	/**
@@ -223,11 +232,11 @@ class OAuth
 
 	private function getConsumerSecret()
 	{
-		return Yii::app()->params['twitter']['consumerSecret'];
+		return Yii::app()->params[strtolower($this->getProviderName())]['consumerSecret'];
 	}
 	private function getConsumerKey()
 	{
-		return Yii::app()->params['twitter']['consumerKey'];
+		return Yii::app()->params[strtolower($this->getProviderName())]['consumerKey'];
 	}
 
 	public function parseParameterString($tcString)
