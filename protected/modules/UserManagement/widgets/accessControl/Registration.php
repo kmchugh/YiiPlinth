@@ -38,8 +38,16 @@ class Registration extends CWidget
             }
         }
 
+        // Raise the registration render event
+        $this->onRegistrationRender(new CEvent($this));
+
         // display the login form
         $this->render('registration',array('toModel'=>$loModel, 'tcFormName'=>$lcFormName));
+    }
+
+    private function onRegistrationRender($toEvent)
+    {
+        $this->raiseEvent('onRegistrationRender', $toEvent);
     }
 }
 
