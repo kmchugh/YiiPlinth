@@ -16,45 +16,6 @@ class AccessController extends PlinthController
 	}
 
 	/**
-	 * Displays the login page
-	 */
-	public function actionLogin()
-	{
-		Utilities::updateCallbackURL();
-
-		$loModel=new LoginForm;
-		$lcFormName='login-form';
-
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']===$lcFormName)
-		{
-			echo CActiveForm::validate($loModel);
-			Yii::app()->end();
-		}
-
-		// collect user input data
-		if(isset($_POST['LoginForm']))
-		{
-			$lcURL = Utilities::getCallbackURL();
-			$loModel->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($loModel->validate() && $loModel->login())
-			{
-				// If this is a mobile request, don't sent do the page
-				if (isset($_REQUEST['requestType']) && $_REQUEST['requestType'] === 'mobile')
-				{
-					$this->redirect('/?requestType=mobile');
-				}
-				Utilities::setCallbackURL(NULL);
-				$this->redirect($lcURL);
-			}
-		}
-
-		// display the login form
-		$this->render('login',array('toModel'=>$loModel, 'tcFormName'=>$lcFormName));
-	}
-
-	/**
 	 * Logs out the current user and redirect to homepage.
 	 */
 	public function actionLogout()
@@ -111,5 +72,14 @@ class AccessController extends PlinthController
 	{
 		Utilities::updateCallbackURL();
 		$this->render('retrieveEmail');
+	}
+
+	/**
+	 * Displays the login page
+	 */
+	public function actionLogin()
+	{
+		Utilities::updateCallbackURL();
+		$this->render('login');
 	}
 }

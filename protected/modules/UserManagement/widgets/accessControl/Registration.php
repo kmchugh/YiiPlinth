@@ -38,17 +38,13 @@ class Registration extends CWidget
             }
         }
 
-        // display the login form
+        // display the registration form
         $lcOutput = $this->render('registration',array('toModel'=>$loModel, 'tcFormName'=>$lcFormName), true);
         $loEvent = new CEvent($this, array("form"=>$lcOutput));
         Yii::app()->getModule('UserManagement')->onPrepareRegistration($loEvent);
 
+        // Render the finished form
         echo $loEvent->params['form'];
-    }
-
-    private function onRegistrationRender($toEvent)
-    {
-        $this->raiseEvent('onRegistrationRender', $toEvent);
     }
 }
 

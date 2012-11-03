@@ -68,4 +68,13 @@ class UserManagementModule extends CWebModule
 	{
 		$this->raiseEvent("onPrepareRegistration", $toEvent);
 	}
+
+	/**
+	 * Occurs when  the user sign in form is being rendered
+	 * @param  CEvent $toEvent the event that occured, this will contain a 'user' parameter which is the user being acted upon
+	 */
+	public function onPrepareSignIn($toEvent)
+	{
+		$this->raiseEvent("onPrepareSignIn", $toEvent);
+	}
 }

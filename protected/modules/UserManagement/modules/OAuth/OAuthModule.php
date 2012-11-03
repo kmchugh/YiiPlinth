@@ -21,6 +21,7 @@ class OAuthModule extends CWebModule
 
 		// Register for events we want to handle
 		$this->getParentModule()->onPrepareRegistration = array($this, 'injectOAuthRegistration');
+		$this->getParentModule()->onPrepareSignIn = array($this, 'injectOAuthSignIn');
 	}
 
 	public function beforeControllerAction($controller, $action)
@@ -55,5 +56,10 @@ class OAuthModule extends CWebModule
 			$lcOutput = $toEvent->sender->widget('YIIPlinth.modules.UserManagement.modules.OAuth.widgets.oauthProviders.OAuthProviders', array('OAuthLinks'=>$loEvent->params['OAuthLinks']), true);
 			$toEvent->params['form'] = preg_replace('/<form/', $lcOutput.'<form', $toEvent->params['form'], 1);
 		}
+	}
+
+	public function injectOAuthSignIn($toEvent)
+	{
+		$this->injectOAuthRegistration($toEvent);
 	}
 }
