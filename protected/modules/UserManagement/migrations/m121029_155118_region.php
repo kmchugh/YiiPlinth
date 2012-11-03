@@ -2,7 +2,7 @@
 /**
  * Creates and populates the Region table
  */
-class m121029_155118_regions extends CDbMigration
+class m121029_155118_region extends CDbMigration
 {
 	private static $g_oCountryLookup;
 

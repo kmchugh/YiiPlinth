@@ -1,6 +1,8 @@
 <?php
-
-class m121031_030340_users extends CDbMigration
+/**
+ * Creates the User table
+ */
+class m121011_011000_user extends CDbMigration
 {
 	public function up()
 	{
@@ -14,7 +16,7 @@ class m121031_030340_users extends CDbMigration
 			'StartDate'=>'datetime',
 			'EndDate'=>'datetime',
 			'LoginCount'=>'integer',
-			'LastLoginDate'=>'datetime',
+			'LastLoginDate'=>'datetime_null',
 			'Anonymous'=>'boolean',
 			'CreatedDate'=>'datetime',
 			'CreatedBy'=>'guid',
@@ -22,9 +24,10 @@ class m121031_030340_users extends CDbMigration
 			'ModifiedBy'=>'guid',
 			'RowVersion'=>'datetime',
 			));
-		$this->createIndex('UQ_{{User}}_GUID', "{{User}}", 'GUID', true);
-		$this->createIndex('UQ_{{User}}_Email', "{{User}}", 'Email' true);
 
+		$this->createIndex('UQ_{{User}}_GUID', "{{User}}", 'GUID', true);
+		$this->createIndex('UQ_{{User}}_Email', "{{User}}", 'Email', true);
+		$this->createIndex('UQ_{{User}}_DisplayName', "{{User}}", 'DisplayName', true);
 	}
 
 	public function down()

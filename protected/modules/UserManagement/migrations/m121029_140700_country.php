@@ -4,7 +4,7 @@
  *
  * Currently there are ~50 records which do not have an ISOCode and these will need to be added in.
  */
-class m121029_140700_countryUpdate extends CDbMigration
+class m121029_140700_country extends CDbMigration
 {
 	public function safeUp()
 	{

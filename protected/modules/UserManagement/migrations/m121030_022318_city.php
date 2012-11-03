@@ -2,7 +2,7 @@
 /**
  * This is broken into two files due to the size of the import
  */
-class m121030_022318_cities extends CDbMigration
+class m121030_022318_city extends CDbMigration
 {
 	private static $g_oCountryLookup;
 	private static $g_oRegionLookup;

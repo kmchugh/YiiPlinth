@@ -1,6 +1,8 @@
 <?php
-
-class m121011_031449_userInfo_UserURL extends CDbMigration
+/**
+ * Adds the UserURL to the User Table
+ */
+class m121011_033449_userInfo extends CDbMigration
 {
 	// Use safeUp/safeDown to do migration with transaction
 	public function safeUp()

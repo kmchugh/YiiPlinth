@@ -1,6 +1,6 @@
 <?php
 
-class m121030_022317_cities extends CDbMigration
+class m121030_022317_city extends CDbMigration
 {
 	private static $g_oCountryLookup;
 	private static $g_oRegionLookup;
