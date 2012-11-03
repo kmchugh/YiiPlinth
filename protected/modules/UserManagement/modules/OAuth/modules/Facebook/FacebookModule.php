@@ -12,6 +12,8 @@ class FacebookModule extends CWebModule
 			'Facebook.models.*',
 			'Facebook.components.*',
 		));
+
+		$this->getParentModule()->onRetrieveOAuthProviderLinks = array($this, 'getOAuthLink');
 	}
 
 	public function beforeControllerAction($controller, $action)
@@ -24,5 +26,14 @@ class FacebookModule extends CWebModule
 		}
 		else
 			return false;
+	}
+
+	/**
+	 * Populates the OAuthLinks array with the authorisation link for this Provider
+	 * @param  CEvent $toEvent the event that occured, contains an OAuthLinks parameter
+	 */
+	public function getOAuthLink($toEvent)
+	{
+		$toEvent->params['OAuthLinks']['Facebook']='/UserManagement/OAuth/Facebook';
 	}
 }

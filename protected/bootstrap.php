@@ -26,18 +26,18 @@
 				  : $tcConfigType;
 
 			// Plinth Config files
-			$laConfig[]=dirname(__FILE__)."/config/common.php";
-			$laConfig[]=dirname(__FILE__)."/config/$tcConfigType.php";
+			$laConfig[]=dirname(__FILE__).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'common.php';
+			$laConfig[]=dirname(__FILE__).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$tcConfigType.'php';
 
 			// Application Config Files
-			$laConfig[]=$taOptions['root']."/protected/config/common.php";
-			$laConfig[]=$taOptions['root']."/protected/config/$tcConfigType.php";
+			$laConfig[]=$taOptions['root'].DIRECTORY_SEPARATOR.'protected'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'common.php';
+			$laConfig[]=$taOptions['root'].DIRECTORY_SEPARATOR.'protected'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$tcConfigType.'.php';
 
 			if (isset($_ENV['HOME']))
 			{
 				// Custom Installation Config
-				$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/common.php";
-				$laConfig[] = $_ENV['HOME']."/".$_SERVER["SERVER_NAME"]."config/$tcConfigType.php";
+				$laConfig[] = $_ENV['HOME'].DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"].'config'.DIRECTORY_SEPARATOR.'common.php';
+				$laConfig[] = $_ENV['HOME'].DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"].'config'.DIRECTORY_SEPARATOR.$tcConfigType.'.php';
 			}
 
 			// Build the config array
@@ -74,21 +74,21 @@
 			defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
 			defined('YII_DEBUG') or define('YII_DEBUG',true);
 
-			require_once(dirname($tcYII).'/yii.php');
+			require_once(dirname($tcYII).DIRECTORY_SEPARATOR.'yii.php');
 
 			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
 
 			if(isset($toConfig))
 			{
 				$loApp=Yii::createConsoleApplication($toConfig);
-				$loApp->commandRunner->addCommands(YII_PATH.'/cli/commands');
+				$loApp->commandRunner->addCommands(YII_PATH.DIRECTORY_SEPARATOR.'cli'.DIRECTORY_SEPARATOR.'commands');
 				$loEnv=@getenv('YII_CONSOLE_COMMANDS');
 				if(!empty($loEnv))
 					$loApp->commandRunner->addCommands($loEnv);
 			}
 			else
 			{
-				$loApp=Yii::createConsoleApplication(array('basePath'=>dirname($tcYII).'/cli'));
+				$loApp=Yii::createConsoleApplication(array('basePath'=>dirname($tcYII).DIRECTORY_SEPARATOR.'cli'));
 			}
 			$loApp->run();
 		}
@@ -102,12 +102,13 @@
 		{
 			// Include the YII Framework
 			require_once($tcYII);
+			require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'PlinthWebApplication.php');
 
 			// Setup an alias for YIIPlinth
 			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
 
 			// And off we go...
-			Yii::createWebApplication($toConfig)->run();
+			Yii::createApplication('PlinthWebApplication', $toConfig)->run();
 		}
 
 		/**
@@ -124,12 +125,12 @@
 					$lcName = is_array($laConfig) ? $lcName : $laConfig;
 
 					// Extract this module config, for now this only supports YIIPlinth modules
-					$lcConfigFile = $tcPath.'/modules/'.$lcName."/config/common.php";
+					$lcConfigFile = $tcPath.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$lcName.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'common.php';
 					if (file_exists($lcConfigFile))
 					{
 						$taConfigList[] = $lcConfigFile;
 					}
-					$lcConfigFile = $tcPath.'/modules/'.$lcName."/config/$tcConfigType.php";
+					$lcConfigFile = $tcPath.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$lcName.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$tcConfigType.'.php';
 					if (file_exists($lcConfigFile))
 					{
 						$taConfigList[] = $lcConfigFile;
@@ -138,7 +139,7 @@
 					// Extract any child modules
 					if (isset($laConfig['modules']))
 					{
-						self::extractModuleConfig($laConfig['modules'], $tcPath."/modules/$lcName", $taConfigList, $tcConfigType);
+						self::extractModuleConfig($laConfig['modules'], $tcPath.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$lcName, $taConfigList, $tcConfigType);
 					}
 				}
 			}

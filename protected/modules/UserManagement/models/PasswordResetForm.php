@@ -47,6 +47,9 @@ class PasswordResetForm extends CFormModel
 				$loUser->resetPassword($lcPassword);
 				if ($loUser->save())
 				{
+					$loEvent = new CEvent($this, array("user"=>$loUser));
+					Yii::app()->getModule('UserManagement')->onPasswordReset($loEvent);
+
 					// Send the user an email
 					$loEmail = new YiiMailMessage;
 					$loEmail->view = '//mail/resetPassword';

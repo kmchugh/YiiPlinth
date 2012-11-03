@@ -34,6 +34,9 @@ return array(
         'LessCSS'=>array(
             'class'=>'YIIPlinth.modules.LessCSS.LessCSSModule',
             ),
+        'Images'=>array(
+            'class'=>'YIIPlinth.modules.Images.ImagesModule',
+            ),
         'Messaging',
         'MailChimp',
     ),

@@ -12,6 +12,8 @@ class TwitterModule extends CWebModule
 			'Twitter.models.*',
 			'Twitter.components.*',
 		));
+
+		$this->getParentModule()->onRetrieveOAuthProviderLinks = array($this, 'getOAuthLink');
 	}
 
 	public function beforeControllerAction($controller, $action)
@@ -24,5 +26,14 @@ class TwitterModule extends CWebModule
 		}
 		else
 			return false;
+	}
+
+	/**
+	 * Populates the OAuthLinks array with the authorisation link for this Provider
+	 * @param  CEvent $toEvent the event that occured, contains an OAuthLinks parameter
+	 */
+	public function getOAuthLink($toEvent)
+	{
+		$toEvent->params['OAuthLinks']['Twitter']='/UserManagement/OAuth/Twitter';
 	}
 }

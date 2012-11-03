@@ -47,6 +47,11 @@ class RegistrationForm extends CFormModel
         if(!$this->hasErrors())
         {
             $loUser = User::create($this->email);
+            if (!$loUser->hasErrors())
+            {
+                $loEvent = new CEvent($this, array("user"=>$loUser));
+                Yii::app()->getModule('UserManagement')->onUserRegistered($loEvent);
+            }
             $this->addErrors($loUser->getErrors());
         }
         return !$this->hasErrors();

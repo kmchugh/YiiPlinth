@@ -6,7 +6,7 @@ return array(
     'components'=>array(
         'urlManager'=>array(
             'rules'=>array(
-                '<path:.+\/>?<file:\w+>\.less'=>'LessCSS/default',
+                '/images/<path:.+>'=>'Images/default',
                 ),
             ),
     ),

@@ -1,5 +1,6 @@
 <div class="form row">
     <h1><?php echo Utilities::getString('Register'); ?></h1>
+    
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>$tcFormName,
         'enableClientValidation'=>true,
@@ -9,7 +10,6 @@
     )); ?>
 
         <fieldset>
-            <legend><h1><?php echo Utilities::getString('Register'); ?></h1></legend>
             <p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
 
             <div class="field">
