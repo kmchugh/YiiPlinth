@@ -13,14 +13,14 @@ class m121103_152000_userInfo extends CDbMigration
     public function safeUp()
     {
         $this->dropColumn('{{UserInfo}}','NotifyUpdates');
-        $this->addColumn('{{userInfo}}','CountryID','id_null');
+        $this->addColumn('{{UserInfo}}','CountryID','id_null');
 
         $this->addForeignKey('FK_{{UserInfo}}_CountryID', '{{UserInfo}}', 'CountryID',
                     '{{Country}}', 'CountryID', 'NO ACTION', 'NO ACTION');
 
         self::$g_aListofUserInfo = $this->getDbConnection()->createCommand()
                                                                                                             ->select('*')
-                                                                                                            ->from('{{userInfo}}')->queryAll();
+                                                                                                            ->from('{{UserInfo}}')->queryAll();
 
 
         //populate the CountryID of the UserInfo table
@@ -28,7 +28,7 @@ class m121103_152000_userInfo extends CDbMigration
         {
             $lnCountryID = $this->getCountryID($laUserInfo['Country']);
 
-            $this->update('{{userInfo}}', 
+            $this->update('{{UserInfo}}', 
                 array('CountryID'=>$lnCountryID,),
                 'UserInfoID=:userInfoID',
                 array(':userInfoID'=>$laUserInfo['UserInfoID'])
@@ -60,7 +60,7 @@ class m121103_152000_userInfo extends CDbMigration
         {
             self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
             ->select('CountryID, Name')
-            ->from('{{country}}')->queryAll();
+            ->from('{{Country}}')->queryAll();
         }
 
         foreach (self::$g_oCountryLookup as $laCountry)
@@ -79,7 +79,7 @@ class m121103_152000_userInfo extends CDbMigration
         {
             self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
                                                                                                                     ->select('CountryID, Name')
-                                                                                                                    ->from('{{country}}')->queryAll();
+                                                                                                                    ->from('{{Country}}')->queryAll();
         }
 
         foreach (self::$g_oCountryLookup as $laCountry)
@@ -99,14 +99,14 @@ class m121103_152000_userInfo extends CDbMigration
 
         self::$g_aListofUserInfo = $this->getDbConnection()->createCommand()
                                                                                                             ->select('*')
-                                                                                                            ->from('{{userInfo}}')->queryAll();
+                                                                                                            ->from('{{UserInfo}}')->queryAll();
 
         //populate the Country of the UserInfo table
         foreach(self::$g_aListofUserInfo as $laUserInfo)
         {
             $lcCountryName = $this->getCountryName($laUserInfo['CountryID']);
 
-            $this->update('{{userInfo}}', 
+            $this->update('{{UserInfo}}', 
                 array('Country'=>$lnCountryName,),
                 'UserInfoID=:userInfoID',
                 array(':userInfoID'=>$laUserInfo['UserInfoID'])
