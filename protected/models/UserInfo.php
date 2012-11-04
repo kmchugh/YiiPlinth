@@ -6,13 +6,16 @@
  * The followings are the available columns in table 'UserInfo':
  * @property string $UserInfoID
  * @property string $UserID
- * @property boolean $NotifyUpdates
- * @property string $Country
+ * @property string $CountryID
  * @property string $ProfileImageURI
  * @property string $FirstName
  * @property string $LastName
  * @property string $Description
  * @property string $UserURL
+ * @property string $BirthDay
+ * @property string $BirthMonth
+ * @property string $BirthYear
+ * @property string $GenderID
  * @property string $CreatedDate
  * @property string $CreatedBy
  * @property string $ModifiedDate
@@ -45,7 +48,6 @@ class UserInfo extends PlinthModel
 	public function afterFind()
 	{
 		parent::afterFind();
-		$this->NotifyUpdates = ord($this->NotifyUpdates);
 	}
 
 	/**
@@ -58,7 +60,6 @@ class UserInfo extends PlinthModel
 			array('Country, FirstName, LastName', 'length', 'max'=>255),
 			array('UserURL', 'length', 'max'=>40),
 			array('UserURL', 'required'),
-			array('NotifyUpdates', 'boolean'),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 
 					'maxSize'=>1024 * 200,
