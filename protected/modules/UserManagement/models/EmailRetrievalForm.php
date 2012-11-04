@@ -1,7 +1,5 @@
 <?php
 
-Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
-Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
 /**
  * LoginForm class.
  * LoginForm is the data structure for keeping
