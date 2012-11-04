@@ -100,6 +100,8 @@ class UserInfo extends PlinthModel
 	{
 		return array(
 			'user' => array(self::BELONGS_TO, 'User', 'UserID'),
+			'country' => array(self::BELONGS_TO, 'Country', 'CountryID'),
+			'gender' => array(self::BELONGS_TO, 'Gender', 'GenderID'),
 		);
 	}
 
