@@ -8,21 +8,22 @@ class SignatureHMACSHA1 extends SignatureMethod
 
 	public function sign($tcMethod, $tcURL, $toParameters, $tcSecret, $tcTokenSecret = '')
 	{
-		$lcBase = strtoupper($tcMethod).'&'.urlencode($tcURL).'&';
+		$lcBase = strtoupper($tcMethod).'&'.rawurlencode($tcURL).'&';
 		$lcParameter = '';
 		$loParameters = array();
 
 		foreach ($toParameters as $lcKey => $lcValue) 
 		{
-			$loParameters[$this->urlencode($lcKey)] = $this->urlencode($lcValue);
+			$loParameters[rawurlencode($lcKey)] = rawurlencode($lcValue);
 		}
+
 		ksort($loParameters);
 
 		foreach ($loParameters as $lcKey => $lcValue) 
 		{
 			$lcParameter.=$lcKey.'='.$lcValue.'&';
 		}
-		$lcParameter = urlencode(substr($lcParameter, 0, strlen($lcParameter)-1));
+		$lcParameter = rawurlencode(substr($lcParameter, 0, strlen($lcParameter)-1));
 
 		$loParameters['oauth_signature']=urlencode(base64_encode(hash_hmac('sha1', $lcBase.$lcParameter, $tcSecret.'&'.$tcTokenSecret, true)));
 

@@ -57,7 +57,7 @@ class UserInfo extends PlinthModel
 	{
 		return array(
 			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
-			array('Country, FirstName, LastName', 'length', 'max'=>255),
+			array('FirstName, LastName', 'length', 'max'=>255),
 			array('UserURL', 'length', 'max'=>40),
 			array('UserURL', 'required'),
 			array('ProfileImageURI', 'file', 
@@ -68,7 +68,7 @@ class UserInfo extends PlinthModel
 					'allowEmpty' => true),
 			array('Description', 'safe'),
 			array('UserURL', 'unique'),
-			array('Country, Description', 'safe', 'on'=>'search'),
+			array('Description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,7 +85,7 @@ class UserInfo extends PlinthModel
 		}
 
 		// Set a profile URL if needed
-		$laDefaultProfiles = Utilities::printVar(Yii::app()->params['defaults']['profileImages']);
+		$laDefaultProfiles = Yii::app()->params['defaults']['profileImages'];
 		if (count($laDefaultProfiles) > 0 && ($this->ProfileImageURI === NULL || strlen($this->ProfileImageURI) === 0))
 		{
 			$this->ProfileImageURI = $laDefaultProfiles[rand(0, count($laDefaultProfiles) -1)];
@@ -113,7 +113,7 @@ class UserInfo extends PlinthModel
 		return array(
 			'UserInfoID' => 'User Info',
 			'UserID' => 'User',
-			'Country' => 'Country',
+			'CountryID' => 'Country',
 			'ProfileImageURI' => 'Profile Image Uri',
 			'Description' => 'Description',
 			'UserURL' => 'User URL',
@@ -133,7 +133,6 @@ class UserInfo extends PlinthModel
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Country',$this->Country,true);
 		$criteria->compare('Description',$this->Description,true);
 
 		return new CActiveDataProvider($this, array(

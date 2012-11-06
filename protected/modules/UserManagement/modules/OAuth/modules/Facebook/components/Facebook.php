@@ -7,13 +7,6 @@ class Facebook extends OAuth
 	public $permissions='email';
 
 	public $endpointURLs = array(
-		'authenticate'=>array(
-			'url'=>'/oauth/authenticate', 
-			'method'=>'get'),
-		'authorize'=>array(
-			'url'=>'/oauth/authorize', 
-			'method'=>'get'),
-
 		'access'=>array(
 			'url'=>'https://graph.facebook.com/oauth/access_token',
 			'method'=>'get'),
@@ -31,6 +24,11 @@ class Facebook extends OAuth
 		return 'Facebook';
 	}
 
+	protected function getConfirmationParameter()
+	{
+		return '';
+	}
+
 	protected function getVerificationParameter()
 	{
 		return 'code';
@@ -39,6 +37,16 @@ class Facebook extends OAuth
 	protected function getTokenParameter()
 	{
 		return 'state';
+	}
+
+	protected function getSecretParameter()
+	{
+		return '';
+	}
+
+	protected function isOAuthConfirmed($toRequest)
+	{
+		return false;
 	}
 
 	protected function isOAuthVerified($toRequest)
@@ -58,6 +66,12 @@ class Facebook extends OAuth
 		return $this->getUserForToken($taParameters['access_token']);
 	}
 
+	public function getUserInfo($toOAuthUser)
+	{
+		$loRequest = $this->makeRequest($this->getEndpoint('userinfo'), $loParameters, NULL);
+		return json_decode($loRequest['response'], true);
+	}
+
 	protected function updateOAuthUserInfo($taParameters, $toOAuthUser)
 	{
 		$loParameters = array('access_token'=>$taParameters['access_token']);
@@ -69,18 +83,36 @@ class Facebook extends OAuth
 			'Token'=>$taParameters['access_token'],
 			'Expires'=>Utilities::getTimestamp() + $taParameters['expires'] * 1000,
 			'UID'=>$laParameters['id'],
-			'DisplayName'=>$laParameters['username'],
+			'DisplayName'=>$laParameters['name'],
 			'UserName'=>$laParameters['username'],
 			));
 
 		return $laParameters;
 	}
 
+	protected function populateUserInfo($toUser, $toUserInfo, $toOAuthUser, $toExtraInfo)
+	{
+		/*
+		    [id] => 517296295
+		    [name] => Ken McHugh
+		    [first_name] => Ken
+		    [last_name] => McHugh
+		    [link] => http://www.facebook.com/kmchugh12
+		    [username] => kmchugh12
+		    [gender] => male
+		    [email] => ken_mchugh@hotmail.com
+		    [timezone] => 8
+		    [locale] => en_GB
+		    [verified] => 1
+		    [updated_time] => 2012-07-28T07:04:18+0000
+		 */
+
+		$toUserInfo->FirstName = !is_null($toExtraInfo) ? $toExtraInfo['first_name'] : '';
+		$toUserInfo->LastName = !is_null($toExtraInfo) ? $toExtraInfo['last_name'] : '';
+	}
+
 	protected function populateUser($toUser, $toOAuthUser, $toExtraInfo)
 	{
-		// TODO: Create and parse a UserInfo here
-		// TODO: Parse this additional information
-
 		/*
 		    [id] => 517296295
 		    [name] => Ken McHugh
@@ -134,22 +166,6 @@ class Facebook extends OAuth
 		}
 		return $laReturn;
 	}
-
-	public function handleOAuthResponse1($toRequest)
-	{
-		if (isset($toRequest['state']))
-		{
-			Utilities::printVar($toRequest);
-			$loUser = $this->getUserForToken($toRequest['state']);
-
-			Utilities::printVar($loUser);
-		}
-		exit();
-
-		
-	}
-
-
 }
 
 ?>

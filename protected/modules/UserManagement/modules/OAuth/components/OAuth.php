@@ -46,10 +46,22 @@ abstract class OAuth
 	protected abstract function getVerificationParameter();
 
 	/**
+	 * Gets the name of the parameters that is used as confirmation by the service
+	 * @return string the name of the parameter to check for the confirmation code
+	 */
+	protected abstract function getConfirmationParameter();
+
+	/**
 	 * Gets the name of the parameters that is used as token by the service
 	 * @return string the name of the parameter to check for the token
 	 */
 	protected abstract function getTokenParameter();
+
+	/**
+	 * Gets the name of the parameters that is used as the secret by the service
+	 * @return string the name of the parameter to check for the secret
+	 */
+	protected abstract function getSecretParameter();
 
 	/**
 	 * Updates the parameter list for the service
@@ -72,6 +84,13 @@ abstract class OAuth
 	protected abstract function isOAuthVerified($toRequest);
 
 	/**
+	 * Checks if the oauth request has been accepted by the provider
+	 * @param  Object the response from the oauth service
+	 * @return boolean true if the provider accepted the request
+	 */
+	protected abstract function isOAuthConfirmed($toRequest);
+
+	/**
 	 * Gets the OAuth user for the access request
 	 * @param  array the parameters parsed from the request
 	 * @return OAuthUser the user from the request
@@ -85,6 +104,8 @@ abstract class OAuth
 	 * @return OAuthUser the updated user
 	 */
 	protected abstract function updateOAuthUserInfo($taParameters, $toOAuthUser);
+
+	public abstract function getUserInfo($toOAuthUser);
 
 	/**
 	 * Add parameters to the access token request
@@ -107,6 +128,16 @@ abstract class OAuth
 	protected abstract function populateUser($toUser, $toOAuthUser, $toExtraInfo);
 
 	/**
+	 * Populates the user information for the newly created user
+	 * @param  User $loUser      The user to populate the information for
+	 * @param  User $loUserInfo      The userinfo to populate the information for
+	 * @param  OAuthUser $toOAuthUser The OAuthUser the user is being created for
+	 * @param  array $toExtraInfo the parameters with the extra information to populate the user with
+	 * @return boolean              true if everything was okay
+	 */
+	protected abstract function populateUserInfo($toUser, $toUserInfo, $toOAuthUser, $toExtraInfo);
+
+	/**
 	 * Extracts and returns the email address from the parameters
 	 * @param  array $taParameters the parameters to extract the email address from
 	 * @return string               the email address
@@ -118,9 +149,16 @@ abstract class OAuth
 	 * @param  Object the request from the OAuth provider
 	 * @return true if the user is logged in as a result of this call
 	 */
-	public function handleOAuthResponse($toRequest)
+	public function handleOAuthResponse($toRequest, $toOAuthUser = null)
 	{
-		if (isset($toRequest[$this->getVerificationParameter()]))
+		if (isset($toRequest[$this->getConfirmationParameter()]) && $this->isOAuthConfirmed($toRequest))
+		{
+			$toOAuthUser->Token = $toRequest[$this->getTokenParameter()];
+			$toOAuthUser->Secret = $toRequest[$this->getSecretParameter()];
+			$toOAuthUser->save();
+			$loValues = $this->makeAuthenticationRequest($toOAuthUser);
+		}
+		else if (isset($toRequest[$this->getVerificationParameter()]) && $this->isOAuthVerified($toRequest))
 		{
 			$loValues = $this->updateAccessToken($_REQUEST[$this->getTokenParameter()], $_REQUEST[$this->getVerificationParameter()]);
 			$loOAuthUser = $loValues['user'];
@@ -161,14 +199,14 @@ abstract class OAuth
 			exit();
 		}
 		$loUser = User::create($tcEmail);
-		$loUser->DisplayName = $toOAuthUser->DisplayName;
+		$loUser->DisplayName = $toOAuthUser->UserName;
 
 		$lnCount = 0;
 		while (!$loUser->save() && $lnCount < 10)
 		{
 			if ($loUser->getError('DisplayName'))
 			{
-				$loUser->DisplayName = $toOAuthUser->DisplayName.str($lnCount+1);
+				$loUser->DisplayName = $toOAuthUser->UserName.($lnCount+1);
 			}
 			else
 			{
@@ -191,6 +229,12 @@ abstract class OAuth
 			{
 				$this->populateUser($loUser, $toOAuthUser, $toExtraInfo);
 				$loUser->save();
+
+				$loUserInfo = new UserInfo();
+                    			$loUserInfo->UserID=$loUser->UserID;
+                    			$this->populateUserInfo($loUser, $loUserInfo, $toOAuthUser, $toExtraInfo);
+
+                    			$loUserInfo->save();
 			}
 		}
 
@@ -222,6 +266,29 @@ abstract class OAuth
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Makes an authentication request to the OAuth provider
+	 * @param  OAuthUser $toOAuthUser The OAuthUser we are processing
+	 * @return array              the user and any extra info discovered for the user
+	 */
+	public function makeAuthenticationRequest($toOAuthUser)
+	{
+		$loExtraInfo = array();
+		if (!is_null($toOAuthUser))
+		{
+			$loParameters = array(
+				'oauth_token'=>$toOAuthUser->Token,
+				);
+			$loParameters = $this->addAccessTokenParameters($loParameters, $toOAuthUser);
+
+			$loRequest = $this->makeRequest($this->getEndpoint('authenticate'), $loParameters, $toOAuthUser);
+		}
+		return array(
+			'user'=>$loOAuthUser,
+			'extrainfo'=>$loExtraInfo,
+			);
 	}
 
 	/**
@@ -307,7 +374,13 @@ abstract class OAuth
 			));
 		if ($loOAuth->save())
 		{
-			$this->handleOAuthResponse($this->makeRequest($this->getEndpoint('request'), $loParameters));
+			$loResponse = $this->makeRequest($this->getEndpoint('request'), $loParameters);
+			if (!is_null($loResponse))
+			{
+				$loParameters = array();
+				parse_str($loResponse['response'], $loParameters);
+				$this->handleOAuthResponse($loParameters, $loOAuth);
+			}
 		}
 		else
 		{
@@ -347,21 +420,30 @@ abstract class OAuth
 	}
 
 	/**
+	 * Checks if the specified end point exists
+	 * @param  string  $tcType the end point to check for
+	 * @return boolean         true if the endpoint exists
+	 */
+	protected function hasEndpoint($tcType)
+	{
+		return isset($this->endpointURLs[$tcType]);
+	}
+
+	/**
 	 * Builds the query string based on the endpoint and parameters
 	 * @return [type] [description]
 	 */
-	protected function buildQueryString($toEndpoint, $toParameters)
+	protected function buildQueryString($toEndpoint, $toParameters, $tcType = 'internal')
 	{
-		if ($toEndpoint['method'] === 'get')
+		$lcURL = $toEndpoint['url'];
+		foreach ($toParameters as $lcKey => $lcValue) 
 		{
-			$lcURL = $toEndpoint['url'];
-			foreach ($toParameters as $lcKey => $lcValue) 
+			if ($tcType==='redirect' || !preg_match('/^oauth/', $lcKey))
 			{
 				$lcURL.=(strpos($lcURL, '?') === FALSE && strpos($lcURL, '?') === FALSE ? '?' : '&').$lcKey.'='.$lcValue;
 			}
-			return $lcURL;
 		}
-		return $toEndpoint['url'];
+		return $lcURL;
 	}
 
 	/**
@@ -375,7 +457,7 @@ abstract class OAuth
 	{
 		$toParameters = $this->addParameters($toEndpoint['method'], $toEndpoint['url'], $toParameters, $toOAuthUser);
 
-		$lcURL = $toEndpoint['method'] === 'get' ? $this->buildQueryString($toEndpoint, $toParameters) : $toEndpoint['url'];
+		$lcURL = $this->buildQueryString($toEndpoint, $toParameters, isset($toEndpoint['type']) ? $toEndpoint['type'] : 'internal');
 
 		if (isset($toEndpoint['type']) && $toEndpoint['type'] == 'redirect')
 		{
@@ -390,19 +472,14 @@ abstract class OAuth
 		    	curl_setopt($loCurl, CURLOPT_RETURNTRANSFER, TRUE);
 
 		    	$lcAuthHeader = 'Authorization: OAuth ';
-		    	//$lcQuery = '';
 		    	foreach ($toParameters as $lcKey => $lcValue)
 		    	{
 		    		if (preg_match('/^oauth/', $lcKey))
 		    		{
 		    			$lcAuthHeader.=$lcKey.'="'.$lcValue.'", ';
-		    		}
-		    		else
-		    		{
-		    			//$lcQuery.=(strpos($tcURL, '?') === FALSE && strpos($lcQuery, '?') === FALSE ? '?' : '&').$lcKey.'='.$lcValue;
+
 		    		}
 		    	}
-
 		    	$lcAuthHeader = substr($lcAuthHeader, 0, strlen($lcAuthHeader)-2);
 
 		    	curl_setopt($loCurl, CURLOPT_HTTPHEADER, array($lcAuthHeader,
@@ -420,7 +497,7 @@ abstract class OAuth
 				}
 			}
 
-			curl_setopt($loCurl, CURLOPT_URL, $lcURL);//.$lcQuery);
+			curl_setopt($loCurl, CURLOPT_URL, $lcURL);
 
 			$this->m_oHTTPHeader = array();
 			$loResponse = curl_exec($loCurl);
@@ -434,6 +511,7 @@ abstract class OAuth
 	    			);
 			curl_close($loCurl);
 			$this->m_oHTTPHeader = array();
+
 			return $loReturn['responseCode'] === 200 || $tlReturnError ? $loReturn : null;
 		}
 		return NULL;
@@ -462,7 +540,7 @@ abstract class OAuth
 
 	protected function getNonce()
 	{
-		return Utilities::getStringGUID().'_'.$this->getProviderName();
+		return Utilities::getStringGUID().$this->getProviderName();
 	}
 
 	protected function getConsumerSecret()

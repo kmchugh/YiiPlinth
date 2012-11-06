@@ -1,7 +1,9 @@
 <?php
 
-class TwitterModule extends CWebModule
+class TwitterModule extends OAuthBaseModule
 {
+	public $providerName = 'Twitter';
+
 	public function init()
 	{
 		// this method is called when the module is being created
@@ -13,19 +15,7 @@ class TwitterModule extends CWebModule
 			'Twitter.components.*',
 		));
 
-		$this->getParentModule()->onRetrieveOAuthProviderLinks = array($this, 'getOAuthLink');
-	}
-
-	public function beforeControllerAction($controller, $action)
-	{
-		if(parent::beforeControllerAction($controller, $action))
-		{
-			// this method is called before any module controller action is performed
-			// you may place customized code here
-			return true;
-		}
-		else
-			return false;
+		parent::init();
 	}
 
 	/**
