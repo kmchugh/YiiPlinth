@@ -1,19 +1,19 @@
 <?php
 
-class Twitter extends OAuth
+class Facebook extends OAuth
 {
-	public $host='https://api.twitter.com';
+	public $host='https://www.facebook.com/dialog/';
 
 	public $endpointURLs = array(
 		'authenticate'=>'/oauth/authenticate',
 		'authorize'=>'/oauth/authorize',
 		'access'=>'/oauth/access_token',
-		'request'=>'/oauth/request_token',
+		'request'=>'/oauth',
 		);
 
 	public function getProviderName()
 	{
-		return 'Twitter';
+		return 'Facebook';
 	}
 
 	public function getUserInfo($toAuthUser)

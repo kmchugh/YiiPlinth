@@ -46,6 +46,7 @@ class OAuth
 			$loParameters['oauth_callback']=$toCallbackURL;
 		}
 		$loRequest = $this->makeRequest($this->getEndpoint('request'), 'POST', $loParameters);
+		Utilities::printVar($loRequest);
 		if (!is_null($loRequest))
 		{
 			$laParameters = array();

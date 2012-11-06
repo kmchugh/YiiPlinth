@@ -1,7 +1,8 @@
 <?php
 
-class FacebookModule extends CWebModule
+class FacebookModule extends OAuthBaseModule
 {
+	public $providerName = 'Facebook';
 	public function init()
 	{
 		// this method is called when the module is being created
@@ -13,19 +14,7 @@ class FacebookModule extends CWebModule
 			'Facebook.components.*',
 		));
 
-		$this->getParentModule()->onRetrieveOAuthProviderLinks = array($this, 'getOAuthLink');
-	}
-
-	public function beforeControllerAction($controller, $action)
-	{
-		if(parent::beforeControllerAction($controller, $action))
-		{
-			// this method is called before any module controller action is performed
-			// you may place customized code here
-			return true;
-		}
-		else
-			return false;
+		parent::init();
 	}
 
 	/**
@@ -34,6 +23,13 @@ class FacebookModule extends CWebModule
 	 */
 	public function getOAuthLink($toEvent)
 	{
-		$toEvent->params['OAuthLinks']['Facebook']='/UserManagement/OAuth/Facebook';
+		$toEvent->params['OAuthLinks'][$this->providerName]='/UserManagement/OAuth/Facebook';
 	}
+
+	/*
+	public function buildCallback()
+	{
+		return 'https://www.facebook.com/dialog/oauth?client_id'.
+	}
+	*/
 }

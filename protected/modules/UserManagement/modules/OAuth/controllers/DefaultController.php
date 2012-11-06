@@ -1,9 +1,6 @@
 <?php
 
-class DefaultController extends Controller
+abstract class DefaultOAuthController extends Controller
 {
-	public function actionIndex()
-	{
-		$this->render('index');
-	}
+	
 }
