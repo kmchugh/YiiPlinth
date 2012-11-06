@@ -165,10 +165,14 @@ abstract class OAuth
 			$loExtraInfo = $loValues['extrainfo'];
 
 			// Determine if this is a new user or an old user
-			if (!isset($loAuthUser->UserID))
+			if (!isset($loOAuthUser->UserID))
 			{
 				// This is a new user so we need to create one
 				$loUser = $this->beginCreateUser($loOAuthUser, $loExtraInfo);
+			}
+			else
+			{
+				$this->loginUser($loOAuthUser->user);
 			}
 			Yii::app()->getController()->redirect(preg_match('/.+?\/login/', Utilities::getCallbackURL()) ? '/' : Utilities::getCallbackURL());
 			return true;
@@ -322,16 +326,19 @@ abstract class OAuth
 					$loOAuthUser = $loUser;
 				}
 				$loExtraInfo = $this->updateOAuthUserInfo($laParameters, $loOAuthUser);
-				$loUser = OAuthUser::model()->findByAttributes(array(
-					'UID' => $loOAuthUser->UID,
-					'Provider'=>$this->getProviderName()));
-				if ($loUser != null && $loUser !== $loOAuthUser)
+				if (is_null($loOAuthUser->UserID))
 				{
-					$loUser->Token = $loOAuthUser->Token;
-					$loUser->Secret = $loOAuthUser->Secret;
-					$loUser->Expires = $loOAuthUser->Expires;
-					$loOAuthUser->delete();
-					$loOAuthUser = $loUser;
+					$loUser = OAuthUser::model()->findByAttributes(array(
+						'UID' => $loOAuthUser->UID,
+						'Provider'=>$this->getProviderName()));
+					if ($loUser != null && $loUser !== $loOAuthUser)
+					{
+						$loUser->Token = $loOAuthUser->Token;
+						$loUser->Secret = $loOAuthUser->Secret;
+						$loUser->Expires = $loOAuthUser->Expires;
+						$loOAuthUser->delete();
+						$loOAuthUser = $loUser;
+					}
 				}
 			}
  			$loOAuthUser->save();
