@@ -4,7 +4,7 @@
  */
 class m121103_153444_group extends CDbMigration
 {
-    public function up()
+    public function safeUp()
     {
         $this->createTable('{{Group}}', array(
             'GroupID'=>'pk',
@@ -24,7 +24,7 @@ class m121103_153444_group extends CDbMigration
         $this->createIndex('UQ_{{Group}}_Name', "{{Group}}", 'Name', true);
     }
 
-    public function down()
+    public function safeDown()
     {
         $this->dropTable('{{Group}}');
     }

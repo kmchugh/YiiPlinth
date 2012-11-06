@@ -46,15 +46,4 @@ class DefaultController extends Controller
 			}
 		}
 	}
-
-	private function loginUser($toUser)
-	{
-		if (!is_null($toUser))
-		{
-			$loUserIdentity=new PlinthUserIdentity($toUser->Email,$toUser->Password);
-			Yii::app()->user->login($loUserIdentity,3600*24*30);
-			return true;
-		}
-		return false;
-	}
 }

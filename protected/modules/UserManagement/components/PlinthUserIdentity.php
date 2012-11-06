@@ -25,7 +25,6 @@ class PlinthUserIdentity extends CUserIdentity
 		else
 		{
 			$this->errorCode = (!$this->m_oUser->validatePassword($this->password)) ? self::ERROR_PASSWORD_INVALID : self::ERROR_NONE;
-			}
 		}
 		return !$this->errorCode;
 	}
