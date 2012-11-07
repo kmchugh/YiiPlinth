@@ -27,7 +27,7 @@ class m121011_031000_userInfo extends CDbMigration
                     '{{User}}', 'UserID', 'NO ACTION', 'NO ACTION');
     }
 
-    public function down()
+    public function safeDown()
     {
         $this->dropTable('{{UserInfo}}');
     }

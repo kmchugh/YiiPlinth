@@ -4,7 +4,7 @@
  */
 class m121011_011000_user extends CDbMigration
 {
-	public function up()
+	public function safeUp()
 	{
 		$this->createTable('{{User}}', array(
 			'UserID'=>'pk',
@@ -30,7 +30,7 @@ class m121011_011000_user extends CDbMigration
 		$this->createIndex('UQ_{{User}}_DisplayName', "{{User}}", 'DisplayName', true);
 	}
 
-	public function down()
+	public function safeDown()
 	{
 		$this->dropTable('{{User}}');
 	}

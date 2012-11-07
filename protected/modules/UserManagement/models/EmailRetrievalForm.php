@@ -49,46 +49,9 @@ class EmailRetrievalForm extends CFormModel
             $loOAuthUser = $this->loadOAuthUser();
             if ($loOAuthUser != NULL)
             {
-                $loUser = User::create($this->email);
+                $loOAuth = new Twitter();
+                $loUser = $loOAuth->createUser($loOAuthUser, $this->email, $loOAuth->getUserInfo($loOAuthUser));
                 $this->addErrors($loUser->getErrors());
-
-                if(!$this->hasErrors())
-                {
-                    $loOAuth = new Twitter();
-                    $loOAuthInfo = $loOAuth->getUserInfo($loOAuthUser);
-
-                    // Update the User
-                    if (!is_null($loOAuthInfo))
-                    {
-                        $loUser->DisplayName = $loOAuthInfo->screen_name;
-                        $loUser->save();
-                    }
-
-                    $laName = explode(' ', !is_null($loOAuthInfo) ? strtoupper($loOAuthInfo->name): $loUser->DisplayName);
-                    if (count($laName) < 2)
-                    {
-                        $laName[1]='';
-                    }
-
-                    $loUserInfo = new UserInfo();
-                    $loUserInfo->UserID=$loUser->UserID;
-                    $loUserInfo->Country = !is_null($loOAuthInfo) ? strtoupper($loOAuthInfo->location) : NULL;
-                    $loUserInfo->ProfileImageURI = !is_null($loOAuthInfo) ? $loOAuthInfo->profile_image_url : NULL;
-                    $loUserInfo->FirstName = $laName[0];
-                    $loUserInfo->LastName = $laName[count($laName)-1];
-                    $loUserInfo->Description = !is_null($loOAuthInfo) ? $loOAuthInfo->description : '';
-                    $loUserInfo->save();
-
-                    $this->addErrors($loUserInfo->getErrors());
-
-                    $loOAuthUser->UserID=$loUser->UserID;
-                    $loOAuthUser->UserGUID=$loUser->GUID;
-                    $loOAuthUser->UserName=$loUser->Email;
-                    $loOAuthUser->save();
-
-                    $loUserIdentity=new PlinthUserIdentity($loUser->Email,$loUser->Password);
-                    Yii::app()->user->login($loUserIdentity,3600*24*30);
-                }
             }
         }
         return !$this->hasErrors();

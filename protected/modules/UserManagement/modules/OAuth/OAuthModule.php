@@ -11,6 +11,7 @@ class OAuthModule extends CWebModule
 		$this->setImport(array(
 			'OAuth.models.*',
 			'OAuth.components.*',
+			'OAuth.controllers.*',
 		));
 
 		// For each module that is installed, initialise it
