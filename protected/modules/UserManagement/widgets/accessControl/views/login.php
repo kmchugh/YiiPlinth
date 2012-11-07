@@ -15,9 +15,6 @@
                 <?php echo $form->labelEx($toModel,'username'); ?>
                 <?php echo $form->textField($toModel,'username'); ?>
                 <?php echo $form->error($toModel,'username'); ?>
-                <p class="hint">
-                    Hint: Your user name is your email address.
-                </p>
             </div>
 
             <div class="field">
