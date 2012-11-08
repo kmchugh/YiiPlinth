@@ -31,7 +31,7 @@ class PasswordReset extends CWidget
             if($loModel->validate() && $loModel->resetPassword())
             {
                 Yii::app()->user->setFlash('formMessage', 'An email has been sent to '.$loModel->email.' with your account details');
-                $this->redirect('login');
+                Yii::app()->getController()->redirect('login');
             }
         }
         // display the login form

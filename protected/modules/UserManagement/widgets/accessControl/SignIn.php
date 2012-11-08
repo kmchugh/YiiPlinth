@@ -40,7 +40,7 @@ class SignIn extends CWidget
                     $this->redirect('/?requestType=mobile');
                 }
                 Utilities::setCallbackURL(NULL);
-                $this->redirect($lcURL);
+                Yii::app()->getController()->redirect($lcURL);
             }
         }
 

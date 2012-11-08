@@ -174,6 +174,7 @@ class User extends PlinthModel
     					'LoginCount' => $this->LoginCount +1,), false);
 			$this->save();
 		}
+		return $llReturn;
 	}
 
 	/**
