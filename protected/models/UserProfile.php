@@ -48,10 +48,13 @@ class UserProfile extends CFormModel
 				$this->m_oUserInfo = UserInfo::model()->findByAttributes(array('UserID' => $this->m_oUser->UserID));
 				if ($this->m_oUserInfo !== null)
 				{
-					$this->country = $this->m_oUserInfo->Country;
+					$this->country = 
+						!is_null($this->m_oUserInfo->country) ?
+							$this->m_oUserInfo->country->Name :
+							'';
 					$this->profileImageURI = $this->m_oUserInfo->ProfileImageURI;
 					$this->description = $this->m_oUserInfo->Description;
-					$this->notifyUpdates = $this->m_oUserInfo->NotifyUpdates;
+					$this->notifyUpdates = TRUE;
 					$this->firstName = $this->m_oUserInfo->FirstName;
 					$this->lastName = $this->m_oUserInfo->LastName;
 
