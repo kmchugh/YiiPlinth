@@ -20,8 +20,8 @@ class m121103_153444_group extends CDbMigration
             'RowVersion'=>'datetime',
             ));
 
-        $this->createIndex('UQ_{{Group}}_GUID', "{{Group}}", 'GUID', true);
-        $this->createIndex('UQ_{{Group}}_Name', "{{Group}}", 'Name', true);
+        $this->createIndex('UQ_{{Group}}_GUID', '{{Group}}', 'GUID', true);
+        $this->createIndex('UQ_{{Group}}_Name', '{{Group}}', 'Name', true);
     }
 
     public function safeDown()
