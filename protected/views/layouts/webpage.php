@@ -6,7 +6,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head profile="http://www.w3.org/2005/10/profile">
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
         <meta http-equiv="imagetoolbar" content="no"/>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="language" content="en"/>
