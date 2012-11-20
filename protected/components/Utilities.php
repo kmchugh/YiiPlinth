@@ -414,6 +414,9 @@
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
 			if (is_null($tcCallbackURL))
 			{
 				$tcCallbackURL = Yii::app()->params['twitter']['callbackURL'];
@@ -455,6 +458,10 @@
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
+			
 			if( !empty($_GET['oauth_verifier']) &&
 				!empty($_SESSION['twitter_token']) &&
 				!empty($_SESSION['twitter_token_secret']))
@@ -483,6 +490,7 @@
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
 
 			// Only if the user is linked to a twitter account
@@ -498,6 +506,10 @@
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
+			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
+
 			// Update the user information
 			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
 

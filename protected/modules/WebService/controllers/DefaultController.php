@@ -118,7 +118,7 @@ class DefaultController extends PlinthController
 
 	public function actionCreate()
 	{
-		$loJSON = CJSON::decode(isset($_POST['json']) ? $_POST['json'] : file_get_contents("php://input"), true);				
+		$loJSON = CJSON::decode(isset($_POST['json']) ? $_POST['json'] : file_get_contents("php://input"), true);
 		foreach ($loJSON as $lcKey => $loValue) 
 		{
 			$_POST[$lcKey] = $loValue;
