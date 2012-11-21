@@ -37,9 +37,18 @@ class OAuthModule extends CWebModule
 			return false;
 	}
 
+	// TODO: Make this private
 	public function onRetrieveOAuthProviderLinks($toEvent)
 	{
 		$this->raiseEvent("onRetrieveOAuthProviderLinks", $toEvent);
+	}
+
+
+	public function getOAuthProviderLinks()
+	{
+		$loEvent = new CEvent($this, array("OAuthLinks"=>array()));
+		$this->onRetrieveOAuthProviderLinks($loEvent);
+		return $loEvent->params['OAuthLinks'];
 	}
 
 	/**

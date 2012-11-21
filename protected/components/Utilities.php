@@ -400,8 +400,9 @@
 		**/
 		public static function getTwitterAuthenticationURL($tcCallbackURL = NULL)
 		{
-			$loTwitterObject = self::getTwitterObject($tcCallbackURL, TRUE);
-			return $loTwitterObject->getAuthorizeUrl($_SESSION['twitter_token']);
+			$loLinks =  Yii::app()->getModule('UserManagement')->getModule('OAuth')->getOAuthProviderLinks();
+
+			return $loLinks['Twitter'];
 		}
 
 		// TODO: Refactor Twitter to separate class
@@ -461,7 +462,7 @@
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
-			
+
 			if( !empty($_GET['oauth_verifier']) &&
 				!empty($_SESSION['twitter_token']) &&
 				!empty($_SESSION['twitter_token_secret']))
