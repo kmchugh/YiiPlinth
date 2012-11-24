@@ -1,7 +1,7 @@
 <?php
 
 /**
- * lessphp v0.3.7
+ * lessphp v0.3.8 - > modified
  * http://leafo.net/lessphp
  *
  * LESS css compiler, adapted from http://lesscss.org
@@ -38,7 +38,7 @@
  * handling things like indentation.
  */
 class lessc {
-	static public $VERSION = "v0.3.7";
+	static public $VERSION = "v0.3.8";
 	static protected $TRUE = array("keyword", "true");
 	static protected $FALSE = array("keyword", "false");
 
@@ -113,14 +113,17 @@ class lessc {
 		$parser = $this->makeParser($realPath);
 		$root = $parser->parse(file_get_contents($realPath));
 
+		// set the parents of all the block props
+		foreach ($root->props as $prop) {
+			if ($prop[0] == "block") {
+				$prop[1]->parent = $parentBlock;
+			}
+		}
+
 		// copy mixins into scope, set their parents
 		// bring blocks from import into current block
 		// TODO: need to mark the source parser	these came from this file
 		foreach ($root->children as $childName => $child) {
-			foreach ($child as $innerBlock) {
-				$innerBlock->parent = $parentBlock;
-			}
-
 			if (isset($parentBlock->children[$childName])) {
 				$parentBlock->children[$childName] = array_merge(
 					$parentBlock->children[$childName],
@@ -620,8 +623,9 @@ class lessc {
 
 			$args = array_map(array($this, "reduce"), (array)$args);
 			$mixins = $this->findBlocks($block, $path, $args);
+
 			if ($mixins === null) {
-				// echo "failed to find block: ".implode(" > ", $path)."\n";
+				// fwrite(STDERR,"failed to find block: ".implode(" > ", $path)."\n");
 				break; // throw error here??
 			}
 
@@ -724,7 +728,11 @@ class lessc {
 			// [1] - delimiter
 			// [2] - array of values
 			return implode($value[1], array_map(array($this, 'compileValue'), $value[2]));
-		case 'raw_color';
+		case 'raw_color':
+			if (!empty($this->formatter->compressColors)) {
+				return $this->compileValue($this->coerceColor($value));
+			}
+			return $value[1];
 		case 'keyword':
 			// [1] - the keyword
 			return $value[1];
@@ -806,13 +814,17 @@ class lessc {
 		return $this->toBool($value[0] == "number" && $value[2] == "em");
 	}
 
+	protected function lib_isrem($value) {
+		return $this->toBool($value[0] == "number" && $value[2] == "rem");
+	}
+
 	protected function lib_rgbahex($color) {
 		$color = $this->coerceColor($color);
 		if (is_null($color))
 			$this->throwError("color expected for rgbahex");
 
 		return sprintf("#%02x%02x%02x%02x",
-			isset($color[4]) ? $color[4]*255 : 0,
+			isset($color[4]) ? $color[4]*255 : 255,
 			$color[1],$color[2], $color[3]);
 	}
 
@@ -1019,6 +1031,25 @@ class lessc {
 		}
 
 		return $this->fixColor($new);
+	}
+
+	protected function lib_contrast($args) {
+		if ($args[0] != 'list' || count($args[2]) < 3) {
+			return array(array('color', 0, 0, 0), 0);
+		}
+
+		list($inputColor, $darkColor, $lightColor) = $args[2];
+
+		$inputColor = $this->assertColor($inputColor);
+		$darkColor = $this->assertColor($darkColor);
+		$lightColor = $this->assertColor($lightColor);
+		$hsl = $this->toHSL($inputColor);
+
+		if ($hsl[3] > 50) {
+			return $darkColor;
+		}
+
+		return $lightColor;
 	}
 
 	protected function assertColor($value, $error = "expected color value") {
@@ -1291,8 +1322,12 @@ class lessc {
 			case 'keyword':
 				$name = $value[1];
 				if (isset(self::$cssColors[$name])) {
-					list($r, $g, $b) = explode(',', self::$cssColors[$name]);
-					return array('color', $r, $g, $b);
+					$rgba = explode(',', self::$cssColors[$name]);
+
+					if(isset($rgba[3]))
+						return array('color', $rgba[0], $rgba[1], $rgba[2], $rgba[3]);
+
+					return array('color', $rgba[0], $rgba[1], $rgba[2]);
 				}
 				return null;
 		}
@@ -1436,6 +1471,34 @@ class lessc {
 		}
 		return $this->fixColor($out);
 	}
+
+	function lib_red($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for red()');
+		}
+		
+		return $color[1];
+	}
+
+	function lib_green($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for green()');
+		}
+		
+		return $color[2];
+	}
+
+	function lib_blue($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for blue()');
+		}
+		
+		return $color[3];
+	}
+
 
 	// operator on two numbers
 	protected function op_number_number($op, $left, $right) {
@@ -1937,6 +2000,7 @@ class lessc {
 		'teal' => '0,128,128',
 		'thistle' => '216,191,216',
 		'tomato' => '255,99,71',
+		'transparent' => '0,0,0,0',
 		'turquoise' => '64,224,208',
 		'violet' => '238,130,238',
 		'wheat' => '245,222,179',
