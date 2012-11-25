@@ -22,7 +22,14 @@ class PlinthWebUser extends CWebUser
 	{
 		if (method_exists(Yii::app(), 'getSession'))
 		{
-			parent::init();
+			if($this->getIsGuest() && $this->allowAutoLogin)
+				$this->restoreFromCookie();
+			else if($this->autoRenewCookie && $this->allowAutoLogin)
+				$this->renewCookie();
+			if($this->autoUpdateFlash)
+				$this->updateFlash();
+
+			$this->updateAuthStatus();
 		}
 	}
 
