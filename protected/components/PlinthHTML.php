@@ -20,4 +20,19 @@ class PlinthHTML extends CHtml
 		}
 		return parent::link($tcText, $tcURL, $taHTMLOptions);
 	}
+
+	public static function colourPalette($tcColourName, $tcColour)
+	{
+echo <<<EOT
+<div class="colourPalette $tcColourName">
+	<h1>@$tcColourName</h1>
+	<h2>#$tcColour</h2>
+	<span class="darkest">darkest</span>
+	<span class="darker">darker</span>
+	<span class="normal">normal</span>
+	<span class="lighter">lighter</span>
+	<span class="lightest">lightest</span>
+</div>
+EOT;
+	}
 }
