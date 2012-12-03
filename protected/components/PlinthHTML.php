@@ -21,18 +21,13 @@ class PlinthHTML extends CHtml
 		return parent::link($tcText, $tcURL, $taHTMLOptions);
 	}
 
-	public static function colourPalette($tcColourName, $tcColour)
+	public static function colourPalette($tcColourName, $tcColour,$taHTMLOptions=array())
 	{
-echo <<<EOT
-<div class="colourPalette $tcColourName">
-	<h1>@$tcColourName</h1>
-	<h2>#$tcColour</h2>
-	<span class="darkest">darkest</span>
-	<span class="darker">darker</span>
-	<span class="normal">normal</span>
-	<span class="lighter">lighter</span>
-	<span class="lightest">lightest</span>
-</div>
-EOT;
+		// Add the colour pallete and colour to the options
+		$taHTMLOptions['class'] = "colourPalette $tcColourName".(isset($taHTMLOptions['class']) ? ' '.$taHTMLOptions['class'] : '');
+
+		$lcContent = '<span class="lighten">@'.$tcColourName.'_4</span><span class="lighter">@'.$tcColourName.'_3</span><span class="lightest">@'.$tcColourName.'_2</span><span class="white">@'.$tcColourName.'_1</span><span class="normal">@'.$tcColourName.' - #'.$tcColour.'</span>';
+
+		return self::tag('div', $taHTMLOptions, $lcContent);
 	}
 }
