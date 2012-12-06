@@ -16,6 +16,7 @@
  * @property string $BirthMonth
  * @property string $BirthYear
  * @property string $GenderID
+ * @property integer $Featured
  * @property string $CreatedDate
  * @property string $CreatedBy
  * @property string $ModifiedDate
@@ -117,6 +118,7 @@ class UserInfo extends PlinthModel
 			'ProfileImageURI' => 'Profile Image Uri',
 			'Description' => 'Description',
 			'UserURL' => 'User URL',
+			'Featured' => 'Featured',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'ModifiedDate' => 'Modified Date',
