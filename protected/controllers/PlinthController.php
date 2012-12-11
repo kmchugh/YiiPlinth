@@ -30,18 +30,19 @@ class PlinthController extends Controller
 		}
 		Yii::app()->language = isset(Yii::app()->session['_lang']) ?  Yii::app()->session['_lang'] : Yii::app()->request->getPreferredLanguage();
 
-
+		// TODO : Update the timexone based on user preference/location
 	}
 
 	/**
 	 * This method is invoked right before an action is to be executed (after all possible filters.)
-	 * You may override this method to do last-minute preparation for the action.
-	 * @param CAction $action the action to be executed.
+	 * You may override this method to do last-minute preparation for the action, if overridden ensure
+	 * a call to super in order to update the layout and style from the configuration settings.
+	 * @param CAction $tcAction the action to be executed.
 	 * @return boolean whether the action should be executed.
 	 */
-	protected function beforeAction($action)
+	protected function beforeAction($tcAction)
 	{
-		$this->layout = LayoutMapManager::getLayout($this);
+		Yii::app()->layoutMap->applyLayout($this, $tcAction);
 		return true;
 	}
 
