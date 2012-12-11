@@ -65,15 +65,25 @@ class LayoutMapManager
         return '/'.$lcReturn;
     }
 
+    /**
+     * Extracts the value for the layout, theme, or style
+     * @param  mixed        A string of function that returns a string
+     * @return string       the string value to be used as a layout, theme, or style
+     */
     private function evaluate($toValue)
     {
         return is_callable($toValue) ? $toValue() : $toValue;
     }
 
-
+    /**
+     * Applies the layout, theme, and style to the specified controller
+     * @param  CController $toController The controller to apply the styling to
+     * @param  CAction $tcAction     The action that is being executed on toController
+     */
     public function applyLayout($toController, $tcAction)
     {
         $lcRoute = $this->extractRoute($toController, $tcAction);
+        $lcStyle = NULL;
         foreach ($this->map as $lcKey => $loValue)
         {
             if (Utilities::startsWith($lcRoute, $lcKey, true))
@@ -81,7 +91,7 @@ class LayoutMapManager
                 // Apply the rules at this level
                 if (isset($loValue['style']))
                 {
-                    Yii::app()->clientScript->registerCssFile($this->evaluate($loValue['style']));
+                    $lcStyle = $this->evaluate($loValue['style']);
                 }
 
                 if (isset($loValue['layout']))
@@ -94,6 +104,12 @@ class LayoutMapManager
                     $toController->theme = $this->evaluate($loValue['theme']);
                 }
             }
+        }
+
+        // Apply the determined style
+        if (!is_null($lcStyle))
+        {
+            Yii::app()->clientScript->registerCssFile($lcStyle);
         }
     }
 }
