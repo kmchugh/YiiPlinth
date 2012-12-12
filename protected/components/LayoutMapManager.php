@@ -56,7 +56,7 @@ class LayoutMapManager
     private function extractRoute($toController, $tcAction)
     {
         $loModule = $toController->getModule();
-        $lcReturn = $toController->id.'/'.$tcAction->id;
+        $lcReturn = $toController->id.'/'.(is_string($tcAction) ? $tcAction : $tcAction->id);
         while(!is_null($loModule))
         {
             $lcReturn = $loModule->id.'/'.$lcReturn;
