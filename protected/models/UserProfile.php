@@ -12,6 +12,7 @@ class UserProfile extends CFormModel
 	public $lastName;
 	public $featured;
 	public $userInfoID;
+	public $userID;
 	public $GUID;
 
 	//public $fbUserName;
@@ -62,6 +63,7 @@ class UserProfile extends CFormModel
 					$this->lastName = $this->m_oUserInfo->LastName;
 					$this->featured = $this->m_oUserInfo->Featured;
 					$this->userInfoID = $this->m_oUserInfo->UserInfoID;
+					$this->userID = $this->m_oUser->UserID;
 					$this->GUID = $this->m_oUser->GUID;
 
 					if ($this->country === null || $this->country === '')
