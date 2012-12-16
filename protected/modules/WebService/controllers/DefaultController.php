@@ -1,7 +1,32 @@
 <?php
+/**
+ * The Web Service default controller handles all of the actions for the WebService functionallity
+ */
 class DefaultController extends PlinthController
 {
 	private $format = 'json';
+
+	/**
+	 * Index is the default action for the Web Services, this can list available services
+	 * @return [type] [description]
+	 */
+	public function actionIndex()
+	{
+		Utilities::printVar($_REQUEST);
+		Utilities::printVar($_SERVER);
+
+		echo "HERE";
+	}
+
+	public function missingAction($tcActionID)
+	{
+		echo $tcActionID;
+	}
+
+	public function actionIndex1()
+	{
+		echo "Index 1";
+	}
 
 	public function filters()
 	{
