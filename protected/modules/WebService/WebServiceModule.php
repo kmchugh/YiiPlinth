@@ -22,25 +22,24 @@ class WebServiceModule extends CWebModule
 
 	public function init()
 	{
+		// import the module-level models and components
+		$this->setImport(array(
+			$this->id.'.controllers.*',
+		));
+
 		$this->configuration = file_exists($this->configuration.'.php') ?
 			require_once($this->configuration.'.php') :
 			array();
 
 		// Always map to the default controller
-		$this->controllerMap = array(preg_replace('/^\/?'.$this->id.'\/?/', '', $_SERVER['REQUEST_URI']) => dirname(__FILE__).'/controllers/DefaultController');
+		$this->controllerMap = array(preg_replace('/^\/'.$this->id.'\/([^\/]+)\/?.*?$/', '$1', $_SERVER['REQUEST_URI'], 1) =>'DefaultController');
 
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
-		
-
-		// import the module-level models and components
-		$this->setImport(array(
-		));
 	}
 
 	public function beforeControllerAction($controller, $action)
 	{
-		echo "$action - $controller";
 		if(parent::beforeControllerAction($controller, $action))
 		{
 			// this method is called before any module controller action is performed

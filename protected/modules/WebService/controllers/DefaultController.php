@@ -12,8 +12,11 @@ class DefaultController extends PlinthController
 	 */
 	public function actionIndex()
 	{
+
+		Utilities::printVar($this->id);
 		Utilities::printVar($_REQUEST);
 		Utilities::printVar($_SERVER);
+
 
 		echo "HERE";
 	}
@@ -22,7 +25,7 @@ class DefaultController extends PlinthController
 	{
 		echo $tcActionID;
 	}
-
+/*
 	public function actionIndex1()
 	{
 		echo "Index 1";
@@ -344,6 +347,7 @@ class DefaultController extends PlinthController
 
 		return (isset($laCodes[$tnStatus])) ? $laCodes[$tnStatus] : '';
 	}
+	*/
 
 }
 

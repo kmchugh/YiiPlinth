@@ -30,7 +30,7 @@ class PlinthController extends Controller
 		}
 		Yii::app()->language = isset(Yii::app()->session['_lang']) ?  Yii::app()->session['_lang'] : Yii::app()->request->getPreferredLanguage();
 
-		// TODO : Update the timexone based on user preference/location
+		// TODO : Update the timezßone based on user preference/location
 	}
 
 	/**
