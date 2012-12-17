@@ -5,32 +5,166 @@
 class DefaultController extends PlinthController
 {
 	private $format = 'json';
+	private $limit = 50;
 
-	/**
-	 * Index is the default action for the Web Services, this can list available services
-	 * @return [type] [description]
-	 */
+	private function createCriteria()
+	{
+		$loCriteria = new CDBCriteria();
+		$loCriteria->limit = $this->limit;
+		return $loCriteria;
+	}
+
 	public function actionIndex()
 	{
-
-		Utilities::printVar($this->id);
-		Utilities::printVar($_REQUEST);
-		Utilities::printVar($_SERVER);
-
-
-		echo "HERE";
+		$this->missingAction('default');
 	}
 
 	public function missingAction($tcActionID)
 	{
-		echo $tcActionID;
-	}
-/*
-	public function actionIndex1()
-	{
-		echo "Index 1";
+		$loModel = $this->getModule()->getModelInfo($this->id);
+		if (!is_null($loModel))
+		{
+			$this->processModel($loModel, $tcActionID, $_SERVER['REQUEST_METHOD']);
+		}
+		else
+		{
+			// There was no model
+			echo "No MODEL";
+
+		}
+		/*
+		Utilities::printVar($this->getModule()->configuration);
+		echo $this->id;
+		if($this->isDefault())
+		{
+			// Default request
+			echo "default";
+		}
+		else if ($this->isModel())
+		{
+			// Model request
+			echo "model";
+		}
+		else
+		{
+			// Invalid request
+			echo "invalid";
+
+		}
+		*/
 	}
 
+	private function processModel($toModelInfo, $tcActionID, $tcMethod)
+	{
+		if (strcasecmp($tcMethod, 'GET') == 0)
+		{
+
+			// Get with no action should retrieve a list
+			$loModel = $toModelInfo['class']::model()->findAll($this->createCriteria());
+			$this->sendResponse(200, $loModel);
+		}
+		else
+		{
+			echo "unknown method";
+		}
+	}
+
+	private function sendResponse($tnStatus = 200, $toContent=NULL, $tcContentType='application/json', $taMessages = NULL, $tlCaseInsensitive=true)
+	{
+		$lcStatusHeader = 'HTTP/1.1 '.$tnStatus.' '.$this->getStatusCodeMessage($tnStatus);
+		header($lcStatusHeader);
+		header('Content-type: '.$tcContentType);
+
+		if ($toContent == NULL)
+		{
+			$toContent = array();
+		}
+
+		$laResult = array(
+			'resultCode' => $tnStatus,
+			'resultDescription' => $this->getStatusCodeMessage($tnStatus),
+			);
+		if (is_array($toContent))
+		{
+			$laResult['size']=count($toContent);
+		}
+		$laResult['result'] = $toContent;
+
+		// If there are any errors, list them out
+		if ($tnStatus != 200)
+		{
+			// TODO: Get the list of errors and render them
+		}
+
+		// If there is a response message, add it in
+		if (!is_null($taMessages))
+		{
+			$laResult['message'] = $taMessages;
+		}
+
+		if ($tlCaseInsensitive)
+		{
+			$laResult = Utilities::array_change_key_case_recursive($laResult);
+		}
+
+		// Respond
+		echo !isset($_REQUEST['jsoncallback']) ?
+			CJSON::encode($laResult) :
+			$_REQUEST['jsoncallback'].'('.CJSON::encode($laResult).');';
+
+		@Yii::app()->end();
+	}
+
+	private function getStatusCodeMessage($tnStatus)
+	{
+		$laCodes = Array(
+			100 => 'Continue',
+			101 => 'Switching Protocols',
+			200 => 'OK',
+			201 => 'Created',
+			202 => 'Accepted',
+			203 => 'Non-Authoritative Information',
+			204 => 'No Content',
+			205 => 'Reset Content',
+			206 => 'Partial Content',
+			300 => 'Multiple Choices',
+			301 => 'Moved Permanently',
+			302 => 'Found',
+			303 => 'See Other',
+			304 => 'Not Modified',
+			305 => 'Use Proxy',
+			306 => '(Unused)',
+			307 => 'Temporary Redirect',
+			400 => 'Bad Request',
+			401 => 'Unauthorized',
+			402 => 'Payment Required',
+			403 => 'Forbidden',
+			404 => 'Not Found',
+			405 => 'Method Not Allowed',
+			406 => 'Not Acceptable',
+			407 => 'Proxy Authentication Required',
+			408 => 'Request Timeout',
+			409 => 'Conflict',
+			410 => 'Gone',
+			411 => 'Length Required',
+			412 => 'Precondition Failed',
+			413 => 'Request Entity Too Large',
+			414 => 'Request-URI Too Long',
+			415 => 'Unsupported Media Type',
+			416 => 'Requested Range Not Satisfiable',
+			417 => 'Expectation Failed',
+			500 => 'Internal Server Error',
+			501 => 'Not Implemented',
+			502 => 'Bad Gateway',
+			503 => 'Service Unavailable',
+			504 => 'Gateway Timeout',
+			505 => 'HTTP Version Not Supported'
+			);
+
+		return (isset($laCodes[$tnStatus])) ? $laCodes[$tnStatus] : '';
+	}
+
+/*
 	public function filters()
 	{
 		return array();
@@ -290,63 +424,7 @@ class DefaultController extends PlinthController
 		
 	}
 
-	private function sendResponse($tnStatus = 200, $toContent=NULL, $tcContentType='text/html', $taMessages = NULL, $tlCaseInsensitive=true)
-	{
-		$lcStatusHeader = 'HTTP/1.1 '.$tnStatus.' '.$this->getStatusCodeMessage($tnStatus);
-		header($lcStatusHeader);
-		//header('Content-type: '.$tcContentType);
-
-		if ($toContent == NULL)
-		{
-			$toContent = array();
-		}
-
-		$laResult = array(
-			'resultCode' => $tnStatus,
-			'resultDescription' => $this->getStatusCodeMessage($tnStatus),
-			'result' => $toContent,
-			);
-
-		// If there are any errors, list them out
-		if ($tnStatus != 200)
-		{
-			// TODO: Get the list of errors and render them
-		}
-
-		// If there is a response message, add it in
-		if (!is_null($taMessages))
-		{
-			$laResult['message'] = $taMessages;
-		}
-
-		if ($tlCaseInsensitive)
-		{
-			$laResult = Utilities::array_change_key_case_recursive($laResult);
-		}
-
-		// Respond
-		echo !isset($_REQUEST['jsoncallback']) ?
-			CJSON::encode($laResult) :
-			$_REQUEST['jsoncallback'].'('.CJSON::encode($laResult).');';
-
-		@Yii::app()->end();
-	}
-
-	private function getStatusCodeMessage($tnStatus)
-	{
-		$laCodes = Array(
-			200 => 'OK',
-			400 => 'Bad Request',
-			401 => 'Unauthorized',
-			402 => 'Payment Required',
-			403 => 'Forbidden',
-			404 => 'Not Found',
-			500 => 'Internal Server Error',
-			501 => 'Not Implemented',
-			);
-
-		return (isset($laCodes[$tnStatus])) ? $laCodes[$tnStatus] : '';
-	}
+	
 	*/
 
 }

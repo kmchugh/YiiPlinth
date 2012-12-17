@@ -49,4 +49,27 @@ class WebServiceModule extends CWebModule
 		else
 			return false;
 	}
+
+	public function getModelInfo($tcModelName)
+	{
+		foreach ($this->configuration['models'] as $lcModel=>$loModel)
+		{
+			if (strcasecmp($tcModelName, $lcModel) == 0)
+			{
+				if (!isset($loModel['class']))
+				{
+					if (class_exists($lcModel))
+					{
+						$loModel['class'] = $lcModel;
+					}
+					else
+					{
+						echo "Class does not exist";
+					}
+				}
+				return $loModel;
+			}
+		}
+		return NULL;
+	}
 }
