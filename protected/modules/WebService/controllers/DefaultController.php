@@ -15,6 +15,7 @@ class DefaultController extends PlinthController
 			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
 			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
 			'join'=>isset($toModelInfo['join']) ? $toModelInfo['join'] : '',
+			'order'=>isset($toModelInfo['order']) ? $toModelInfo['order'] : '',
 			);
 		if (isset($toModelInfo['where']))
 		{
