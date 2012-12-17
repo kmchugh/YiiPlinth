@@ -15,11 +15,14 @@ class DefaultController extends PlinthController
 			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
 			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
 			'join'=>isset($toModelInfo['join']) ? $toModelInfo['join'] : '',
-			'order'=>isset($toModelInfo['order']) ? $toModelInfo['order'] : '',
 			);
 		if (isset($toModelInfo['where']))
 		{
 			$this->addWhere($loReturn, $toModelInfo['where']);
+		}
+		if (isset($toModelInfo['order']))
+		{
+			$loReturn['order']=$toModelInfo['order'];
 		}
 		return $loReturn;
 	}
@@ -276,55 +279,6 @@ class DefaultController extends PlinthController
 				}
 			}
 			$this->sendResponse(200, $laRows, 'application/json');
-		}
-	}
-
-	public function actionView()
-	{
-		if (isset($_GET['model']) && (isset($_GET['id']) || isset($_GET['guid'])))
-		{
-			$lcModelName = $_GET['model'];
-			$loModel = NULL;
-			if (@class_exists($lcModelName, TRUE))
-			{
-				$loModel = isset($_GET['id']) ?
-					$lcModelName::model()->findByPk($_GET['id']) :
-					$lcModelName::model()->findByAttributes(array('GUID' => $_GET['guid']));
-			}
-			else
-			{
-				$lcID = isset($_GET['id']) ? $_GET['id'] : $_GET['guid'];
-				$lcModelName = strtolower($lcModelName);
-				if ($lcModelName === 'streamlistenerlist')
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('COUNT(DISTINCT `ListenerGUID`) as ListenerCount')
-							->from('StreamListener')
-							->join('Stream', 'Stream.StreamID = StreamListener.StreamID')
-							->where('Stream.GUID=:streamGUID', array(':streamGUID'=>$lcID))
-							->queryRow();
-					$loModel = $loModel['ListenerCount'];
-				}
-				else if ($lcModelName === 'commentatorlistenerlist')
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('COUNT(DISTINCT `ListenerGUID`) as ListenerCount')
-							->from('StreamListener')
-							->join('StreamCommentator', 'StreamCommentator.StreamID = StreamListener.StreamID')
-							->where('StreamCommentator.CommentatorGUID=:streamGUID', array(':streamGUID'=>$lcID))
-							->queryRow();
-					$loModel = $loModel['ListenerCount'];
-				}
-				else
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('*')
-							->from('v'.$lcModelName)
-							->queryAll();
-				}
-				
-			}
-			$this->sendResponse(200, $loModel, 'application/json');
 		}
 	}
 
