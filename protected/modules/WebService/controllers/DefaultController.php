@@ -14,7 +14,12 @@ class DefaultController extends PlinthController
 			'from'=>'{{'.$toModelInfo['class']::model()->tableName().'}}',
 			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
 			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
+			'join'=>isset($toModelInfo['join']) ? $toModelInfo['join'] : '',
 			);
+		if (isset($toModelInfo['where']))
+		{
+			$this->addWhere($loReturn, $toModelInfo['where']);
+		}
 		return $loReturn;
 	}
 
@@ -62,8 +67,9 @@ class DefaultController extends PlinthController
 		$laParams = isset($taQuery['params']) ? $taQuery['params'] : array();
 		foreach ($taClause as $lcField => $loValue)
 		{
-			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = :'.$lcField;
-			$laParams[':'.$lcField] = $loValue;
+			$lcReplacement = ':'.str_replace('.', '_', $lcField);
+			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = '.$lcReplacement;
+			$laParams[$lcReplacement] = $loValue;
 		}
 
 		$taQuery['where']=$lcWhere;

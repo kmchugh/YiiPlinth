@@ -68,6 +68,7 @@ class WebServiceModule extends CWebModule
 			{
 				if (!isset($loModel['class']))
 				{
+					$lcModel = isset($loModel['model']) ? $loModel['model'] : $lcModel;
 					if (class_exists($lcModel))
 					{
 						$loModel['class'] = $lcModel;
