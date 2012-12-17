@@ -4,19 +4,23 @@
  */
 class DefaultController extends PlinthController
 {
-	private $format = 'json';
-	private $limit = 50;
+	// TODO : Implement caching
+	public $defaultLimit = 50;
 
-	private function createCriteria()
+
+	private function createQuery($toModelInfo, $toModel)
 	{
-		$loCriteria = new CDBCriteria();
-		$loCriteria->limit = $this->limit;
-		return $loCriteria;
+		$loReturn = array(
+			'from'=>'{{'.$toModelInfo['class']::model()->tableName().'}}',
+			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
+			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
+			);
+		return $loReturn;
 	}
 
 	public function actionIndex()
 	{
-		$this->missingAction('default');
+		$this->missingAction(NULL);
 	}
 
 	public function missingAction($tcActionID)
@@ -28,40 +32,76 @@ class DefaultController extends PlinthController
 		}
 		else
 		{
-			// There was no model
-			echo "No MODEL";
+			if (strcasecmp($this->id, 'default') ==0)
+			{
+				$this->sendResponse($this->getModule()->getModelList());
+			}
+			else
+			{
+				// There was no model
+				$this->sendResponse(NULL, array($this->id.' is an invalid model.'), 404);
+			}
+		}
+	}
 
-		}
-		/*
-		Utilities::printVar($this->getModule()->configuration);
-		echo $this->id;
-		if($this->isDefault())
-		{
-			// Default request
-			echo "default";
-		}
-		else if ($this->isModel())
-		{
-			// Model request
-			echo "model";
-		}
-		else
-		{
-			// Invalid request
-			echo "invalid";
+	private function getPrimaryKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['primaryKey']) ?
+			$toModelInfo['primaryKey'] :
+			$toModel->getMetaData()->tableSchema->primaryKey;
+	}
 
+	private function getUniqueKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['uniqueKey']) ? $toModelInfo['uniqueKey'] : 'GUID';
+	}
+
+	private function addWhere(&$taQuery, $taClause)
+	{
+		$lcWhere = isset($taQuery['where']) ? $taQuery['where'] : '';
+		$laParams = isset($taQuery['params']) ? $taQuery['params'] : array();
+		foreach ($taClause as $lcField => $loValue)
+		{
+			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = :'.$lcField;
+			$laParams[':'.$lcField] = $loValue;
 		}
-		*/
+
+		$taQuery['where']=$lcWhere;
+		$taQuery['params']=$laParams;
+		return $taQuery;
 	}
 
 	private function processModel($toModelInfo, $tcActionID, $tcMethod)
 	{
+		$loReturn = NULL;
+		$laMessages = NULL;
+		$lnReturnCode = 200;
+		$laQuery = NULL;
+
 		if (strcasecmp($tcMethod, 'GET') == 0)
 		{
+			$loModel = $toModelInfo['class']::model();
+			$laQuery = $this->createQuery($toModelInfo, $loModel);
+			if (!is_null($tcActionID))
+			{
+				if (is_numeric($tcActionID))
+				{
+					$this->addWhere($laQuery, array($this->getPrimaryKey($toModelInfo, $loModel)=>$tcActionID));
+				}
+				else
+				{
+					$this->addWhere($laQuery, array($this->getUniqueKey($toModelInfo, $loModel)=>$tcActionID));
+				}
+			}
 
-			// Get with no action should retrieve a list
-			$loModel = $toModelInfo['class']::model()->findAll($this->createCriteria());
-			$this->sendResponse(200, $loModel);
+			$loCommand = Yii::app()->db->createCommand($laQuery);
+			$loReturn = $loCommand->queryAll();
+
+			if (is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
+			{
+				$lnReturnCode = 404;
+			}
+			$this->sendResponse($loReturn, $laMessages, $lnReturnCode);
 		}
 		else
 		{
@@ -69,8 +109,10 @@ class DefaultController extends PlinthController
 		}
 	}
 
-	private function sendResponse($tnStatus = 200, $toContent=NULL, $tcContentType='application/json', $taMessages = NULL, $tlCaseInsensitive=true)
+	private function sendResponse($toContent=NULL, $taMessages = NULL, $tnStatus = 200, $tlCaseInsensitive=true)
 	{
+		//$tcContentType = (strpos($_SERVER['HTTP_ACCEPT'], 'json')) ? 'application/json' : 'text/html';
+		$tcContentType = 'application/json';
 		$lcStatusHeader = 'HTTP/1.1 '.$tnStatus.' '.$this->getStatusCodeMessage($tnStatus);
 		header($lcStatusHeader);
 		header('Content-type: '.$tcContentType);
@@ -84,7 +126,8 @@ class DefaultController extends PlinthController
 			'resultCode' => $tnStatus,
 			'resultDescription' => $this->getStatusCodeMessage($tnStatus),
 			);
-		if (is_array($toContent))
+		$lnCount = is_array($toContent) ? count($toContent) : 0;
+		if ($lnCount > 0)
 		{
 			$laResult['size']=count($toContent);
 		}

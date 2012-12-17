@@ -50,6 +50,16 @@ class WebServiceModule extends CWebModule
 			return false;
 	}
 
+	public function getModelList()
+	{
+		$laReturn = array();
+		foreach ($this->configuration['models'] as $lcModel=>$loModel)
+		{
+			$laReturn[] = $lcModel;
+		}
+		return $laReturn;
+	}
+
 	public function getModelInfo($tcModelName)
 	{
 		foreach ($this->configuration['models'] as $lcModel=>$loModel)
