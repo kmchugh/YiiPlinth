@@ -62,6 +62,10 @@ class WebServiceModule extends CWebModule
 
 	public function getModelInfo($tcModelName)
 	{
+		if (!isset($this->configuration['models']))
+		{
+			return null;
+		}
 		foreach ($this->configuration['models'] as $lcModel=>$loModel)
 		{
 			if (strcasecmp($tcModelName, $lcModel) == 0)
