@@ -32,7 +32,7 @@ class WebServiceModule extends CWebModule
 			array();
 
 		// Always map to the default controller
-		$this->controllerMap = array(preg_replace('/^\/'.$this->id.'\/([^\/]+)\/?.*?$/', '$1', $_SERVER['REQUEST_URI'], 1) =>'DefaultController');
+		$this->controllerMap = array(preg_replace('/^\/'.$this->id.'\/([^(\/|\?)]+)\/?.*?$/', '$1', $_SERVER['REQUEST_URI'], 1) =>'DefaultController');
 
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
