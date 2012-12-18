@@ -84,7 +84,7 @@ class DefaultController extends PlinthController
 
 	private function processModel($toModelInfo, $tcActionID, $tcMethod)
 	{
-		$lcCacheKey = $_SERVER['REQUEST_URI'];
+		$lcCacheKey = strtolower($_SERVER['REQUEST_URI']);
 		$loReturn = NULL;
 		$laMessages = NULL;
 		$lnReturnCode = 200;
@@ -99,6 +99,7 @@ class DefaultController extends PlinthController
 				{
 					$loReturn = NULL;
 				}
+				// TODO: Send an expires header for cached
 			}
 
 			if (is_null($loReturn))
@@ -117,14 +118,39 @@ class DefaultController extends PlinthController
 					}
 				}
 
-				$loCommand = Yii::app()->db->createCommand($laQuery);
-				$loReturn = $loCommand->queryAll();
+				$laParameters = Utilities::aSplit('&', '=', $_SERVER['QUERY_STRING']);
+				foreach ($laParameters as $lcKey => $lcValue)
+				{
+					$this->addWhere($laQuery, array($lcKey=>$lcValue));
+				}
 
-				if (is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
+
+
+				$loCommand = Yii::app()->db->createCommand($laQuery);
+				try
+				{
+					$loReturn = $loCommand->queryAll();
+				}
+				catch (CDbException $ex)
+				{
+					$lnReturnCode = 400;
+					$laMessages[] = 'Invalid Query, check your parameters';
+
+					Utilities::printVar($_SERVER);
+
+					Utilities::printVar($ex);
+				}
+				catch (Exception $ex)
+				{
+					Utilities::printVar($ex);
+					$loReturn = NULL;
+				}
+
+				if ($lnReturnCode == 200 && is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
 				{
 					$lnReturnCode = 404;
 				}
-				if ($lnReturnCode >= 200 && $lnReturnCode < 300)
+				if ($lnReturnCode >= 200 && $lnReturnCode < 400)
 				{
 					Yii::app()->cache->set($lcCacheKey, $loReturn, (isset($toModelInfo['cache']['expiry'])?$toModelInfo['cache']['expiry'] : $this->defaultCacheExpiry));
 				}
@@ -162,7 +188,7 @@ class DefaultController extends PlinthController
 		$laResult['result'] = $toContent;
 
 		// If there are any errors, list them out
-		if ($tnStatus != 200)
+		if ($tnStatus < 200 || $tnStatus >= 400)
 		{
 			// TODO: Get the list of errors and render them
 		}
@@ -183,7 +209,7 @@ class DefaultController extends PlinthController
 			CJSON::encode($laResult) :
 			$_REQUEST['jsoncallback'].'('.CJSON::encode($laResult).');';
 
-		@Yii::app()->end();
+		//@Yii::app()->end();
 	}
 
 	private function getStatusCodeMessage($tnStatus)

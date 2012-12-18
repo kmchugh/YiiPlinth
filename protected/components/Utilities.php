@@ -391,6 +391,17 @@
 			return $taArray;
 		}
 
+		public static function aSplit($tcStringDelimiter, $tcAssociativeDelimiter, $tcString)
+		{
+			if (is_null($tcString) || strlen($tcString)==0)
+			{
+				return array();
+			}
+			$laReturn = array();
+			preg_match_all('/([^'.$tcStringDelimiter.']+)'.$tcAssociativeDelimiter.'([^'.$tcStringDelimiter.']+)/', $tcString, $laReturn);
+			return array_combine($laReturn[1], $laReturn[2]);
+		}
+
 
 
 		private static $g_oTwitter = NULL;
