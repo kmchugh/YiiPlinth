@@ -6,6 +6,7 @@ class DefaultController extends PlinthController
 {
 	// TODO : Implement caching
 	public $defaultLimit = 50;
+	public $defaultCacheExpiry = 30000;
 
 
 	private function createQuery($toModelInfo, $toModel)
@@ -83,6 +84,7 @@ class DefaultController extends PlinthController
 
 	private function processModel($toModelInfo, $tcActionID, $tcMethod)
 	{
+		$lcCacheKey = $_SERVER['REQUEST_URI'];
 		$loReturn = NULL;
 		$laMessages = NULL;
 		$lnReturnCode = 200;
@@ -90,26 +92,42 @@ class DefaultController extends PlinthController
 
 		if (strcasecmp($tcMethod, 'GET') == 0)
 		{
-			$loModel = $toModelInfo['class']::model();
-			$laQuery = $this->createQuery($toModelInfo, $loModel);
-			if (!is_null($tcActionID))
+			if (isset($toModelInfo['cache']))
 			{
-				if (is_numeric($tcActionID))
+				$loReturn = Yii::app()->cache->get($lcCacheKey);
+				if ($loReturn === false)
 				{
-					$this->addWhere($laQuery, array($this->getPrimaryKey($toModelInfo, $loModel)=>$tcActionID));
-				}
-				else
-				{
-					$this->addWhere($laQuery, array($this->getUniqueKey($toModelInfo, $loModel)=>$tcActionID));
+					$loReturn = NULL;
 				}
 			}
 
-			$loCommand = Yii::app()->db->createCommand($laQuery);
-			$loReturn = $loCommand->queryAll();
-
-			if (is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
+			if (is_null($loReturn))
 			{
-				$lnReturnCode = 404;
+				$loModel = $toModelInfo['class']::model();
+				$laQuery = $this->createQuery($toModelInfo, $loModel);
+				if (!is_null($tcActionID))
+				{
+					if (is_numeric($tcActionID))
+					{
+						$this->addWhere($laQuery, array($this->getPrimaryKey($toModelInfo, $loModel)=>$tcActionID));
+					}
+					else
+					{
+						$this->addWhere($laQuery, array($this->getUniqueKey($toModelInfo, $loModel)=>$tcActionID));
+					}
+				}
+
+				$loCommand = Yii::app()->db->createCommand($laQuery);
+				$loReturn = $loCommand->queryAll();
+
+				if (is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
+				{
+					$lnReturnCode = 404;
+				}
+				if ($lnReturnCode >= 200 && $lnReturnCode < 300)
+				{
+					Yii::app()->cache->set($lcCacheKey, $loReturn, (isset($toModelInfo['cache']['expiry'])?$toModelInfo['cache']['expiry'] : $this->defaultCacheExpiry));
+				}
 			}
 			$this->sendResponse($loReturn, $laMessages, $lnReturnCode);
 		}
@@ -139,7 +157,7 @@ class DefaultController extends PlinthController
 		$lnCount = is_array($toContent) ? count($toContent) : 0;
 		if ($lnCount > 0)
 		{
-			$laResult['size']=count($toContent);
+			$laResult['count']=count($toContent);
 		}
 		$laResult['result'] = $toContent;
 
