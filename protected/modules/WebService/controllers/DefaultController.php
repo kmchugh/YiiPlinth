@@ -136,9 +136,10 @@ class DefaultController extends PlinthController
 					$lnReturnCode = 400;
 					$laMessages[] = 'Invalid Query, check your parameters';
 
-					Utilities::printVar($_SERVER);
-
-					Utilities::printVar($ex);
+					if (Utilities::isDevelopment())
+					{
+						$laMessages[]=$ex->errorInfo[2];
+					}
 				}
 				catch (Exception $ex)
 				{
