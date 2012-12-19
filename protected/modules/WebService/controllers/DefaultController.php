@@ -8,8 +8,35 @@ class DefaultController extends PlinthController
 	public $defaultLimit = 50;
 	public $defaultCacheExpiry = 30000;
 
+	private function getPrimaryKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['primaryKey']) ?
+			$toModelInfo['primaryKey'] :
+			$toModel->getMetaData()->tableSchema->primaryKey;
+	}
 
-	private function createQuery($toModelInfo, $toModel)
+	private function getUniqueKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['uniqueKey']) ? $toModelInfo['uniqueKey'] : 'GUID';
+	}
+
+	private function addWhere(&$taQuery, $taClause)
+	{
+		$lcWhere = isset($taQuery['where']) ? $taQuery['where'] : '';
+		$laParams = isset($taQuery['params']) ? $taQuery['params'] : array();
+		foreach ($taClause as $lcField => $loValue)
+		{
+			$lcReplacement = ':'.str_replace('.', '_', $lcField);
+			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = '.$lcReplacement;
+			$laParams[$lcReplacement] = $loValue;
+		}
+
+		$taQuery['where']=$lcWhere;
+		$taQuery['params']=$laParams;
+		return $taQuery;
+	}
+
+	private function createQuery($toModelInfo, $toModel, $toUniqueIdentifier)
 	{
 		$loReturn = array(
 			'from'=>'{{'.$toModelInfo['class']::model()->tableName().'}}',
@@ -24,6 +51,24 @@ class DefaultController extends PlinthController
 		if (isset($toModelInfo['order']))
 		{
 			$loReturn['order']=$toModelInfo['order'];
+		}
+
+		if (!is_null($toUniqueIdentifier))
+		{
+			if (is_numeric($toUniqueIdentifier))
+			{
+				$this->addWhere($loReturn, array($this->getPrimaryKey($toModelInfo, $toModel)=>$toUniqueIdentifier));
+			}
+			else
+			{
+				$this->addWhere($loReturn, array($this->getUniqueKey($toModelInfo, $toModel)=>$toUniqueIdentifier));
+			}
+		}
+
+		$laParameters = Utilities::aSplit('&', '=', $_SERVER['QUERY_STRING']);
+		foreach ($laParameters as $lcKey => $lcValue)
+		{
+			$this->addWhere($loReturn, array($lcKey=>$lcValue));
 		}
 		return $loReturn;
 	}
@@ -54,114 +99,124 @@ class DefaultController extends PlinthController
 		}
 	}
 
-	private function getPrimaryKey($toModelInfo, $toModel)
+	private function executeCommandFor($taQuery, &$taMessages)
 	{
-		return isset($toModelInfo['primaryKey']) ?
-			$toModelInfo['primaryKey'] :
-			$toModel->getMetaData()->tableSchema->primaryKey;
-	}
-
-	private function getUniqueKey($toModelInfo, $toModel)
-	{
-		return isset($toModelInfo['uniqueKey']) ? $toModelInfo['uniqueKey'] : 'GUID';
-	}
-
-	private function addWhere(&$taQuery, $taClause)
-	{
-		$lcWhere = isset($taQuery['where']) ? $taQuery['where'] : '';
-		$laParams = isset($taQuery['params']) ? $taQuery['params'] : array();
-		foreach ($taClause as $lcField => $loValue)
+		$loReturn = null;
+		$loCommand = Yii::app()->db->createCommand($taQuery);
+		try
 		{
-			$lcReplacement = ':'.str_replace('.', '_', $lcField);
-			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = '.$lcReplacement;
-			$laParams[$lcReplacement] = $loValue;
+			$loReturn = $loCommand->queryAll();
 		}
+		catch (CDbException $ex)
+		{
+			$lnReturnCode = 400;
+			$taMessages[] = 'Invalid Query, check your parameters';
 
-		$taQuery['where']=$lcWhere;
-		$taQuery['params']=$laParams;
-		return $taQuery;
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+		}
+		catch (Exception $ex)
+		{
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+			$loReturn = NULL;
+		}
+		return $loReturn;
 	}
 
 	private function processModel($toModelInfo, $tcActionID, $tcMethod)
 	{
-		$lcCacheKey = strtolower($_SERVER['REQUEST_URI']);
-		$loReturn = NULL;
-		$laMessages = NULL;
+		$laMessages = array();
 		$lnReturnCode = 200;
 		$laQuery = NULL;
+		$lcMethod = strtolower($_SERVER['REQUEST_METHOD']);
+		$lcCacheKey = strtolower($_SERVER['REQUEST_URI']);
+		$laData = array();
+		$loModel = $toModelInfo['class']::model();
+		$loResponse = NULL;
 
-		if (strcasecmp($tcMethod, 'GET') == 0)
+		// TODO: Extract XML data as well as json
+		switch($lcMethod)
 		{
-			if (isset($toModelInfo['cache']))
-			{
-				$loReturn = Yii::app()->cache->get($lcCacheKey);
-				if ($loReturn === false)
-				{
-					$loReturn = NULL;
-				}
-				// TODO: Send an expires header for cached
-			}
-
-			if (is_null($loReturn))
-			{
-				$loModel = $toModelInfo['class']::model();
-				$laQuery = $this->createQuery($toModelInfo, $loModel);
-				if (!is_null($tcActionID))
-				{
-					if (is_numeric($tcActionID))
-					{
-						$this->addWhere($laQuery, array($this->getPrimaryKey($toModelInfo, $loModel)=>$tcActionID));
-					}
-					else
-					{
-						$this->addWhere($laQuery, array($this->getUniqueKey($toModelInfo, $loModel)=>$tcActionID));
-					}
-				}
-
-				$laParameters = Utilities::aSplit('&', '=', $_SERVER['QUERY_STRING']);
-				foreach ($laParameters as $lcKey => $lcValue)
-				{
-					$this->addWhere($laQuery, array($lcKey=>$lcValue));
-				}
-
-
-
-				$loCommand = Yii::app()->db->createCommand($laQuery);
-				try
-				{
-					$loReturn = $loCommand->queryAll();
-				}
-				catch (CDbException $ex)
-				{
-					$lnReturnCode = 400;
-					$laMessages[] = 'Invalid Query, check your parameters';
-
-					if (Utilities::isDevelopment())
-					{
-						$laMessages[]=$ex->errorInfo[2];
-					}
-				}
-				catch (Exception $ex)
-				{
-					Utilities::printVar($ex);
-					$loReturn = NULL;
-				}
-
-				if ($lnReturnCode == 200 && is_null($loReturn) || (is_array($loReturn) && count($loReturn) == 0))
-				{
-					$lnReturnCode = 404;
-				}
-				if ($lnReturnCode >= 200 && $lnReturnCode < 400)
-				{
-					Yii::app()->cache->set($lcCacheKey, $loReturn, (isset($toModelInfo['cache']['expiry'])?$toModelInfo['cache']['expiry'] : $this->defaultCacheExpiry));
-				}
-			}
-			$this->sendResponse($loReturn, $laMessages, $lnReturnCode);
+			case 'get':
+				$laData = $_GET;
+				break;
+			case 'post':
+				$laData = CJSON::decode(isset($_POST['json']) ?
+					$_POST['json'] : file_get_contents('php://input'), true);
+				break;
+			default:
+				$lnReturnCode=405;
 		}
-		else
+
+		// We are still okay so process
+		if ($lnReturnCode == 200)
 		{
-			echo "unknown method";
+			switch($lcMethod)
+			{
+				// Retrieve the list
+				case 'get':
+					if (isset($toModelInfo['cache']))
+					{
+						$loResponse = Yii::app()->cache->get($lcCacheKey) || NULL;
+						// TODO: Send an expires header for cached
+					}
+					if (is_null($loResponse))
+					{
+						$laQuery = $this->createQuery($toModelInfo, $loModel, $tcActionID);
+						$loResponse = $this->executeCommandFor($laQuery, $laMessages);
+
+						if ($lnReturnCode == 200 && is_null($loResponse) || (is_array($loResponse) && count($loResponse) == 0))
+						{
+							$lnReturnCode = 404;
+						}
+						if (isset($toModelInfo['cache']) && $lnReturnCode >= 200 && $lnReturnCode < 400)
+						{
+							Yii::app()->cache->set($lcCacheKey, $loResponse, (isset($toModelInfo['cache']['expiry'])?$toModelInfo['cache']['expiry'] : $this->defaultCacheExpiry));
+						}
+					}
+					break;
+
+				// Create a new record
+				case 'post':
+					$loInstance = new $loModel();
+
+					$loInstance->setAttributes($laData, false, true);
+
+					try
+					{
+						if (!$loInstance->save())
+						{
+							$laMessages = array_merge($laMessages, $loInstance->getErrors());
+							$lnReturnCode = 417;
+						}
+						else
+						{
+							$laQuery = $this->createQuery($toModelInfo, $loModel, $loInstance->getPrimaryKey());
+							$loResponse = $this->executeCommandFor($laQuery, $laMessages);
+							$lnReturnCode = 201;
+						}
+					}
+					catch (CDbException $ex)
+					{
+						// Probably a foreign key constraint failure, but we don't want to make that public
+						$lnReturnCode = 417;
+						$laMessages[] = 'Unable to create a new '.get_class($loModel);
+						if (Utilities::isDevelopment())
+						{
+							$laMessages[]=$ex->errorInfo[2];
+						}
+					}
+					break;
+				default:
+					$lnReturnCode=405;
+			}
 		}
+		$this->sendResponse($loResponse, $laMessages, $lnReturnCode);
 	}
 
 	private function sendResponse($toContent=NULL, $taMessages = NULL, $tnStatus = 200, $tlCaseInsensitive=true)
