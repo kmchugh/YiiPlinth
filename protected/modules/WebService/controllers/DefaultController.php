@@ -128,12 +128,12 @@ class DefaultController extends PlinthController
 		return $loReturn;
 	}
 
-	private function processModel($toModelInfo, $tcActionID, $tcMethod)
+	public function processModel($toModelInfo, $tcActionID, $tcMethod, $tlReturn = FALSE)
 	{
 		$laMessages = array();
 		$lnReturnCode = 200;
 		$laQuery = NULL;
-		$lcMethod = strtolower($_SERVER['REQUEST_METHOD']);
+		$lcMethod = strtolower($tcMethod);
 		$lcCacheKey = strtolower($_SERVER['REQUEST_URI']);
 		$laData = array();
 		$loModel = $toModelInfo['class']::model();
@@ -162,7 +162,7 @@ class DefaultController extends PlinthController
 				case 'get':
 					if (isset($toModelInfo['cache']))
 					{
-						$loResponse = Yii::app()->cache->get($lcCacheKey) || NULL;
+						$loResponse = Utilities::ISNULLOREMPTY(Yii::app()->cache->get($lcCacheKey), NULL);
 						// TODO: Send an expires header for cached
 					}
 					if (is_null($loResponse))
@@ -183,43 +183,69 @@ class DefaultController extends PlinthController
 
 				// Create a new record
 				case 'post':
-					$loInstance = new $loModel();
-
-					$loInstance->setAttributes($laData, false, true);
-
-					try
+					if (!isset($toModelInfo['onCreate']))
 					{
-						if (!$loInstance->save())
-						{
-							$laMessages = array_merge($laMessages, $loInstance->getErrors());
-							$lnReturnCode = 417;
-						}
-						else
-						{
-							$laQuery = $this->createQuery($toModelInfo, $loModel, $loInstance->getPrimaryKey());
-							$loResponse = $this->executeCommandFor($laQuery, $laMessages);
-							$lnReturnCode = 201;
-						}
+						$loResponse = $this->createModel($this, $loModel, $laData, $lnReturnCode, $laMessages);
 					}
-					catch (CDbException $ex)
+					else
 					{
-						// Probably a foreign key constraint failure, but we don't want to make that public
-						$lnReturnCode = 417;
-						$laMessages[] = 'Unable to create a new '.get_class($loModel);
-						if (Utilities::isDevelopment())
-						{
-							$laMessages[]=$ex->errorInfo[2];
-						}
+						$loFunction = $toModelInfo['onCreate'];
+						$loResponse = $loFunction($this, $loModel, $laData, $lnReturnCode, $laMessages);
 					}
 					break;
 				default:
 					$lnReturnCode=405;
 			}
 		}
-		$this->sendResponse($loResponse, $laMessages, $lnReturnCode);
+		if ($tlReturn === false)
+		{
+			$this->sendResponse($loResponse, $laMessages, $lnReturnCode);
+		}
+		else
+		{
+			return array(
+				'response'=>$loResponse,
+				'messages'=>$laMessages,
+				'resultCode'=>$lnReturnCode,
+				);
+		}
 	}
 
-	private function sendResponse($toContent=NULL, $taMessages = NULL, $tnStatus = 200, $tlCaseInsensitive=true)
+	private function createModel($toController, $toModel, $taValues, &$tnResult, &$taMessages)
+	{
+		$loInstance = new $toModel();
+		$loInstance->setAttributes($taValues, false, true);
+
+		try
+		{
+			if (!$loInstance->save())
+			{
+				foreach ($loInstance->getErrors() as $loMessage)
+				{
+					$taMessages[] = $loMessage;
+				}
+				$tnResult = 417;
+			}
+			else
+			{
+				$laQuery = $this->createQuery($toModelInfo, $toModel, $loInstance->getPrimaryKey());
+				$loResponse = $this->executeCommandFor($laQuery, $taMessages);
+				$tnResult = 201;
+			}
+		}
+		catch (CDbException $ex)
+		{
+			// Probably a foreign key constraint failure, but we don't want to make that public
+			$tnResult = 417;
+			$taMessages[] = 'Unable to create a new '.get_class($toModel);
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+		}
+	}
+
+	public function sendResponse($toContent=NULL, $taMessages = NULL, $tnStatus = 200, $tlCaseInsensitive=true)
 	{
 		//$tcContentType = (strpos($_SERVER['HTTP_ACCEPT'], 'json')) ? 'application/json' : 'text/html';
 		$tcContentType = 'application/json';
