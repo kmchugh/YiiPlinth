@@ -284,7 +284,7 @@ class DefaultController extends PlinthController
 		}
 
 		// If there is a response message, add it in
-		if (!is_null($taMessages))
+		if (!is_null($taMessages) && count($taMessages) > 0)
 		{
 			$laResult['message'] = $taMessages;
 		}
