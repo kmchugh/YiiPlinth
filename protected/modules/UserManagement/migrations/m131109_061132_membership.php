@@ -36,6 +36,7 @@ class m131109_061132_membership extends CDbMigration
                             '{{User}}', 'UserID', 'NO ACTION', 'NO ACTION');
 	}
 
+
 	public function safeDown()
 	{
 		$this->dropTable('{{Membership}}');
