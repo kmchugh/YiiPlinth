@@ -140,17 +140,24 @@ class DefaultController extends PlinthController
 		$loResponse = NULL;
 
 		// TODO: Extract XML data as well as json
-		switch($lcMethod)
+		if (strpos(strtolower($toModelInfo['options']), $lcMethod)!==false)
 		{
-			case 'get':
-				$laData = $_GET;
-				break;
-			case 'post':
-				$laData = CJSON::decode(isset($_POST['json']) ?
-					$_POST['json'] : file_get_contents('php://input'), true);
-				break;
-			default:
-				$lnReturnCode=405;
+			switch($lcMethod)
+			{
+				case 'get':
+					$laData = $_GET;
+					break;
+				case 'post':
+					$laData = CJSON::decode(isset($_POST['json']) ?
+						$_POST['json'] : file_get_contents('php://input'), true);
+					break;
+				default:
+					$lnReturnCode=405;
+			}
+		}
+		else
+		{
+			$lnReturnCode = 405;
 		}
 
 		// We are still okay so process
