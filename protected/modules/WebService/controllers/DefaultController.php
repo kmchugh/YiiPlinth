@@ -185,12 +185,12 @@ class DefaultController extends PlinthController
 				case 'post':
 					if (!isset($toModelInfo['onCreate']))
 					{
-						$loResponse = $this->createModel($this, $loModel, $laData, $lnReturnCode, $laMessages);
+						$loResponse = $this->createModel($this, $toModelInfo, $loModel, $laData, $lnReturnCode, $laMessages);
 					}
 					else
 					{
 						$loFunction = $toModelInfo['onCreate'];
-						$loResponse = $loFunction($this, $loModel, $laData, $lnReturnCode, $laMessages);
+						$loResponse = $loFunction($this, $toModelInfo, $loModel, $laData, $lnReturnCode, $laMessages);
 					}
 					break;
 				default:
@@ -211,7 +211,7 @@ class DefaultController extends PlinthController
 		}
 	}
 
-	private function createModel($toController, $toModel, $taValues, &$tnResult, &$taMessages)
+	private function createModel($toController, $toModelInfo, $toModel, $taValues, &$tnResult, &$taMessages)
 	{
 		$loInstance = new $toModel();
 		$loInstance->setAttributes($taValues, false, true);
@@ -231,6 +231,7 @@ class DefaultController extends PlinthController
 				$laQuery = $this->createQuery($toModelInfo, $toModel, $loInstance->getPrimaryKey());
 				$loResponse = $this->executeCommandFor($laQuery, $taMessages);
 				$tnResult = 201;
+				return $loResponse;
 			}
 		}
 		catch (CDbException $ex)
