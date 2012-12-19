@@ -55,7 +55,7 @@ class WebServiceModule extends CWebModule
 		$laReturn = array();
 		foreach ($this->configuration['models'] as $lcModel=>$loModel)
 		{
-			$laReturn[] = $lcModel;
+			$laReturn[$lcModel] = array('options'=>(isset($loModel['options']) ? $loModel['options'] : ''));
 		}
 		return $laReturn;
 	}
@@ -81,6 +81,12 @@ class WebServiceModule extends CWebModule
 					{
 						echo "Class does not exist";
 					}
+				}
+
+				if (!isset($loModel['options']))
+				{
+
+					$loModel['options']='';
 				}
 				return $loModel;
 			}
