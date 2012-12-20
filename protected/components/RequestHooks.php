@@ -13,6 +13,7 @@ class RequestHooks
 		{
 			Yii::app()->theme = 'mobile';
 		}
+		Yii::app()->session['theme'] = Yii::app()->theme->name;
 	}
 }
 

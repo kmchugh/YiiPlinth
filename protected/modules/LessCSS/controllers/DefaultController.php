@@ -58,7 +58,7 @@ class DefaultController extends Controller
 		{
 			throw new CHttpException(404,'The requested resource does not exist.');
 		}
-		$lcCSS = $this->m_cCachePath.$path.'/'.$file.'.css';
+		$lcCSS = $this->m_cCachePath.$path.'/'.is_null(Yii::app()->theme)Yii::app()->theme->name.'/'.$file.'.css';
 
 		$this->compile($lcFile, $lcCSS);
 
