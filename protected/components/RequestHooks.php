@@ -11,7 +11,7 @@ class RequestHooks
 
 		if (isset($_REQUEST['requestType']) && $_REQUEST['requestType'] === 'mobile')
 		{
-			Yii::app()->theme = 'classic';
+			Yii::app()->theme = 'mobile';
 		}
 	}
 }
