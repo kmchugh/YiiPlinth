@@ -37,7 +37,7 @@ class SignIn extends CWidget
                 // If this is a mobile request, don't sent do the page
                 if (isset($_REQUEST['requestType']) && $_REQUEST['requestType'] === 'mobile')
                 {
-                    $this->redirect('/?requestType=mobile');
+                    Yii::app()->getController()->redirect('/?requestType=mobile');
                 }
                 Utilities::setCallbackURL(NULL);
                 Yii::app()->getController()->redirect($lcURL);
