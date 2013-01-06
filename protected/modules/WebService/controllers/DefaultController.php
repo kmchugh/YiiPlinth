@@ -39,7 +39,7 @@ class DefaultController extends PlinthController
 	private function createQuery($toModelInfo, $toModel, $toUniqueIdentifier)
 	{
 		$loReturn = array(
-			'from'=>'{{'.$toModelInfo['class']::model()->tableName().'}}',
+			'from'=>isset($toModelInfo['from']) ? $toModelInfo['from'] : '{{'.$toModelInfo['class']::model()->tableName().'}}',
 			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
 			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
 			'join'=>isset($toModelInfo['join']) ? $toModelInfo['join'] : '',
