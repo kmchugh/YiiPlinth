@@ -1,8 +1,357 @@
 <?php
+/**
+ * The Web Service default controller handles all of the actions for the WebService functionallity
+ */
 class DefaultController extends PlinthController
 {
-	private $format = 'json';
+	// TODO : Implement caching
+	public $defaultLimit = 50;
+	public $defaultCacheExpiry = 30000;
 
+	private function getPrimaryKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['primaryKey']) ?
+			$toModelInfo['primaryKey'] :
+			$toModel->getMetaData()->tableSchema->primaryKey;
+	}
+
+	private function getUniqueKey($toModelInfo, $toModel)
+	{
+		return isset($toModelInfo['uniqueKey']) ? $toModelInfo['uniqueKey'] : 'GUID';
+	}
+
+	private function addWhere(&$taQuery, $taClause)
+	{
+		$lcWhere = isset($taQuery['where']) ? $taQuery['where'] : '';
+		$laParams = isset($taQuery['params']) ? $taQuery['params'] : array();
+		foreach ($taClause as $lcField => $loValue)
+		{
+			$lcReplacement = ':'.str_replace('.', '_', $lcField);
+			$lcWhere.= (strlen($lcWhere) > 0 ? ' AND ' : '').$lcField.' = '.$lcReplacement;
+			$laParams[$lcReplacement] = $loValue;
+		}
+
+		$taQuery['where']=$lcWhere;
+		$taQuery['params']=$laParams;
+		return $taQuery;
+	}
+
+	private function createQuery($toModelInfo, $toModel, $toUniqueIdentifier)
+	{
+		$loReturn = array(
+			'from'=>isset($toModelInfo['from']) ? $toModelInfo['from'] : '{{'.$toModelInfo['class']::model()->tableName().'}}',
+			'select'=>isset($toModelInfo['select']) ? $toModelInfo['select'] : '*',
+			'limit'=>isset($toModelInfo['limit']) ? $toModelInfo['limit'] : $this->defaultLimit,
+			'join'=>isset($toModelInfo['join']) ? $toModelInfo['join'] : '',
+			);
+		if (isset($toModelInfo['where']))
+		{
+			$this->addWhere($loReturn, $toModelInfo['where']);
+		}
+		if (isset($toModelInfo['order']))
+		{
+			$loReturn['order']=$toModelInfo['order'];
+		}
+
+		if (!is_null($toUniqueIdentifier))
+		{
+			if (is_numeric($toUniqueIdentifier))
+			{
+				$this->addWhere($loReturn, array($this->getPrimaryKey($toModelInfo, $toModel)=>$toUniqueIdentifier));
+			}
+			else
+			{
+				$this->addWhere($loReturn, array($this->getUniqueKey($toModelInfo, $toModel)=>$toUniqueIdentifier));
+			}
+		}
+
+		$laParameters = Utilities::aSplit('&', '=', $_SERVER['QUERY_STRING']);
+		foreach ($laParameters as $lcKey => $lcValue)
+		{
+			$this->addWhere($loReturn, array($lcKey=>$lcValue));
+		}
+		return $loReturn;
+	}
+
+	public function actionIndex()
+	{
+		$this->missingAction(NULL);
+	}
+
+	public function missingAction($tcActionID)
+	{
+		$loModel = $this->getModule()->getModelInfo($this->id);
+		if (!is_null($loModel))
+		{
+			$this->processModel($loModel, $tcActionID, $_SERVER['REQUEST_METHOD']);
+		}
+		else
+		{
+			if (strcasecmp($this->id, 'default') ==0)
+			{
+				$this->sendResponse($this->getModule()->getModelList());
+			}
+			else
+			{
+				// There was no model
+				$this->sendResponse(NULL, array($this->id.' is an invalid model.'), 404);
+			}
+		}
+	}
+
+	private function executeCommandFor($taQuery, &$taMessages)
+	{
+		$loReturn = null;
+		$loCommand = Yii::app()->db->createCommand($taQuery);
+		try
+		{
+			$loReturn = $loCommand->queryAll();
+		}
+		catch (CDbException $ex)
+		{
+			$lnReturnCode = 400;
+			$taMessages[] = 'Invalid Query, check your parameters';
+
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+		}
+		catch (Exception $ex)
+		{
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+			$loReturn = NULL;
+		}
+		return $loReturn;
+	}
+
+	public function processModel($toModelInfo, $tcActionID, $tcMethod, $tlReturn = FALSE)
+	{
+		$laMessages = array();
+		$lnReturnCode = 200;
+		$laQuery = NULL;
+		$lcMethod = strtolower($tcMethod);
+		$lcCacheKey = strtolower($_SERVER['REQUEST_URI']);
+		$laData = array();
+		$loModel = $toModelInfo['class']::model();
+		$loResponse = NULL;
+
+		// TODO: Extract XML data as well as json
+		if (strpos(strtolower($toModelInfo['options']), $lcMethod)!==false)
+		{
+			switch($lcMethod)
+			{
+				case 'get':
+					$laData = $_GET;
+					break;
+				case 'post':
+					$laData = CJSON::decode(isset($_POST['json']) ?
+						$_POST['json'] : file_get_contents('php://input'), true);
+					break;
+				default:
+					$lnReturnCode=405;
+			}
+		}
+		else
+		{
+			$lnReturnCode = 405;
+		}
+
+		// We are still okay so process
+		if ($lnReturnCode == 200)
+		{
+			switch($lcMethod)
+			{
+				// Retrieve the list
+				case 'get':
+					if (isset($toModelInfo['cache']))
+					{
+						$loResponse = Utilities::ISNULLOREMPTY(Yii::app()->cache->get($lcCacheKey), NULL);
+						// TODO: Send an expires header for cached
+					}
+					if (is_null($loResponse))
+					{
+						$laQuery = $this->createQuery($toModelInfo, $loModel, $tcActionID);
+						$loResponse = $this->executeCommandFor($laQuery, $laMessages);
+
+						if ($lnReturnCode == 200 && is_null($loResponse) || (is_array($loResponse) && count($loResponse) == 0))
+						{
+							$lnReturnCode = 404;
+						}
+						if (isset($toModelInfo['cache']) && $lnReturnCode >= 200 && $lnReturnCode < 400)
+						{
+							Yii::app()->cache->set($lcCacheKey, $loResponse, (isset($toModelInfo['cache']['expiry'])?$toModelInfo['cache']['expiry'] : $this->defaultCacheExpiry));
+						}
+					}
+					break;
+
+				// Create a new record
+				case 'post':
+					if (!isset($toModelInfo['onCreate']))
+					{
+						$loResponse = $this->createModel($this, $toModelInfo, $loModel, $laData, $lnReturnCode, $laMessages);
+					}
+					else
+					{
+						$loFunction = $toModelInfo['onCreate'];
+						$loResponse = $loFunction($this, $toModelInfo, $loModel, $laData, $lnReturnCode, $laMessages);
+					}
+					break;
+				default:
+					$lnReturnCode=405;
+			}
+		}
+		if ($tlReturn === false)
+		{
+			$this->sendResponse($loResponse, $laMessages, $lnReturnCode);
+		}
+		else
+		{
+			return array(
+				'response'=>$loResponse,
+				'messages'=>$laMessages,
+				'resultCode'=>$lnReturnCode,
+				);
+		}
+	}
+
+	private function createModel($toController, $toModelInfo, $toModel, $taValues, &$tnResult, &$taMessages)
+	{
+		$loInstance = new $toModel();
+		$loInstance->setAttributes($taValues, false, true);
+
+		try
+		{
+			if (!$loInstance->save())
+			{
+				foreach ($loInstance->getErrors() as $loMessage)
+				{
+					$taMessages[] = $loMessage;
+				}
+				$tnResult = 417;
+			}
+			else
+			{
+				$laQuery = $this->createQuery($toModelInfo, $toModel, $loInstance->getPrimaryKey());
+				$loResponse = $this->executeCommandFor($laQuery, $taMessages);
+				$tnResult = 201;
+				return $loResponse;
+			}
+		}
+		catch (CDbException $ex)
+		{
+			// Probably a foreign key constraint failure, but we don't want to make that public
+			$tnResult = 417;
+			$taMessages[] = 'Unable to create a new '.get_class($toModel);
+			if (Utilities::isDevelopment())
+			{
+				$taMessages[]=$ex->errorInfo[2];
+			}
+		}
+	}
+
+	public function sendResponse($toContent=NULL, $taMessages = NULL, $tnStatus = 200, $tlCaseInsensitive=true)
+	{
+		//$tcContentType = (strpos($_SERVER['HTTP_ACCEPT'], 'json')) ? 'application/json' : 'text/html';
+		$tcContentType = 'application/json';
+		$lcStatusHeader = 'HTTP/1.1 '.$tnStatus.' '.$this->getStatusCodeMessage($tnStatus);
+		header($lcStatusHeader);
+		header('Content-type: '.$tcContentType);
+
+		if ($toContent == NULL)
+		{
+			$toContent = array();
+		}
+
+		$laResult = array(
+			'resultCode' => $tnStatus,
+			'resultDescription' => $this->getStatusCodeMessage($tnStatus),
+			);
+		$lnCount = is_array($toContent) ? count($toContent) : 0;
+		if ($lnCount > 0)
+		{
+			$laResult['count']=count($toContent);
+		}
+		$laResult['result'] = $toContent;
+
+		// If there are any errors, list them out
+		if ($tnStatus < 200 || $tnStatus >= 400)
+		{
+			// TODO: Get the list of errors and render them
+		}
+
+		// If there is a response message, add it in
+		if (!is_null($taMessages) && count($taMessages) > 0)
+		{
+			$laResult['message'] = $taMessages;
+		}
+
+		if ($tlCaseInsensitive)
+		{
+			$laResult = Utilities::array_change_key_case_recursive($laResult);
+		}
+
+		// Respond
+		echo !isset($_REQUEST['jsoncallback']) ?
+			CJSON::encode($laResult) :
+			$_REQUEST['jsoncallback'].'('.CJSON::encode($laResult).');';
+
+		//@Yii::app()->end();
+	}
+
+	private function getStatusCodeMessage($tnStatus)
+	{
+		$laCodes = Array(
+			100 => 'Continue',
+			101 => 'Switching Protocols',
+			200 => 'OK',
+			201 => 'Created',
+			202 => 'Accepted',
+			203 => 'Non-Authoritative Information',
+			204 => 'No Content',
+			205 => 'Reset Content',
+			206 => 'Partial Content',
+			300 => 'Multiple Choices',
+			301 => 'Moved Permanently',
+			302 => 'Found',
+			303 => 'See Other',
+			304 => 'Not Modified',
+			305 => 'Use Proxy',
+			306 => '(Unused)',
+			307 => 'Temporary Redirect',
+			400 => 'Bad Request',
+			401 => 'Unauthorized',
+			402 => 'Payment Required',
+			403 => 'Forbidden',
+			404 => 'Not Found',
+			405 => 'Method Not Allowed',
+			406 => 'Not Acceptable',
+			407 => 'Proxy Authentication Required',
+			408 => 'Request Timeout',
+			409 => 'Conflict',
+			410 => 'Gone',
+			411 => 'Length Required',
+			412 => 'Precondition Failed',
+			413 => 'Request Entity Too Large',
+			414 => 'Request-URI Too Long',
+			415 => 'Unsupported Media Type',
+			416 => 'Requested Range Not Satisfiable',
+			417 => 'Expectation Failed',
+			500 => 'Internal Server Error',
+			501 => 'Not Implemented',
+			502 => 'Bad Gateway',
+			503 => 'Service Unavailable',
+			504 => 'Gateway Timeout',
+			505 => 'HTTP Version Not Supported'
+			);
+
+		return (isset($laCodes[$tnStatus])) ? $laCodes[$tnStatus] : '';
+	}
+
+/*
 	public function filters()
 	{
 		return array();
@@ -64,55 +413,6 @@ class DefaultController extends PlinthController
 				}
 			}
 			$this->sendResponse(200, $laRows, 'application/json');
-		}
-	}
-
-	public function actionView()
-	{
-		if (isset($_GET['model']) && (isset($_GET['id']) || isset($_GET['guid'])))
-		{
-			$lcModelName = $_GET['model'];
-			$loModel = NULL;
-			if (@class_exists($lcModelName, TRUE))
-			{
-				$loModel = isset($_GET['id']) ?
-					$lcModelName::model()->findByPk($_GET['id']) :
-					$lcModelName::model()->findByAttributes(array('GUID' => $_GET['guid']));
-			}
-			else
-			{
-				$lcID = isset($_GET['id']) ? $_GET['id'] : $_GET['guid'];
-				$lcModelName = strtolower($lcModelName);
-				if ($lcModelName === 'streamlistenerlist')
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('COUNT(DISTINCT `ListenerGUID`) as ListenerCount')
-							->from('StreamListener')
-							->join('Stream', 'Stream.StreamID = StreamListener.StreamID')
-							->where('Stream.GUID=:streamGUID', array(':streamGUID'=>$lcID))
-							->queryRow();
-					$loModel = $loModel['ListenerCount'];
-				}
-				else if ($lcModelName === 'commentatorlistenerlist')
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('COUNT(DISTINCT `ListenerGUID`) as ListenerCount')
-							->from('StreamListener')
-							->join('StreamCommentator', 'StreamCommentator.StreamID = StreamListener.StreamID')
-							->where('StreamCommentator.CommentatorGUID=:streamGUID', array(':streamGUID'=>$lcID))
-							->queryRow();
-					$loModel = $loModel['ListenerCount'];
-				}
-				else
-				{
-					$loModel = Yii::app()->db->createCommand()
-							->select('*')
-							->from('v'.$lcModelName)
-							->queryAll();
-				}
-				
-			}
-			$this->sendResponse(200, $loModel, 'application/json');
 		}
 	}
 
@@ -262,63 +562,8 @@ class DefaultController extends PlinthController
 		
 	}
 
-	private function sendResponse($tnStatus = 200, $toContent=NULL, $tcContentType='text/html', $taMessages = NULL, $tlCaseInsensitive=true)
-	{
-		$lcStatusHeader = 'HTTP/1.1 '.$tnStatus.' '.$this->getStatusCodeMessage($tnStatus);
-		header($lcStatusHeader);
-		//header('Content-type: '.$tcContentType);
-
-		if ($toContent == NULL)
-		{
-			$toContent = array();
-		}
-
-		$laResult = array(
-			'resultCode' => $tnStatus,
-			'resultDescription' => $this->getStatusCodeMessage($tnStatus),
-			'result' => $toContent,
-			);
-
-		// If there are any errors, list them out
-		if ($tnStatus != 200)
-		{
-			// TODO: Get the list of errors and render them
-		}
-
-		// If there is a response message, add it in
-		if (!is_null($taMessages))
-		{
-			$laResult['message'] = $taMessages;
-		}
-
-		if ($tlCaseInsensitive)
-		{
-			$laResult = Utilities::array_change_key_case_recursive($laResult);
-		}
-
-		// Respond
-		echo !isset($_REQUEST['jsoncallback']) ?
-			CJSON::encode($laResult) :
-			$_REQUEST['jsoncallback'].'('.CJSON::encode($laResult).');';
-
-		@Yii::app()->end();
-	}
-
-	private function getStatusCodeMessage($tnStatus)
-	{
-		$laCodes = Array(
-			200 => 'OK',
-			400 => 'Bad Request',
-			401 => 'Unauthorized',
-			402 => 'Payment Required',
-			403 => 'Forbidden',
-			404 => 'Not Found',
-			500 => 'Internal Server Error',
-			501 => 'Not Implemented',
-			);
-
-		return (isset($laCodes[$tnStatus])) ? $laCodes[$tnStatus] : '';
-	}
+	
+	*/
 
 }
 

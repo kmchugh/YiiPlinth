@@ -4,7 +4,7 @@
  * Adds a few more colums in the Group table and creates the GroupTypeID table
  */
 
-class m121109_023019_group extends CDbMigration
+class m121213_023019_group extends CDbMigration
 {
 	public function safeUp()
 	{
@@ -15,16 +15,16 @@ class m121109_023019_group extends CDbMigration
 		$this->createTable('{{GroupType}}', array(
 			'GroupTypeID'=>'pk',
 			'Code'=>'code',
-            'Name'=>'title',
-            'Description'=>'description',
-            'GUID'=>'guid',
-            'Sequence'=>'integer',
-            'ImageURI'=>'uri_null',
-            'CreatedDate'=>'datetime',
-            'CreatedBy'=>'guid',
-            'ModifiedDate'=>'datetime',
-            'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+			'Name'=>'title',
+			'Description'=>'description',
+			'GUID'=>'guid',
+			'Sequence'=>'integer',
+			'ImageURI'=>'uri_null',
+			'CreatedDate'=>'datetime',
+			'CreatedBy'=>'guid',
+			'ModifiedDate'=>'datetime',
+			'ModifiedBy'=>'guid',
+			'RowVersion'=>'datetime',
 			));
 
 		$this->addForeignKey('FK_{{GroupType}}_GroupTypeID', '{{GroupType}}', 'GroupTypeID',

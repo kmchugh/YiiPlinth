@@ -3,7 +3,7 @@
 /**
  * Creates the Membership table
  */
-class m121109_061132_membership extends CDbMigration
+class m131109_061132_membership extends CDbMigration
 {
 	public function safeUp()
 	{
@@ -35,6 +35,7 @@ class m121109_061132_membership extends CDbMigration
 		$this->addForeignKey('FK_{{Membership}}ParentGroupID', '{{Membership}}', 'ParentGroupID', 
                             '{{User}}', 'UserID', 'NO ACTION', 'NO ACTION');
 	}
+
 
 	public function safeDown()
 	{

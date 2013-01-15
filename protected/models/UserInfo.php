@@ -16,6 +16,7 @@
  * @property string $BirthMonth
  * @property string $BirthYear
  * @property string $GenderID
+ * @property integer $Featured
  * @property string $CreatedDate
  * @property string $CreatedBy
  * @property string $ModifiedDate
@@ -48,6 +49,7 @@ class UserInfo extends PlinthModel
 	public function afterFind()
 	{
 		parent::afterFind();
+		$this->Featured = ord($this->Featured);
 	}
 
 	/**
@@ -59,6 +61,7 @@ class UserInfo extends PlinthModel
 			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
 			array('FirstName, LastName', 'length', 'max'=>255),
 			array('UserURL', 'length', 'max'=>40),
+			array('Featured', 'boolean'),
 			array('UserURL', 'required'),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 
@@ -117,6 +120,7 @@ class UserInfo extends PlinthModel
 			'ProfileImageURI' => 'Profile Image Uri',
 			'Description' => 'Description',
 			'UserURL' => 'User URL',
+			'Featured' => 'Featured',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'ModifiedDate' => 'Modified Date',
