@@ -9,6 +9,7 @@ class RegistrationForm extends CFormModel
 {
     public $email;
     public $email_repeat;
+    public $accept_terms;
 
     /**
      * Declares the validation rules.
@@ -21,6 +22,8 @@ class RegistrationForm extends CFormModel
             // username and password are required
             array('email', 'email'),
             array('email, email_repeat', 'required'),
+            array('accept_terms', 'required', 'message'=>Utilities::getString('Please accept the terms of service')),
+            array('accept_terms', 'boolean'),
             array('email', 'length', 'max'=>255),
             array('email_repeat', 'compare', 'compareAttribute'=>'email'),
             array('email', 'unique', 'className'=>'User', 'attributeName'=>'Email'),
@@ -35,6 +38,7 @@ class RegistrationForm extends CFormModel
         return array(
             'email' => 'Email Address',
             'email_repeat' => 'Verify Email Address',
+            'accept_terms' => Utilities::getString('registration agreement'),
         );
     }
 

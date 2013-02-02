@@ -11,17 +11,30 @@
 
         <fieldset>
             <p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
+            <div class="fields">
+                <div class="field">
+                    <?php
+                        echo $form->labelEx($toModel,'email');
+                        echo $form->textField($toModel,'email', array('placeholder'=>$toModel->getAttributeLabel('email')));
+                        echo $form->error($toModel,'email');
+                    ?>
+                </div>
 
-            <div class="field">
-                <?php echo $form->labelEx($toModel,'email'); ?>
-                <?php echo $form->textField($toModel,'email'); ?>
-                <?php echo $form->error($toModel,'email'); ?>
-            </div>
+                <div class="field">
+                    <?php
+                        echo $form->labelEx($toModel,'email_repeat');
+                        echo $form->textField($toModel,'email_repeat', array('placeholder'=>$toModel->getAttributeLabel('email_repeat')));
+                        echo $form->error($toModel,'email_repeat');
+                    ?>
+                </div>
 
-            <div class="field">
-                <?php echo $form->labelEx($toModel,'email_repeat'); ?>
-                <?php echo $form->textField($toModel,'email_repeat'); ?>
-                <?php echo $form->error($toModel,'email_repeat'); ?>
+                <div class="field tandc">
+                    <?php
+                    echo $form->checkBox($toModel,'accept_terms',array('value' => 1, 'uncheckValue'=>0));
+                    echo $form->labelEx($toModel,'accept_terms');
+                    echo $form->error($toModel,'accept_terms');
+                    ?>
+                </div>
             </div>
 
             <div class="buttons">
@@ -29,10 +42,6 @@
                  echo CHtml::htmlButton(Utilities::getString('Register'), array('type'=>'submit')); 
                  ?>
             </div>
-            <div class="field">
-                <label class="note">
-                    <?php echo Utilities::getString('registration agreement'); ?>
-            </label>
 
             <?php if(Yii::app()->user->hasFlash('formMessage')): ?> 
                 <div class="flash-success">
