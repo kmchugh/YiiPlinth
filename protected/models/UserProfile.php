@@ -73,8 +73,7 @@ class UserProfile extends CFormModel
 				}
 				else
 				{
-					$this->m_oUserInfo = new UserInfo();
-					$this->m_oUserInfo->UserID = $this->m_oUser->UserID;
+                    $this->m_oUserInfo = UserInfo::create($toUser);
 				}
 			}
 		}

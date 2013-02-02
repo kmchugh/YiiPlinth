@@ -65,7 +65,6 @@ class LoginForm extends CFormModel
 	 */
 	public function login()
 	{
-		echo "LOGGING IN";
 		if($this->m_oUserIdentity===null)
 		{
 			$this->m_oUserIdentity=new PlinthUserIdentity($this->username,$this->password);

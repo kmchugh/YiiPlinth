@@ -41,6 +41,18 @@ class ChangePassword extends CWidget
                 {
                     $loToken->delete();
                 }
+
+                // Send the user an email with a link to change password
+                $loEmail = new YiiMailMessage;
+                $loEmail->view = '//mail/changePassword';
+                $loEmail->layout = '//layouts/mail';
+                $loEmail->setBody(array('userModel'=>$loUser), 'text/html');
+                $loEmail->subject = Utilities::getString('change_password_email_subject');
+                $loEmail->addTo($loUser->Email);
+                $loEmail->from = Yii::app()->params['adminEmail'];
+                Yii::app()->mail->send($loEmail);
+
+
                 // TODO: This should redirect back to where we came from
                 Yii::app()->getController()->redirect(Yii::app()->user->isGuest ? '/login' : '/');
             }

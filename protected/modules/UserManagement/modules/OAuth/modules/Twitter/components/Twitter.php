@@ -204,7 +204,6 @@ class Twitter extends OAuth
                         $laName[1]='';
                     }
 
-                    $loUserInfo = new UserInfo();
                     $loUserInfo->UserID=$loUser->UserID;
                     $loUserInfo->Country = !is_null($loOAuthInfo) ? strtoupper($loOAuthInfo->location) : NULL;
                     $loUserInfo->ProfileImageURI = !is_null($loOAuthInfo) ? $loOAuthInfo->profile_image_url : NULL;

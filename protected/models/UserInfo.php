@@ -28,6 +28,25 @@
  */
 class UserInfo extends PlinthModel
 {
+
+    /**
+     * Creates a new UserInfo for the User
+     */
+    public static function create($toUser)
+    {
+        $loUserInfo = $toUser->userInfo;
+        if (is_null($loUserInfo))
+        {
+            $loUserInfo = new UserInfo();
+            $loUserInfo->UserID = $toUser->UserID;
+            $loUserInfo->FirstName = $toUser->DisplayName;
+
+            $loUserInfo->save();
+            $toUser->userInfo = $loUserInfo;
+        }
+        return $loUserInfo;
+    }
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.

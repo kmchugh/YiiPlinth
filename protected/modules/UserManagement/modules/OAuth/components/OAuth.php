@@ -232,13 +232,14 @@ abstract class OAuth
 			if (!is_null($toExtraInfo))
 			{
 				$this->populateUser($loUser, $toOAuthUser, $toExtraInfo);
-				$loUser->save();
+				if ($loUser->save())
+                {
+                    $loUserInfo = UserInfo::create($loUser);
+                    $this->populateUserInfo($loUser, $loUserInfo, $toOAuthUser, $toExtraInfo);
 
-				$loUserInfo = new UserInfo();
-                    			$loUserInfo->UserID=$loUser->UserID;
-                    			$this->populateUserInfo($loUser, $loUserInfo, $toOAuthUser, $toExtraInfo);
+                    $loUserInfo->save();
+                }
 
-                    			$loUserInfo->save();
 			}
 		}
 
@@ -290,7 +291,7 @@ abstract class OAuth
 			$loRequest = $this->makeRequest($this->getEndpoint('authenticate'), $loParameters, $toOAuthUser);
 		}
 		return array(
-			'user'=>$loOAuthUser,
+			'user'=>$toOAuthUser,
 			'extrainfo'=>$loExtraInfo,
 			);
 	}

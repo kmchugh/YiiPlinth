@@ -185,28 +185,37 @@ class User extends PlinthModel
 	public static function create($tcEmail)
 	{
 		$lcPassword = substr(Utilities::getStringGUID(), 0, 10);
-            	$loUser = new User;
-	           $loUser->setAttributes(
-	                array(
-	                'Email' => $tcEmail,
-	                'DisplayName' => substr($tcEmail, 0, strpos($tcEmail, '@')),
-	                'StartDate' => Utilities::getTimeStamp(),
-	                ), false);
-            	$loUser->resetPassword($lcPassword);
-	            if ($loUser->save())
-	            {
-	                // Send the user an email
-	                $loEmail = new YiiMailMessage;
-	                $loEmail->view = '//mail/userRegistration';
-	                $loEmail->layout = '//layouts/mail';
-	                $loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-	                $loEmail->subject = 'Welcome to YouCommentate.  Time to start calling it as you see it!';
-	                $loEmail->addTo($loUser->Email);
-	                $loEmail->from = Yii::app()->params['adminEmail'];
-	                Yii::app()->mail->send($loEmail);
+        $loUser = new User;
+        $loUser->setAttributes(
+            array(
+                'Email' => $tcEmail,
+                'DisplayName' => substr($tcEmail, 0, strpos($tcEmail, '@')),
+                'StartDate' => Utilities::getTimeStamp(),
+            ), false);
+        $loUser->resetPassword($lcPassword);
+        if ($loUser->save())
+        {
 
-	                // Once a User record is created, create a User Profile
-	            }
-	            return $loUser;
+            // Create a token to allow the user to set their own password
+            // Create a new token
+            $loToken = new ChangePasswordToken();
+            $loToken->UserGUID = $loUser->GUID;
+            if ($loToken->save())
+            {
+                // Send the user an email with a link to change password
+                $loEmail = new YiiMailMessage;
+                $loEmail->view = '//mail/userRegistration';
+                $loEmail->layout = '//layouts/mail';
+                $loEmail->setBody(array('userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
+                $loEmail->subject = Utilities::getString('registration_email_subject');
+                $loEmail->addTo($loUser->Email);
+                $loEmail->from = Yii::app()->params['adminEmail'];
+                Yii::app()->mail->send($loEmail);
+            }
+
+            // Once a User record is created, create a User Profile
+            $loUserInfo = UserInfo::create($loUser);
+        }
+        return $loUser;
 	}
 }

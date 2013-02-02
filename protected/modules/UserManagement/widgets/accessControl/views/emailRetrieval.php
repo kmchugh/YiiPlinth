@@ -13,21 +13,26 @@
 
             <div class="fields">
                 <div class="field">
-                    <?php echo $form->labelEx($toModel,'email'); ?>
-                    <?php echo $form->textField($toModel,'email'); ?>
-                    <?php echo $form->error($toModel,'email'); ?>
+                    <div class="hint"><?php echo Utilities::getString('email retrieval explanation');?></div>
+                    <?php
+                        echo $form->labelEx($toModel,'email');
+                        echo $form->textField($toModel,'email', array('placeholder'=>$toModel->getAttributeLabel('email')));
+                        echo $form->error($toModel,'email');
+                    ?>
                 </div>
 
                 <div class="field">
-                    <?php echo $form->labelEx($toModel,'email_repeat'); ?>
-                    <?php echo $form->textField($toModel,'email_repeat'); ?>
-                    <?php echo $form->error($toModel,'email_repeat'); ?>
+                    <?php
+                        echo $form->labelEx($toModel,'email_repeat');
+                        echo $form->textField($toModel,'email_repeat', array('placeholder'=>$toModel->getAttributeLabel('email_repeat')));
+                        echo $form->error($toModel,'email_repeat');
+                    ?>
                 </div>
             </div>
 
             <div class="buttons">
                 <?php
-                 echo CHtml::htmlButton(Utilities::getString('Update'), array('type'=>'submit')); 
+                 echo CHtml::htmlButton(Utilities::getString('Connect'), array('type'=>'submit'));
                  ?>
             </div>
             <div class="field">

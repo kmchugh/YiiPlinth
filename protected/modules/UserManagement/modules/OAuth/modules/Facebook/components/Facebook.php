@@ -109,6 +109,8 @@ class Facebook extends OAuth
 
 		$toUserInfo->FirstName = !is_null($toExtraInfo) ? $toExtraInfo['first_name'] : '';
 		$toUserInfo->LastName = !is_null($toExtraInfo) ? $toExtraInfo['last_name'] : '';
+        https://graph.facebook.com/1207059/picture?width=121&height=100
+        $toUserInfo->ProfileImageURI = 'http://graph.facebook.com/'.$toOAuthUser->UID.'/picture?width=256&height=256';
 	}
 
 	protected function populateUser($toUser, $toOAuthUser, $toExtraInfo)
