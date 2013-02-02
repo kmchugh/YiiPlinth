@@ -1,5 +1,5 @@
-<div class="form row">
-    <h1><?php echo Utilities::getString('Register'); ?></h1>
+<div class="form row registration">
+    <h1><?php echo Utilities::getString('Register_title'); ?></h1>
     
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>$tcFormName,
@@ -50,6 +50,15 @@
             <?php endif; ?>
 
         </fieldset>
+
+        <div class="oauth">
+            <label><?php echo Utilities::getString("or register with"); ?></label>
+            <span class="oauth"/>
+        </div>
+
+        <div class="links">
+            <a href="/login"><?php echo Utilities::getString("signin_link"); ?></a>
+        </div>
 
     <?php $this->endWidget(); ?>
 </div>

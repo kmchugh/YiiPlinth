@@ -1,4 +1,4 @@
-<div class="form row">
+<div class="form row forgottenPassword">
     <h1><?php echo Utilities::getString('Email Retrieval'); ?></h1>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>$tcFormName,
@@ -11,16 +11,18 @@
         <fieldset>
             <p class="note"><?php echo Utilities::getString('Fields with'); ?> <span class="required">*</span> <?php echo Utilities::getString('are required'); ?></p>
 
-            <div class="field">
-                <?php echo $form->labelEx($toModel,'email'); ?>
-                <?php echo $form->textField($toModel,'email'); ?>
-                <?php echo $form->error($toModel,'email'); ?>
-            </div>
+            <div class="fields">
+                <div class="field">
+                    <?php echo $form->labelEx($toModel,'email'); ?>
+                    <?php echo $form->textField($toModel,'email'); ?>
+                    <?php echo $form->error($toModel,'email'); ?>
+                </div>
 
-            <div class="field">
-                <?php echo $form->labelEx($toModel,'email_repeat'); ?>
-                <?php echo $form->textField($toModel,'email_repeat'); ?>
-                <?php echo $form->error($toModel,'email_repeat'); ?>
+                <div class="field">
+                    <?php echo $form->labelEx($toModel,'email_repeat'); ?>
+                    <?php echo $form->textField($toModel,'email_repeat'); ?>
+                    <?php echo $form->error($toModel,'email_repeat'); ?>
+                </div>
             </div>
 
             <div class="buttons">
