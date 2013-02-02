@@ -326,7 +326,7 @@
 			return (Yii::app()->hasModule($tcModuleName)) ?
 				$toCallback() :
 				!is_null($toFailure) ?
-					$toFailure() :
+                    (is_callable($toFailure) ? $toFailure() : NULL ):
 					NULL;
 		}
 
