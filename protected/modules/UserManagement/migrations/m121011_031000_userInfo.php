@@ -20,7 +20,7 @@ class m121011_031000_userInfo extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
             ));
 
         $this->addForeignKey('FK_{{UserInfo}}_UserID', '{{UserInfo}}', 'UserID',

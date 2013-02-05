@@ -22,7 +22,7 @@ class m121011_011000_user extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 
 		$this->createIndex('UQ_{{User}}_GUID', "{{User}}", 'GUID', true);

@@ -19,7 +19,7 @@ class m121103_151635_gender extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
             ));
 
         $this->createIndex('UQ_{{Gender}}_Code', "{{Gender}}", 'Code', true);

@@ -22,6 +22,15 @@
 			return $GLOBALS[$lcKey];
 		}
 
+        /**
+         * Returns a url suitable for use in URLS
+         * @param $tcURL the url to encode
+         */
+        public static function SEOEncode($tcURL)
+        {
+            return rawurldecode(str_replace(' ', '_', $tcURL));
+        }
+
 		/**
 		* Includes the files specified, and if the return value from the
 		* file specified is an array, merges the results in the order given

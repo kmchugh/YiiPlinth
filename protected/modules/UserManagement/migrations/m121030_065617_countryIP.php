@@ -20,7 +20,7 @@ class m121030_065617_countryIP extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 		$this->addForeignKey('FK_{{CountryIPv4}}_UserID', '{{CountryIPv4}}', 'CountryID',
 					'{{Country}}', 'CountryID', 'NO ACTION', 'NO ACTION');

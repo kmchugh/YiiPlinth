@@ -24,7 +24,7 @@ class m121213_023019_group extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 
 		$this->addForeignKey('FK_{{GroupType}}_GroupTypeID', '{{GroupType}}', 'GroupTypeID',

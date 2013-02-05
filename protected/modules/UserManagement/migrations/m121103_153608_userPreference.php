@@ -18,7 +18,7 @@ class m121103_153608_userPreference extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
             ));
 
         $this->createIndex('UQ_{{UserPreferenceType}}_Code', "{{UserPreferenceType}}", 'Code', true);
@@ -39,7 +39,7 @@ class m121103_153608_userPreference extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
             ));
 
         $this->addForeignKey('FK_{{UserPreference}}_TypeID', '{{UserPreference}}', 'TypeID', 

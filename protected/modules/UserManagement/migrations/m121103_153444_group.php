@@ -17,7 +17,7 @@ class m121103_153444_group extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
             ));
 
         $this->createIndex('UQ_{{Group}}_GUID', '{{Group}}', 'GUID', true);

@@ -17,7 +17,7 @@ class m121029_155118_region extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 
 		$this->addForeignKey('FK_{{Region}}_CountryID', '{{Region}}', 'CountryID',
