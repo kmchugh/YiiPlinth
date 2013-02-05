@@ -15,29 +15,30 @@
                 <div class="field">
                     <?php
                         echo $form->labelEx($toModel,'email');
-                        echo $form->textField($toModel,'email', array('placeholder'=>$toModel->getAttributeLabel('email')));
+                        echo $form->textField($toModel,'email', array('placeholder'=>Utilities::getString("What's your registered email?")));
                         echo $form->error($toModel,'email');
                     ?>
                 </div>
 
                 <?php if(CCaptcha::checkRequirements()): ?>
                     <div class="field captcha">
-                        <div><?php $this->widget('CCaptcha'); ?></div>
-                        <div class="hint">Please enter the letters as they are shown in the image above.
-                            <br/>Letters are not case-sensitive.</div>
+                        <div class="image"><?php $this->widget('CCaptcha',
+                                array('buttonOptions'=>array('title'=>Utilities::getString('Get a new code')))); ?></div>
+                        <div class="hint"><?php echo Utilities::getString('Enter the letters above') ?></div>
                         <div class="field">
                             <?php
                                 echo $form->labelEx($toModel,'verifyCode');
-                                echo $form->textField($toModel,'verifyCode', array('placeholder'=>$toModel->getAttributeLabel('verifyCode')));
+                                echo $form->textField($toModel,'verifyCode');
                                 echo $form->error($toModel,'verifyCode');
                             ?>
                         </div>
+                        <div class="hint"><?php echo Utilities::getString('Letters are not case-sensitive') ?></div>
                     </div>
                 <?php endif; ?>
             </div>
 
             <div class="buttons">
-				<?php echo CHtml::htmlButton(Utilities::getString('Reset'), array('type'=>'submit')); ?>
+				<?php echo CHtml::htmlButton(Utilities::getString('Retrieve Password'), array('type'=>'submit')); ?>
 			</div>
 
 			<?php if(Yii::app()->user->hasFlash('formMessage')): ?> 

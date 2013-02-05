@@ -52,7 +52,7 @@
         </fieldset>
 
         <div class="oauth">
-            <label><?php echo Utilities::getString("or register with"); ?></label>
+            <label><?php echo Utilities::getString("or"); ?></label>
             <span class="oauth"/>
         </div>
 

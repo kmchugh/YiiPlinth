@@ -2,7 +2,7 @@
 <?php
     foreach ($OAuthProviders as $lcName => $lcURL) 
     {
-        echo PlinthHTML::link($lcName, $lcURL, array('class'=>lcfirst($lcName)));
+        echo PlinthHTML::link(Utilities::getString('oauth_link_'.$lcName), $lcURL, array('class'=>lcfirst($lcName)));
     }
 ?>
 </div>
