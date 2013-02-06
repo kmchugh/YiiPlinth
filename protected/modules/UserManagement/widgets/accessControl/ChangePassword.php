@@ -52,6 +52,14 @@ class ChangePassword extends CWidget
                 $loEmail->from = Yii::app()->params['adminEmail'];
                 Yii::app()->mail->send($loEmail);
 
+                // We know the users name and password at this stage so be helpful and log them in
+                if (Yii::app()->user->isGuest)
+                {
+                    $loLoginForm = new LoginForm();
+                    $loLoginForm->username = $loUser->Email;
+                    $loLoginForm->password  =$loModel->password;
+                    $loLoginForm->login();
+                }
 
                 // TODO: This should redirect back to where we came from
                 Yii::app()->getController()->redirect(Yii::app()->user->isGuest ? '/login' : '/');
