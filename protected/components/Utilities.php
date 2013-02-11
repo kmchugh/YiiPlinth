@@ -523,6 +523,7 @@
 			}
 		}
 
+        // TODO: Refactor the getTwitterUser and getFacebookUser to getOAuthUser
 		public static function getTwitterUser($toTwitterObject = NULL)
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
@@ -559,6 +560,43 @@
 			}
 			return $loAuthUser;
 		}
+
+        public static function getFacebookUser($toOAuthObject = NULL)
+        {
+            // TODO: Remove this after all twitter functionality has been refactored
+            Yii::import('YIIPlinth.modules.UserManagement.models.*');
+            Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.components.*');
+            Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
+            Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Facebook.components.*');
+
+            // Update the user information
+            $loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Facebook'));
+
+            if (is_null($loAuthUser) && !is_null($toOAuthObject))
+            {
+                $loUserInfo = $toOAuthObject->get('account/verify_credentials');
+
+                if (isset($loUserInfo->error))
+                {
+                    echo $loUserInfo->error;
+                    $loUserInfo = null;
+                }
+
+                if ($loUserInfo != NULL)
+                {
+                    $loUser = User::model()->findByAttributes(array('GUID'=>Yii::app()->user->GUID));
+
+                    $loAuthUser = new OAuthUser();
+                    $loAuthUser->Provider='Facebook';
+                    $loAuthUser->UserID=$loUser->UserID;
+                    $loAuthUser->UserGUID=$loUser->GUID;
+                    $loAuthUser->UID=$loUserInfo->id;
+                    $loAuthUser->DisplayName=$loUserInfo->screen_name;
+                    $loAuthUser->UserName=$loUserInfo->name;
+                }
+            }
+            return $loAuthUser;
+        }
 
 		public static function tweet($tcMessage, $tcAuthToken)
 		{
