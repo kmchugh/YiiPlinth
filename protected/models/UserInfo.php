@@ -77,7 +77,7 @@ class UserInfo extends PlinthModel
 	public function rules()
 	{
 		return array(
-			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
+			array('UserID, CreatedDate, ModifiedDate, Rowversion, CountryID', 'length', 'max'=>20),
 			array('FirstName, LastName', 'length', 'max'=>255),
 			array('UserURL', 'length', 'max'=>40),
 			array('Featured', 'boolean'),

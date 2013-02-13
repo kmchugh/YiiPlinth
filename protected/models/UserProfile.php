@@ -151,7 +151,7 @@ class UserProfile extends CFormModel
 			// Update the Info and validate
 			$this->m_oUserInfo->setAttributes(array(
 				'Description' => $this->description,
-				'Country' => $this->country,
+				'CountryID' => $this->country,
 				'ProfileImageURI' => $this->profileImageURI
 				));
 
