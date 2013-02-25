@@ -235,7 +235,9 @@ class DefaultController extends PlinthController
 			}
 			else
 			{
+                $loInstance = $toModel->findByAttributes(array('Rowversion'=>$loInstance->Rowversion));
 				$laQuery = $this->createQuery($toModelInfo, $toModel, $loInstance->getPrimaryKey());
+
 				$loResponse = $this->executeCommandFor($laQuery, $taMessages);
 				$tnResult = 201;
 				return $loResponse;
