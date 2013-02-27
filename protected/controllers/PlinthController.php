@@ -41,10 +41,7 @@ class PlinthController extends Controller
 		// TODO : Update the timezone based on user preference/location
 
         // TODO: Remove this for going live
-        if ($_SERVER['HTTP_HOST'] === "www.youcommentate.com" && get_class($this) !== "LandingController")
-        {
-            $this->redirect('/Landing');
-        }
+        $this->redirect('/Landing');
 	}
 
 	/**
