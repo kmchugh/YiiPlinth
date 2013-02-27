@@ -41,7 +41,10 @@ class PlinthController extends Controller
 		// TODO : Update the timezone based on user preference/location
 
         // TODO: Remove this for going live
-        $this->redirect('/Landing');
+        if (get_class($this) !== "LandingController")
+        {
+            $this->redirect('/Landing');
+        }
 	}
 
 	/**
@@ -59,7 +62,7 @@ class PlinthController extends Controller
 
 	/**
 	 * Sets the property specified by tcName to the value taValue.  This value
-	 * can only be retrieved by getProeprty
+	 * can only be retrieved by getProperty
 	 * @param String $tcName the property to set
 	 * @param String $toValue the value of the property
 	 */
