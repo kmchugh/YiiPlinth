@@ -43,7 +43,7 @@ class PlinthController extends Controller
         // TODO: Remove this for going live
         if (get_class($this) !== "LandingController")
         {
-            $this->redirect('/Landing');
+            //$this->redirect('/Landing');
         }
 	}
 
