@@ -27,6 +27,7 @@ class LayoutMapManager
      *         '/'=>array(
      *             'layout'=>function(){return Yii::app()->isGuest ? '//layouts/primaryPage' : '//layouts/authenticatedPage';},
      *             'style'=>function(){return Yii::app()->isGuest ? 'home.less' : 'secondaryDefault.less';}
+     *             'theme'=>'classic'
      *          ),
      *          '/UserManagement/'=>array('layout'=>'//layouts/primaryPage', 'style'=>'userManagement.less'),
      *          '/Site/'=>array('layout'=>'//layouts/primaryPage', 'style'=>'/infoPage.less', 'theme'=>'classic'),
@@ -101,7 +102,9 @@ class LayoutMapManager
 
                 if (isset($loValue['theme']))
                 {
-                    $toController->theme = $this->evaluate($loValue['theme']);
+                    $lcTheme = $this->evaluate($loValue['theme']);
+                    Yii::app()->theme = $lcTheme;
+                    Yii::app()->session['theme'] = $lcTheme;
                 }
             }
         }
