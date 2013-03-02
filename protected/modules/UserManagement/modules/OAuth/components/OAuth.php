@@ -167,8 +167,18 @@ abstract class OAuth
 			// Determine if this is a new user or an old user
 			if (!isset($loOAuthUser->UserID))
 			{
-				// This is a new user so we need to create one
-				$loUser = $this->beginCreateUser($loOAuthUser, $loExtraInfo);
+                if (Yii::app()->user->isguest)
+                {
+                    // This is a new user so we need to create one
+                    $loUser = $this->beginCreateUser($loOAuthUser, $loExtraInfo);
+                }
+                else
+                {
+                    $loOAuthUser->UserID=Yii::app()->user->id;
+                    $loOAuthUser->UserGUID=Yii::app()->user->guid;
+                    $loOAuthUser->save();
+                    $this->loginUser($loOAuthUser->user);
+                }
 			}
 			else
 			{
@@ -476,34 +486,35 @@ abstract class OAuth
 			$loCurl = curl_init();
 			curl_setopt($loCurl, CURLOPT_USERAGENT, $this->userAgent);
 			curl_setopt($loCurl, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-		    	curl_setopt($loCurl, CURLOPT_TIMEOUT, $this->timeout);
-		    	curl_setopt($loCurl, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($loCurl, CURLOPT_TIMEOUT, $this->timeout);
+            curl_setopt($loCurl, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($loCurl, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
-		    	$lcAuthHeader = 'Authorization: OAuth ';
-		    	foreach ($toParameters as $lcKey => $lcValue)
-		    	{
-		    		if (preg_match('/^oauth/', $lcKey))
-		    		{
-		    			$lcAuthHeader.=$lcKey.'="'.$lcValue.'", ';
+            $lcAuthHeader = 'Authorization: OAuth ';
+            foreach ($toParameters as $lcKey => $lcValue)
+            {
+                if (preg_match('/^oauth/', $lcKey))
+                {
+                    $lcAuthHeader.=$lcKey.'="'.$lcValue.'", ';
 
-		    		}
-		    	}
-		    	$lcAuthHeader = substr($lcAuthHeader, 0, strlen($lcAuthHeader)-2);
+                }
+            }
+            $lcAuthHeader = substr($lcAuthHeader, 0, strlen($lcAuthHeader)-2);
 
-		    	curl_setopt($loCurl, CURLOPT_HTTPHEADER, array($lcAuthHeader,
-		    		'Expect:'));
-		    	curl_setopt($loCurl, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer);
-		    	curl_setopt($loCurl, CURLOPT_HEADERFUNCTION, array($this, 'headerCallback'));
-		    	curl_setopt($loCurl, CURLOPT_HEADER, FALSE);
+            curl_setopt($loCurl, CURLOPT_HTTPHEADER, array($lcAuthHeader,
+                'Expect:'));
+            curl_setopt($loCurl, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer);
+            curl_setopt($loCurl, CURLOPT_HEADERFUNCTION, array($this, 'headerCallback'));
+            curl_setopt($loCurl, CURLOPT_HEADER, FALSE);
 
-		    	if ($toEndpoint['method'] === 'POST')
-		    	{
-		    		curl_setopt($loCurl, CURLOPT_POST, TRUE);
-				if (!is_null($toParameters))
-				{
-					curl_setopt($loCurl, CURLOPT_POSTFIELDS, $toParameters);
-				}
-			}
+            if ($toEndpoint['method'] === 'POST')
+            {
+                curl_setopt($loCurl, CURLOPT_POST, TRUE);
+                if (!is_null($toParameters))
+                {
+                    curl_setopt($loCurl, CURLOPT_POSTFIELDS, $toParameters);
+                }
+            }
 
 			curl_setopt($loCurl, CURLOPT_URL, $lcURL);
 
@@ -555,7 +566,8 @@ abstract class OAuth
 	{
 		return Yii::app()->params[strtolower($this->getProviderName())]['consumerSecret'];
 	}
-	private function getConsumerKey()
+    // TODO: Make this private when oauth is fixed
+	protected function getConsumerKey()
 	{
 		return Yii::app()->params[strtolower($this->getProviderName())]['consumerKey'];
 	}
@@ -585,8 +597,6 @@ abstract class OAuth
 
 		return $this->sign($tcMethod, $tcURL, $toParameters, $toOAuthUser);
 	}
-
-	
 
 	protected function headerCallback($toCurlSession, $tcData)
 	{

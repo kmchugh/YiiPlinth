@@ -22,6 +22,9 @@ class Twitter extends OAuth
 		'userinfo'=>array(
 			'url'=>'https://api.twitter.com/1/users/show.json',
 			'method'=>'get'),
+        'postStatus'=>array(
+            'url'=>'https://api.twitter.com/1.1/statuses/update.json',
+            'method'=>'post'),
 		);
 
 
@@ -32,9 +35,36 @@ class Twitter extends OAuth
 
 	public function postTweet($toAuthUser, $tcTweet)
 	{
-		$loResponse = $this->makeRequest('https://api.twitter.com/1.1/statuses/update.json', array(
-			'status'=>$tcTweet,
-			'include_entities'=>'true'), $toAuthUser, true);
+        require dirname(__FILE__).'/tmhOAuth.php';
+        require dirname(__FILE__).'/tmhUtilities.php';
+        $tmhOAuth = new tmhOAuth(array(
+            'consumer_key'    => $this->getConsumerKey(),
+            'consumer_secret' => $this->getConsumerSecret(),
+            'user_token'      => $toAuthUser->Token,
+            'user_secret'     => $toAuthUser->Secret,
+        ));
+
+        $code = $tmhOAuth->request('POST', $tmhOAuth->url('1/statuses/update'), array(
+            'status' => $tcTweet
+        ));
+
+        /*
+        if ($code == 200)
+        {
+            Utilities::printVar(json_decode($tmhOAuth->response['response']));
+        } else
+        {
+            Utilities::printVar($tmhOAuth->response);
+        }
+        */
+
+        return NULL;
+
+        // TODO: Fix OAUTH
+		$loResponse = $this->makeRequest($this->getEndpoint('postStatus'), array(
+			'status'=>$tcTweet), $toAuthUser, true);
+
+
 
 		if ($loResponse != null)
 		{
@@ -107,8 +137,8 @@ class Twitter extends OAuth
 	protected function beginCreateUser($toOAuthUser, $toExtraInfo)
 	{
 		// We can't access email from Twitter so request it from the user
-		$_SESSION['OAuthUser'] = $toOAuthUser->OAuthUserID;
-		Yii::app()->getController()->redirect('/retrieveEmail');
+        $_SESSION['OAuthUser'] = $toOAuthUser->OAuthUserID;
+        Yii::app()->getController()->redirect('/retrieveEmail');
 	}
 
 	protected function populateUserInfo($toUser, $toUserInfo, $toOAuthUser, $toExtraInfo)

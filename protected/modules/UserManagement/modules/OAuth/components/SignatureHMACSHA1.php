@@ -16,7 +16,6 @@ class SignatureHMACSHA1 extends SignatureMethod
 		{
 			$loParameters[rawurlencode($lcKey)] = rawurlencode($lcValue);
 		}
-
 		ksort($loParameters);
 
 		foreach ($loParameters as $lcKey => $lcValue) 
@@ -25,7 +24,7 @@ class SignatureHMACSHA1 extends SignatureMethod
 		}
 		$lcParameter = rawurlencode(substr($lcParameter, 0, strlen($lcParameter)-1));
 
-		$loParameters['oauth_signature']=urlencode(base64_encode(hash_hmac('sha1', $lcBase.$lcParameter, $tcSecret.'&'.$tcTokenSecret, true)));
+		$loParameters['oauth_signature']=rawurlencode(base64_encode(hash_hmac('sha1', $lcBase.$lcParameter, $tcSecret.'&'.$tcTokenSecret, true)));
 
 		ksort($loParameters);
 		return $loParameters;
