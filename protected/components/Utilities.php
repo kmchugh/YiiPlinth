@@ -506,7 +506,7 @@
 			return NULL;
 		}
 
-		public static function sendTweet($tcMessage)
+		public static function sendTweet($tcMessage, $tcUSerGUID)
 		{
 			// TODO: Remove this after all twitter functionality has been refactored
 			Yii::import('YIIPlinth.modules.UserManagement.models.*');
@@ -514,8 +514,8 @@
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.models.*');
 			Yii::import('YIIPlinth.modules.UserManagement.modules.OAuth.modules.Twitter.components.*');
 
-			// Only if the user is linked to a twitter account
-			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>Yii::app()->user->GUID, 'Provider'=>'Twitter'));
+            // Only if the user is linked to a twitter account
+			$loAuthUser = OAuthUser::model()->findByAttributes(array('UserGUID'=>$tcUSerGUID, 'Provider'=>'Twitter'));
 			if (!is_null($loAuthUser))
 			{
 				$loOAuth = new Twitter();

@@ -48,7 +48,7 @@ class Twitter extends OAuth
             'status' => $tcTweet
         ));
 
-        /*
+/*
         if ($code == 200)
         {
             Utilities::printVar(json_decode($tmhOAuth->response['response']));
@@ -56,7 +56,7 @@ class Twitter extends OAuth
         {
             Utilities::printVar($tmhOAuth->response);
         }
-        */
+*/
 
         return NULL;
 
