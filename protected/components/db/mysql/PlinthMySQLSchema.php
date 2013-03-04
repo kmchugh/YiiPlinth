@@ -16,6 +16,7 @@ class PlinthMySQLSchema extends CMysqlSchema
         'boolean_null' => "bit(1)",
         'code' => 'varchar(40) NOT NULL',
         'code_null' => 'varchar(40) NULL',
+        'counter' => 'bigint(20) unsigned NOT NULL',
         'date' => 'date',
         'datetime' => 'bigint(20) unsigned NOT NULL',
         'datetime_null' => 'bigint(20) unsigned NULL',
