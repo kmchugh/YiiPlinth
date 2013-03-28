@@ -152,7 +152,7 @@ class DefaultController extends PlinthController
 						$_POST['json'] : file_get_contents('php://input'), true);
 					break;
                 case 'put':
-                    $laData = CJSON::decode(str_replace("json=", "", file_get_contents('php://input')), true);
+                    $laData = CJSON::decode(str_replace("json=", "", rawurldecode(file_get_contents('php://input'))), true);
                     break;
 				default:
 					$lnReturnCode=405;
@@ -241,13 +241,16 @@ class DefaultController extends PlinthController
         $loInstance = new $toModel();
         $loInstance->setAttributes($taValues, false, true);
 
+
+
         // ModelID and URL ID Should be the same
         if (is_numeric($tcUniqueIdentifier))
         {
             if ($loInstance->getPrimaryKey() != intval($tcUniqueIdentifier))
             {
                 $tnResult = 417;
-                $taMessages[] = 'Unique Keys do not match ('.$tcUniqueIdentifier.') '.get_class($toModel);
+                $taMessages[] = 'Unique Keys do not match ('.$loInstance->getPrimaryKey().' - '.$tcUniqueIdentifier.') '.get_class($toModel);
+                return;
             }
         }
         else
@@ -256,7 +259,8 @@ class DefaultController extends PlinthController
             {
                 // Probably a foreign key constraint failure, but we don't want to make that public
                 $tnResult = 417;
-                $taMessages[] = 'Unique Keys do not match ('.$tcUniqueIdentifier.') '.get_class($toModel);
+                $taMessages[] = 'Unique Keys do not match ('.$loInstance->getAttribute($this->getUniqueKey($toModelInfo, $toModel)).' - '.$tcUniqueIdentifier.') '.get_class($toModel);
+                return;
             }
         }
 
