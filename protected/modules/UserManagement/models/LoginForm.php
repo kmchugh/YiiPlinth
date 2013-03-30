@@ -72,7 +72,7 @@ class LoginForm extends CFormModel
 		}
 		if($this->m_oUserIdentity->errorCode===PlinthUserIdentity::ERROR_NONE)
 		{
-			$lnDuration=$this->rememberMe ? 3600*24*30 : 0;
+			$lnDuration=3600*24*30;//$this->rememberMe ? 3600*24*30 : 0;
 			Yii::app()->user->login($this->m_oUserIdentity,$lnDuration);
 
 			return true;

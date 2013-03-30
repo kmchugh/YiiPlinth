@@ -4,7 +4,7 @@
  * Adds a few more colums in the Group table and creates the GroupTypeID table
  */
 
-class m121213_023019_group extends CDbMigration
+class m141213_023019_group extends CDbMigration
 {
 	public function safeUp()
 	{

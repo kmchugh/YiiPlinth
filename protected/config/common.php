@@ -47,6 +47,7 @@ return array(
             'sessionName'=>'PHPSESSID',
             'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
             'connectionID'=>'db',
+            'timeout'=>86400,
             'sessionTableName'=>'Session'
             ),
         'db'=>array(
@@ -70,6 +71,11 @@ return array(
             'logging'=>true,
             'dryRun' => false,
             ),
+        'user'=>array(
+            'allowAutoLogin'=>true,
+            'autoRenewCookie'=>true,
+            'authTimeout'=>31557600,
+        ),
         'urlManager'=>array(
             'urlFormat'=>'path',
             'showScriptName'=>false,

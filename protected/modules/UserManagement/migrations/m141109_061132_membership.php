@@ -3,7 +3,7 @@
 /**
  * Creates the Membership table
  */
-class m131109_061132_membership extends CDbMigration
+class m141109_061132_membership extends CDbMigration
 {
 	public function safeUp()
 	{
