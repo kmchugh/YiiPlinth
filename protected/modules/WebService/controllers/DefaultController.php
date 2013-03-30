@@ -151,6 +151,9 @@ class DefaultController extends PlinthController
 					$laData = CJSON::decode(isset($_POST['json']) ?
 						$_POST['json'] : file_get_contents('php://input'), true);
 					break;
+                case 'put':
+                    $laData = CJSON::decode(str_replace("json=", "", rawurldecode(file_get_contents('php://input'))), true);
+                    break;
 				default:
 					$lnReturnCode=405;
 			}
@@ -200,6 +203,20 @@ class DefaultController extends PlinthController
 						$loResponse = $loFunction($this, $toModelInfo, $loModel, $laData, $lnReturnCode, $laMessages);
 					}
 					break;
+
+                // Update an existing record
+                case 'put':
+                    if (!isset($toModelInfo['onUpdate']))
+                    {
+                        $loResponse = $this->updateModel($this, $toModelInfo, $loModel, $laData, $tcActionID, $lnReturnCode, $laMessages);
+                    }
+                    else
+                    {
+                        $loFunction = $toModelInfo['onUpdate'];
+                        $loResponse = $loFunction($this, $toModelInfo, $loModel, $laData, $tcActionID, $lnReturnCode, $laMessages);
+                    }
+                    break;
+
 				default:
 					$lnReturnCode=405;
 			}
@@ -217,6 +234,70 @@ class DefaultController extends PlinthController
 				);
 		}
 	}
+
+    // TODO: Complete the automatic PUT request implementation
+    private function updateModel($toController, $toModelInfo, $toModel, $taValues, $tcUniqueIdentifier, &$tnResult, &$taMessages)
+    {
+        $loInstance = new $toModel();
+        $loInstance->setAttributes($taValues, false, true);
+
+
+
+        // ModelID and URL ID Should be the same
+        if (is_numeric($tcUniqueIdentifier))
+        {
+            if ($loInstance->getPrimaryKey() != intval($tcUniqueIdentifier))
+            {
+                $tnResult = 417;
+                $taMessages[] = 'Unique Keys do not match ('.$loInstance->getPrimaryKey().' - '.$tcUniqueIdentifier.') '.get_class($toModel);
+                return;
+            }
+        }
+        else
+        {
+            if ($loInstance->getAttribute($this->getUniqueKey($toModelInfo, $toModel)) != intval($tcUniqueIdentifier))
+            {
+                // Probably a foreign key constraint failure, but we don't want to make that public
+                $tnResult = 417;
+                $taMessages[] = 'Unique Keys do not match ('.$loInstance->getAttribute($this->getUniqueKey($toModelInfo, $toModel)).' - '.$tcUniqueIdentifier.') '.get_class($toModel);
+                return;
+            }
+        }
+
+        $loInstance = $toModel->findByPk($loInstance->getPrimaryKey());
+        $loInstance->setAttributes($taValues, false, true);
+
+        try
+        {
+            if (!$loInstance->save())
+            {
+                foreach ($loInstance->getErrors() as $loMessage)
+                {
+                    $taMessages[] = $loMessage;
+                }
+                $tnResult = 417;
+            }
+            else
+            {
+                $loInstance = $toModel->findByAttributes(array('Rowversion'=>$loInstance->Rowversion));
+                $laQuery = $this->createQuery($toModelInfo, $toModel, $loInstance->getPrimaryKey());
+
+                $loResponse = $this->executeCommandFor($laQuery, $taMessages);
+                $tnResult = 200;
+                return $loResponse;
+            }
+        }
+        catch (CDbException $ex)
+        {
+            // Probably a foreign key constraint failure, but we don't want to make that public
+            $tnResult = 417;
+            $taMessages[] = 'Unable to update existing '.get_class($toModel);
+            if (Utilities::isDevelopment())
+            {
+                $taMessages[]=$ex->errorInfo[2];
+            }
+        }
+    }
 
 	private function createModel($toController, $toModelInfo, $toModel, $taValues, &$tnResult, &$taMessages)
 	{
