@@ -27,8 +27,8 @@ class m141213_023019_group extends CDbMigration
 			'Rowversion'=>'datetime',
 			));
 
-		$this->addForeignKey('FK_{{GroupType}}_GroupTypeID', '{{GroupType}}', 'GroupTypeID',
-							'{{Group}}', 'GroupTypeID', 'NO ACTION', 'NO ACTION');
+		$this->addForeignKey('FK_{{Group}}_GroupTypeID', '{{Group}}', 'GroupTypeID',
+							'{{GroupType}}', 'GroupTypeID', 'NO ACTION', 'NO ACTION');
 
 	}
 
