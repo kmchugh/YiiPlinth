@@ -4,7 +4,7 @@
  * Base controller class.  This should be the base class
  * for any Plinth controllers
  */
-class PlinthController extends Controller
+class PlinthController extends CController
 {
 	private $m_aProperties;
 
