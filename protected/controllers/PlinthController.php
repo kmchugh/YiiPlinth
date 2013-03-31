@@ -17,8 +17,6 @@ class PlinthController extends CController
 	{
 		parent::init();
 
-        //$this->setPageTitle($this->getAction()->name);
-
         $lcPageTitle=ucfirst(basename($this->getId()));
         $this->setPageTitle(
             ($this->getAction()!==null && strcasecmp($this->getAction()->getId(),$this->defaultAction)) ?
