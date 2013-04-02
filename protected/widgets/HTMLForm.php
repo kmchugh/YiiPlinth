@@ -62,7 +62,8 @@ class HTMLForm extends CActiveForm
         $lcName = isset($toField['name']) ? $toField['name'] : NULL;
         $lcValue = isset($toField['value']) ? $toField['value'] : NULL;
         $lcPlaceholder = isset($toField['placeholder']) ? $toField['placeholder'] : '';
-        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true) || $toField['type'] === 'link';
+
+        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true) || $toField['type'] === 'link' || $toField['type'] === 'checkbox';
 
         $laValues = isset($toField['class']) ? array('tcClass'=>$toField['class']) : array();
         $laValues['tcFieldContent'] = '';
@@ -108,16 +109,15 @@ class HTMLForm extends CActiveForm
                 break;
 
             case 'checkbox' :
-                $lnCount = 0;
-                foreach ($toField['options'] as $lcCurrentValue=>$lcOption)
-                {
-                    $lcOptionID = $lcID.'_'.$lnCount;
-                    $laValues['tcFieldContent'].= '<span class=\'checkItem\'>'. ($llSkipModel ?
-                        PlinthHTML::checkBox($lcName, $lcValue === $lcCurrentValue, array('id'=>$lcOptionID)) :
-                        $this->checkBox($this->model, $lcAttribute, array('id'=>$lcOptionID))).PlinthHTML::label($lcOption, $lcOptionID).'</span>';
-                    $lnCount++;
+                // Render the Checkbox
+                $laValues['tcFieldContent'].= '<span class=\'checkItem\'>'. ($llSkipModel ?
+                        PlinthHTML::checkBox($lcName, $lcValue === 1, $laOptions) :
+                        $this->checkBox($this->model, $lcAttribute, $laOptions));
 
-                }
+                // Render the label
+                $laValues['tcFieldContent'].= $llSkipModel ?
+                    PlinthHTML::label($toField['label'], $lcID):
+                    $this->labelEx($this->model, $lcAttribute).'</span>';
                 break;
 
             case 'select' :
