@@ -1,6 +1,6 @@
 <?php
     $loForm=$this->widget('HTMLForm', array(
-    'id'=>$tcFormName.'_1',
+    'id'=>$tcFormName,
     'enableClientValidation'=>true,
     'clientOptions'=>array('validateOnSubmit'=>true,),
     'containerClass'=>'login',

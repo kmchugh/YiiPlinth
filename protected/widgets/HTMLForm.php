@@ -62,7 +62,7 @@ class HTMLForm extends CActiveForm
         $lcName = isset($toField['name']) ? $toField['name'] : NULL;
         $lcValue = isset($toField['value']) ? $toField['value'] : NULL;
         $lcPlaceholder = isset($toField['placeholder']) ? $toField['placeholder'] : '';
-        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true) ||$toField['type'] === 'link';
+        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true) || $toField['type'] === 'link';
 
         $laValues = isset($toField['class']) ? array('tcClass'=>$toField['class']) : array();
         $laValues['tcFieldContent'] = '';
@@ -139,6 +139,13 @@ class HTMLForm extends CActiveForm
             case 'link' :
                 $laValues['tcFieldContent'].= CHtml::link($toField['label'],array($toField['url']));
                 $laValues['tcError'] = '';
+                break;
+
+            case 'captcha' :
+                $this->fieldLayout = '//layouts/_captcha';
+                $laValues['tcFieldContent'].= $llSkipModel ?
+                    PlinthHTML::textField($lcName, $lcValue, $laOptions) :
+                    $this->textField($this->model, $lcAttribute, $laOptions);
                 break;
 
             case 'list' :
