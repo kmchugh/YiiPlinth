@@ -1,4 +1,4 @@
-<div class="form row passwordReset">
+<div class="form passwordReset">
 	<h1><?php echo Utilities::getString('Reset Password'); ?></h1>
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>$tcFormName,

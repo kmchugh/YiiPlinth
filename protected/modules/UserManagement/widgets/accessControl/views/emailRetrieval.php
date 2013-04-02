@@ -1,4 +1,4 @@
-<div class="form row forgottenPassword">
+<div class="form forgottenPassword">
     <h1><?php echo Utilities::getString('Email Retrieval'); ?></h1>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>$tcFormName,

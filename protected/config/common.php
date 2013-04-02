@@ -12,6 +12,7 @@ return array(
         'YIIPlinth.models.*',
         'YIIPlinth.components.*',
         'YIIPlinth.controllers.*',
+        'YIIPlinth.widgets.*',
         'YIIPlinth.extensions.Session.*',
         'YIIPlinth.extensions.Mail.*',
     ),

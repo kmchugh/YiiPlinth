@@ -1,4 +1,4 @@
-<div class="form row changePassword">
+<div class="form changePassword">
     <h1><?php echo Utilities::getString('Change Password'); ?></h1>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>$tcFormName,

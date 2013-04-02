@@ -1,4 +1,4 @@
-<div class="form row registration">
+<div class="form registration">
     <h1><?php echo Utilities::getString('Register_title'); ?></h1>
     
     <?php $form=$this->beginWidget('CActiveForm', array(
