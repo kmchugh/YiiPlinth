@@ -34,7 +34,7 @@
                 ?>
             </div>
 
-            <?php if (count($this->links) >0)
+            <?php if (count($this->buttons) >0)
             { ?>
                 <div class="buttons">
                     <?php
