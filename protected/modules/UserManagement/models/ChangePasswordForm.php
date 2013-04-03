@@ -19,6 +19,7 @@ class ChangePasswordForm extends CFormModel
             // username and password are required
             array('password', 'length', 'max'=>255, 'min'=>3),
             array('password, password_repeat', 'required'),
+            array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>'Passwords must match exactly'),
         );
     }
 

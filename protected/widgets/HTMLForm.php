@@ -167,11 +167,10 @@ class HTMLForm extends CActiveForm
                 $laOptions['type']=$toField['type'];
                 $laValues['tcFieldContent'].= $llSkipModel ?
                     PlinthHTML::textField($lcName, $lcValue, $laOptions) :
-                    $this->textField($this->model, $lcAttribute, $laOptions);
+                    PlinthHTML::activeTextField($this->model, $lcAttribute, $laOptions);
         }
 
         return $this->renderFile($this->controller->getLayoutFile($this->fieldLayout),$laValues, true);
-        //return CHtml::activeTextField($model,$attribute,$htmlOptions);
     }
 
     /**
