@@ -16,7 +16,7 @@ $loForm=$this->widget('HTMLForm', array(
         array('url'=>'/login', 'title'=>Utilities::getString("signin_link")),
     ),
     'buttons'=>array(
-        array('type'=>'submit', 'title'=>Utilities::getString("Sign in")),
+        array('type'=>'submit', 'title'=>Utilities::getString("Register")),
     ),
 ));
 ?>

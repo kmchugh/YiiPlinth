@@ -10,7 +10,7 @@
     'fields'=>array(
         array('type'=>'email','label'=>'username', 'placeholder'=>$toModel->getAttributeLabel('username'),),
         array('type'=>'password','label'=>'password', 'placeholder'=>$toModel->getAttributeLabel('password'),),
-        array('type'=>'link','label'=>Utilities::getString("Forgot your password?"), 'url'=>'PasswordReset', 'class'=>'linkField'),
+        array('type'=>'link','label'=>Utilities::getString("Forgot your password"), 'url'=>'PasswordReset', 'class'=>'linkField'),
     ),
     'links'=>array(
         array('url'=>'/register', 'title'=>Utilities::getString("register_link")),
