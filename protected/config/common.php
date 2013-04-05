@@ -32,6 +32,9 @@ return array(
                     ),
                 ),
             ),
+        'Contact'=>array(
+                'class'=>'YIIPlinth.modules.Contact.ContactModule',
+            ),
         'LessCSS'=>array(
             'class'=>'YIIPlinth.modules.LessCSS.LessCSSModule',
             ),
