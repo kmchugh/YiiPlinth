@@ -61,7 +61,7 @@
         // TODO: Use the oauth module to render an 'oauth marker' instead of hard coding the marker
         ?>
         <div class="oauth">
-            <label><?php echo Utilities::getString("or"); ?></label>
+            <label><?php echo Utilities::getString("oauth_or"); ?></label>
             <span class="oauth"/>
         </div>
     <?php
