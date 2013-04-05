@@ -29,7 +29,8 @@ class EmailRetrieval extends CWidget
             if($loModel->validate() && $loModel->register())
             {
                 // Model is valid, build a user and user info based on the information we can gather
-                Yii::app()->getController()->redirect(Utilities::getCallbackURL());
+                //Yii::app()->getController()->redirect(Utilities::getCallbackURL());
+                Yii::app()->getController()->redirect('/');
             }
         }
         $this->render('emailRetrieval', array('toModel'=>$loModel, 'tcFormName'=>$lcFormName));
