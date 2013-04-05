@@ -53,6 +53,8 @@ class YiiMailMessage extends CComponent
 	 */
 	public $layout = 'email';
 
+    public $title;
+
 	/**
 	* Any requests to set or get attributes or call methods on this class that 
 	* are not found are redirected to the {@link Swift_Mime_Message} object.
@@ -148,7 +150,7 @@ class YiiMailMessage extends CComponent
 			$lcLayoutFile = $loController->getLayoutFile($this->layout);
 			$lcViewFile = $this->resolveViewFile($loController, $this->view);
 
-			$laData =  array_merge(array('subject'=>$this->subject),
+			$laData =  array_merge(array('title'=>$this->title, 'subject'=>$this->subject),
 					$tcBody,
 					array('mail'=>$this));
 

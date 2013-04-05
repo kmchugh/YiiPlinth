@@ -46,10 +46,10 @@ class ChangePassword extends CWidget
                 $loEmail = new YiiMailMessage;
                 $loEmail->view = '//mail/changePassword';
                 $loEmail->layout = '//layouts/mail';
-                $loEmail->setBody(array('userModel'=>$loUser), 'text/html');
+                $loEmail->setBody(array('title'=>'Your password has been reset','userModel'=>$loUser), 'text/html');
                 $loEmail->subject = Utilities::getString('change_password_email_subject');
                 $loEmail->addTo($loUser->Email);
-                $loEmail->from = Yii::app()->params['adminEmail'];
+                $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
                 Yii::app()->mail->send($loEmail);
 
                 // We know the users name and password at this stage so be helpful and log them in

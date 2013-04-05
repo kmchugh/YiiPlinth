@@ -195,7 +195,6 @@ class User extends PlinthModel
         $loUser->resetPassword($lcPassword);
         if ($loUser->save())
         {
-
             // Create a token to allow the user to set their own password
             // Create a new token
             $loToken = new ChangePasswordToken();
@@ -206,10 +205,10 @@ class User extends PlinthModel
                 $loEmail = new YiiMailMessage;
                 $loEmail->view = '//mail/userRegistration';
                 $loEmail->layout = '//layouts/mail';
-                $loEmail->setBody(array('userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
-                $loEmail->subject = Utilities::getString('registration_email_subject');
+                $loEmail->setBody(array('title'=>Utilities::getString('User account created'), 'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
+                $loEmail->setSubject(Utilities::getString('registration_email_subject'));
                 $loEmail->addTo($loUser->Email);
-                $loEmail->from = Yii::app()->params['adminEmail'];
+                $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
                 Yii::app()->mail->send($loEmail);
             }
 
