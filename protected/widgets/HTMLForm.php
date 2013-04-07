@@ -67,7 +67,7 @@ class HTMLForm extends CActiveForm
 
         $laValues = isset($toField['class']) ? array('tcClass'=>$toField['class']) : array();
         $laValues['tcFieldContent'] = '';
-        $laValues['tcError'] = $llSkipModel ? (isset($toField['error']) ? $toField['error'] : '') : $this->error($this->model, $lcAttribute);
+        $laValues['tcError'] = $llSkipModel || !property_exists($this->model, $lcAttribute) ? (isset($toField['error']) ? $toField['error'] : '') : $this->error($this->model, $lcAttribute);
         if (isset($toField['hint']))
         {
             $laValues['tcFieldHint'] = $toField['hint'];
