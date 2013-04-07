@@ -75,11 +75,6 @@ return array(
             'logging'=>true,
             'dryRun' => false,
             ),
-        'user'=>array(
-            'allowAutoLogin'=>true,
-            'autoRenewCookie'=>true,
-            'authTimeout'=>31557600,
-        ),
         'urlManager'=>array(
             'urlFormat'=>'path',
             'showScriptName'=>false,

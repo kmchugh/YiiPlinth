@@ -7,6 +7,8 @@ return array(
 		'user'=>array(
 			'class'=>'YIIPlinth.modules.UserManagement.components.PlinthWebUser',
 			'allowAutoLogin'=>true,
+            'autoRenewCookie'=>true,
+            'authTimeout'=>31557600,
 			'loginUrl'=>'/login',
 			),
 		'urlManager'=>array(

@@ -162,4 +162,15 @@ class UserInfo extends PlinthModel
 			'criteria'=>$criteria,
 		));
 	}
+
+    /**
+     * @return string the profile image for the user
+     */
+    public function getUserProfileURI()
+    {
+        return !is_null($this->ProfileImageURI) ?
+            $this->ProfileImageURI :
+            Yii::app()->user->defaultProfileImageURI;
+
+    }
 }
