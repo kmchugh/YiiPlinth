@@ -17,7 +17,7 @@ abstract class PlinthModel extends CActiveRecord
 	protected function beforeValidate()
 	{
 		$loUser = Yii::app()->user;
-		$lcUser = !is_null($loUser) && $loUser->hasState('GUID') ? $loUser->GUID : "SYSTEM";
+		$lcUser = !is_null($loUser) && $loUser->hasState('PLINTHUSER') ? $loUser->GUID : "SYSTEM";
 		if ($this->getIsNewRecord())
 		{
 			// Set the created date and created user
@@ -28,7 +28,6 @@ abstract class PlinthModel extends CActiveRecord
 			{
 				$this->GUID = Utilities::getStringGUID();
 			}
-
 		}
 		else
 		{

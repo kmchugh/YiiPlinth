@@ -31,6 +31,7 @@ class PlinthWebUser extends CWebUser
 
 			$this->updateAuthStatus();
 		}
+        $this->setState('PLINTHUSER', true);
 	}
 
 	/**
