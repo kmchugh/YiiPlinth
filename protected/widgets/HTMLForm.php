@@ -63,7 +63,7 @@ class HTMLForm extends CActiveForm
         $lcValue = isset($toField['value']) ? $toField['value'] : NULL;
         $lcPlaceholder = isset($toField['placeholder']) ? $toField['placeholder'] : '';
 
-        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true) || $toField['type'] === 'link' || $toField['type'] === 'checkbox';
+        $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true);
 
         $laValues = isset($toField['class']) ? array('tcClass'=>$toField['class']) : array();
         $laValues['tcFieldContent'] = '';
@@ -84,6 +84,7 @@ class HTMLForm extends CActiveForm
         {
             $laOptions['value'] = $lcValue;
         }
+        $laValues['toValue'] = $lcValue;
 
         if (count($lcPlaceholder) > 0)
         {
@@ -93,9 +94,13 @@ class HTMLForm extends CActiveForm
         // Create the field label based on if we are using the model or not
         if (!$llNoLabel)
         {
-            $laValues['tcFieldContent'] = $llSkipModel ?
+            $laValues['tcFieldLabel'] = $llSkipModel ?
                 PlinthHTML::label($toField['label'], $lcID):
                 $this->labelEx($this->model, $lcAttribute) ;
+        }
+        else
+        {
+            $laValues['tcFieldLabel'] = '';
         }
 
         // Create the actual input
@@ -115,6 +120,7 @@ class HTMLForm extends CActiveForm
 
             case 'checkbox' :
                 // Render the Checkbox
+                $laValues['tcFieldLabel'] = '';
                 $laValues['tcFieldContent'].= '<span class=\'checkItem\'>'. ($llSkipModel ?
                         PlinthHTML::checkBox($lcName, $lcValue === 1, $laOptions) :
                         $this->checkBox($this->model, $lcAttribute, $laOptions));
@@ -142,6 +148,7 @@ class HTMLForm extends CActiveForm
                 break;
 
             case 'link' :
+                $laValues['tcFieldLabel'] = '';
                 $laValues['tcFieldContent'].= CHtml::link($toField['label'],array($toField['url']));
                 $laValues['tcError'] = '';
                 break;
@@ -151,6 +158,14 @@ class HTMLForm extends CActiveForm
                 $laValues['tcFieldContent'].= $llSkipModel ?
                     PlinthHTML::textField($lcName, $lcValue, $laOptions) :
                     $this->textField($this->model, $lcAttribute, $laOptions);
+                break;
+
+            case 'imageupload' :
+                $laOptions['dromos-module']='fileupload/dromos.fileupload';
+                $this->fieldLayout = '//layouts/_imageUpload';
+                $laValues['tcFieldContent'].= $llSkipModel ?
+                    PlinthHTML::fileField($lcName, $lcValue, $laOptions) :
+                    $this->fileField($this->model, $lcAttribute, $laOptions);
                 break;
 
             case 'list' :
