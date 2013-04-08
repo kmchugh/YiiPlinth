@@ -1,6 +1,54 @@
 <?php
 	abstract class Utilities
 	{
+        /**
+         * Retrieves and processes the image
+         * @param $toModel the model that we are extracting the attribute for
+         * @param $tcAttribute the attribute the image is to be attached to
+         * @param $tcImageDirectory the directory to store the image to
+         * @param null $taSize the size of the image if it is to be resized (array('width', 'height')
+         * @param null $tcImageName the name of the image if it is to be renamed, otherwise null
+         * @return null|string the URL of the image or null if no image could be processed
+         */
+        public static function processImage($toModel, $tcAttribute, $tcImageDirectory, $taSize = NULL, $tcImageName = NULL)
+        {
+            $loImage = CUploadedFile::getInstance($toModel, $tcAttribute);
+            if (!is_null($loImage) && $loImage instanceof CUploadedFile)
+            {
+                // Make sure the storage directory exists
+                if (!is_dir($tcImageDirectory))
+                {
+                    mkdir($tcImageDirectory, 0777, true);
+                }
+                $lcImageName = $tcImageDirectory.(is_null($tcImageName) ? $loImage->name : $tcImageName);
+
+                // Make sure the file does not already exist
+                if (is_file($lcImageName))
+                {
+                    unlink($lcImageName);
+                }
+
+                // Attempt to save the File
+                if ($loImage->saveAs($lcImageName, true))
+                {
+                    if (!is_null($taSize))
+                    {
+                        // Resize the image
+                        $loImage = Yii::app()->image->load($lcImageName);
+                        $loImage->resize($taSize['width'], $taSize['height']);
+                        $loImage->save();
+
+                        // Finally publish the file
+                        $lcURL = Yii::app()->assetManager->publish($lcImageName);
+                        return $lcURL;
+                    }
+                }
+                return null;
+            }
+            return $toModel[$tcAttribute];
+        }
+
+
 		/**
 		* Returns true if this request was in development mode
 		**/

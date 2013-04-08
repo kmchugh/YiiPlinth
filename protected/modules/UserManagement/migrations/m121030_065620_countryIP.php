@@ -35,24 +35,24 @@ class m121030_065620_countryIP extends CDbMigration
 	{
 	}
 
-	private function getCountryID($tcCountryCode)
-	{
-		if (!self::$g_oCountryLookup)
-		{
-			self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
-			->select('CountryID, ISOCode')
-			->from('{{Country}}')->queryAll();
-		}
+    private function getCountryID($tcCountryCode)
+    {
+        if (!self::$g_oCountryLookup)
+        {
+            self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
+                ->select('CountryID, ISOCode, FIPSCode, InternetCode')
+                ->from('{{Country}}')->queryAll();
+        }
 
-		foreach (self::$g_oCountryLookup as $laCountry)
-		{
-			if ($laCountry['ISOCode'] === $tcCountryCode)
-			{
-				return $laCountry['CountryID'];
-			}
-		}
-		return NULL;
-	}
+        foreach (self::$g_oCountryLookup as $laCountry)
+        {
+            if ($laCountry['ISOCode'] === $tcCountryCode || $laCountry['FIPSCode'] === $tcCountryCode || $laCountry['InternetCode'] === $tcCountryCode)
+            {
+                return $laCountry['CountryID'];
+            }
+        }
+        return NULL;
+    }
 
 	private function getIPList()
 	{

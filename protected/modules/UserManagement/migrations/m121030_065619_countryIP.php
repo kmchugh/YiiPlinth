@@ -40,13 +40,13 @@ class m121030_065619_countryIP extends CDbMigration
 		if (!self::$g_oCountryLookup)
 		{
 			self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
-			->select('CountryID, ISOCode')
+			->select('CountryID, ISOCode, FIPSCode, InternetCode')
 			->from('{{Country}}')->queryAll();
 		}
 
 		foreach (self::$g_oCountryLookup as $laCountry)
 		{
-			if ($laCountry['ISOCode'] === $tcCountryCode)
+			if ($laCountry['ISOCode'] === $tcCountryCode || $laCountry['FIPSCode'] === $tcCountryCode || $laCountry['InternetCode'] === $tcCountryCode)
 			{
 				return $laCountry['CountryID'];
 			}

@@ -118,22 +118,22 @@ class CountryIPv4 extends PlinthModel
 	public static function getCountryForIP($tcIPv4Address)
 	{
 		if ($tcIPv4Address === '')
-	    	{
-	    		$tcIPv4Address = 0;
-	    	}
-	    	else
-	    	{
-	    		$tcIPv4Address = explode('.', $tcIPv4Address);
-	    		$tcIPv4Address = ($tcIPv4Address[3] + $tcIPv4Address[2] * 256 +
-	    			$tcIPv4Address[1] * 256 * 256 +
-	    			$tcIPv4Address[0] * 256 * 256 * 256);
-	    	}
+        {
+            $tcIPv4Address = 0;
+        }
+        else
+        {
+            $tcIPv4Address = explode('.', $tcIPv4Address);
+            $tcIPv4Address = ($tcIPv4Address[3] + $tcIPv4Address[2] * 256 +
+                $tcIPv4Address[1] * 256 * 256 +
+                $tcIPv4Address[0] * 256 * 256 * 256);
+        }
 
-	    	$loCountryIP = CountryIPv4::model()->find(array(
+        $loCountryIP = CountryIPv4::model()->find(array(
 			'condition'=>':ipAddress BETWEEN StartIP AND EndIP',
 			'params'=>array(':ipAddress'=>$tcIPv4Address),
 			));
-		return $loCountryIP !== NULL ? $loCountryIP->country : NULL;
+		return !is_null($loCountryIP) ? $loCountryIP->country : NULL;
 
 	}
 }

@@ -37,6 +37,16 @@ class HTMLForm extends CActiveForm
         {
             $this->htmlOptions['id']=$this->id;
         }
+
+        // If there is a file upload, change the enc type
+        foreach($this->fields as $loField)
+        {
+            if (trim($loField['type'])==='imageupload')
+            {
+                $this->htmlOptions['enctype'] = 'multipart/form-data';
+                break;
+            }
+        }
     }
 
     /**
@@ -56,11 +66,14 @@ class HTMLForm extends CActiveForm
     {
         static $lnCount = 0;
 
+        // TODO: This should not be a hard coded reset, add a defaultLayout instead
+        $this->fieldLayout = '//layouts/_field';
+
         $llSkipModel = $this->skipModel($toField);
         $lcAttribute = $llSkipModel ? NULL : $toField['label'];
         $lcID = isset($toField['id']) ? $toField['id'] : $this->id.'_'.$lnCount++;
         $lcName = isset($toField['name']) ? $toField['name'] : NULL;
-        $lcValue = isset($toField['value']) ? $toField['value'] : NULL;
+        $lcValue = $llSkipModel ? isset($toField['value']) ? $toField['value'] : NULL : $this->model[$lcAttribute];
         $lcPlaceholder = isset($toField['placeholder']) ? $toField['placeholder'] : '';
 
         $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true);
@@ -145,6 +158,10 @@ class HTMLForm extends CActiveForm
                 $laValues['tcFieldContent'].= $llSkipModel ?
                     PlinthHTML::textArea($lcName, $lcValue, $laOptions) :
                     $this->textArea($this->model, $lcAttribute, $laOptions);
+                break;
+
+            case 'label' :
+                $laValues['tcFieldContent'].= '<label class="input">'.($llSkipModel ? $lcValue : $this->model[$lcAttribute]).'</label>';
                 break;
 
             case 'link' :

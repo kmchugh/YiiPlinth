@@ -169,6 +169,7 @@ class UserProfile extends CFormModel
 		return parent::beforeValidate();
 	}
 
+    // TODO : Remove this from here and use the Country version instead
 	private function getDefaultCountry()
 	{
 		$lnIPAddress = Yii::app()->request->userHostAddress;
