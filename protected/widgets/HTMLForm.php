@@ -73,7 +73,7 @@ class HTMLForm extends CActiveForm
         $lcAttribute = $llSkipModel ? NULL : $toField['label'];
         $lcID = isset($toField['id']) ? $toField['id'] : $this->id.'_'.$lnCount++;
         $lcName = isset($toField['name']) ? $toField['name'] : NULL;
-        $lcValue = $llSkipModel ? isset($toField['value']) ? $toField['value'] : NULL : $this->model[$lcAttribute];
+        $lcValue = $llSkipModel ? isset($toField['value']) ? $toField['value'] : NULL : (property_exists($this->model, $lcAttribute) ? $this->model[$lcAttribute] : NULL);
         $lcPlaceholder = isset($toField['placeholder']) ? $toField['placeholder'] : '';
 
         $llNoLabel = (isset($toField['noLabel']) && $toField['noLabel'] === true);
