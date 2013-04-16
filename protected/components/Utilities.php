@@ -10,7 +10,7 @@
          * @param null $tcImageName the name of the image if it is to be renamed, otherwise null
          * @return null|string the URL of the image or null if no image could be processed
          */
-        public static function processImage($toModel, $tcAttribute, $tcImageDirectory, $taSize = NULL, $tcImageName = NULL)
+        public static function processImage($toModel, $tcAttribute, $tcImageDirectory, $taSize = NULL, $tlDeleteOriginal = true, $tcImageName = NULL)
         {
             $loImage = CUploadedFile::getInstance($toModel, $tcAttribute);
             if (!is_null($loImage) && $loImage instanceof CUploadedFile)
@@ -20,7 +20,7 @@
                 {
                     mkdir($tcImageDirectory, 0777, true);
                 }
-                $lcImageName = $tcImageDirectory.(is_null($tcImageName) ? $loImage->name : $tcImageName);
+                $lcImageName = $tcImageDirectory.(is_null($tcImageName) ? $loImage->name : $tcImageName).'.'.$loImage->extensionName;
 
                 // Make sure the file does not already exist
                 if (is_file($lcImageName))
@@ -29,7 +29,7 @@
                 }
 
                 // Attempt to save the File
-                if ($loImage->saveAs($lcImageName, true))
+                if ($loImage->saveAs($lcImageName, $tlDeleteOriginal))
                 {
                     if (!is_null($taSize))
                     {
