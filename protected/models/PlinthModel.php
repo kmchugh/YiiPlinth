@@ -52,10 +52,19 @@ abstract class PlinthModel extends CActiveRecord
 		return is_null($this->CreatedBy) || $this->CreatedBy === Yii::app()->user->GUID;
 	}
 
-	public function setAttributes($taValues, $tlSafeOnly=true, $tlCaseInsensitive=false)
+    /**
+     * Sets all of the attributes specified in taValues
+     * @param array $taValues the attributes to set
+     * @param bool $tlSafeOnly true to allow setting only safe attributes
+     * @param bool $tlCaseInsensitive true to set attributes regardless of case
+     */
+    public function setAttributes($taValues, $tlSafeOnly=true, $tlCaseInsensitive=false)
 	{
 		if(!is_array($taValues))
+        {
 			return;
+        }
+
 		$laAttributes = $tlSafeOnly ? $this->getSafeAttributeNames() : $this->attributeNames();
 		$laAttributes= array_flip(array_combine($laAttributes, $tlCaseInsensitive ? array_map('strtolower', $laAttributes) : $laAttributes));
 		foreach ($taValues as $lcKey => $loValue) 

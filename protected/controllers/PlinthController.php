@@ -17,6 +17,18 @@ class PlinthController extends CController
 	{
 		parent::init();
 
+        // Force a trailing slash
+        $lcRequestURI = Yii::app()->request->requestUri;
+        if (false === strpos($lcRequestURI, '?') && '/' !== substr($lcRequestURI, strlen($lcRequestURI) - 1, 1))
+        {
+            yii::app()->request->redirect("{$lcRequestURI}/", true, 301);
+        }
+        elseif ('/' !== substr($lcRequestURI, strpos($lcRequestURI, '?') - 1, 1))
+        {
+            yii::app()->request->redirect(substr($lcRequestURI, 0, strpos($lcRequestURI, '?')) . '/' . substr($lcRequestURI, strpos($lcRequestURI, '?')), true, 301);
+        }
+
+        // Update the page title if needed
         $lcPageTitle=ucfirst(basename($this->getId()));
         $this->setPageTitle(
             ($this->getAction()!==null && strcasecmp($this->getAction()->getId(),$this->defaultAction)) ?
