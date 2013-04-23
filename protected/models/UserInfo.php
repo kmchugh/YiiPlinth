@@ -84,8 +84,6 @@ class UserInfo extends PlinthModel
 			array('UserURL', 'required'),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 
-					'maxSize'=>1024 * 200,
-					'tooLarge' => 'The maximum file size should be 200kb',
 					'wrongType' => 'Only .png, .gif, .jpg, and .jpeg are allowed',
 					'allowEmpty' => true),
 			array('Description', 'safe'),
