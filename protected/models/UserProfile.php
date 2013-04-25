@@ -70,7 +70,7 @@ class UserProfile extends CFormModel
 
 					if ($this->country === null || $this->country === '')
 					{
-						$this->country = $this->getDefaultCountry();
+						$this->country = CountryIPv4::getCountryForIP(Yii::app()->request->userHostAddress);
 					}
 				}
 				else
@@ -169,32 +169,7 @@ class UserProfile extends CFormModel
 		return parent::beforeValidate();
 	}
 
-    // TODO : Remove this from here and use the Country version instead
-	private function getDefaultCountry()
-	{
-		$lnIPAddress = Yii::app()->request->userHostAddress;
-
-    	if ($lnIPAddress === '')
-    	{
-    		$lnIPAddress = 0;
-    	}
-    	else
-    	{
-    		$lnIPAddress = explode('.', $lnIPAddress);
-    		$lnIPAddress = ($lnIPAddress[3] + $lnIPAddress[2] * 256 +
-    			$lnIPAddress[1] * 256 * 256 +
-    			$lnIPAddress[0] * 256 * 256 * 256);
-    	}
-
-		$loCountry = CountryIP::model()->find(array(
-			'condition'=>':ipAddress BETWEEN StartIP AND EndIP',
-			'params'=>array(':ipAddress'=>$lnIPAddress),
-			));
-		return $loCountry !== null ? $loCountry->Country : null;
-	}
-
-
-	public function rules()
+    public function rules()
 	{
 		return array(
 			array('displayName', 'required'),

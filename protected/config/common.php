@@ -10,6 +10,7 @@ return array(
     // autoloading model and component classes
     'import'=>array(
         'YIIPlinth.models.*',
+        'YIIPlinth.models.behaviours.*',
         'YIIPlinth.components.*',
         'YIIPlinth.controllers.*',
         'YIIPlinth.widgets.*',

@@ -23,7 +23,7 @@ class PlinthMySQLSchema extends CMysqlSchema
         'decimal' => 'decimal',
         'description'=>'varchar(500) NULL',
         'guid'=> 'varchar(40) NOT NULL',
-        'guild_null'=>'varchar(40) NULL',
+        'guid_null'=>'varchar(40) NULL',
         'float' => 'float NOT NULL',
         'float_null' => 'float NULL',
         'id' => 'bigint(20) unsigned NOT NULL',

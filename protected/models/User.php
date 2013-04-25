@@ -8,6 +8,7 @@
  * @property string $GUID
  * @property string $Email
  * @property string $DisplayName
+ * @property string $Slug
  * @property string $Password
  * @property boolean $Locked
  * @property string $StartDate
@@ -27,6 +28,12 @@
  */
 class User extends PlinthModel
 {
+    // TODO: Refactor this to PlinthModel
+    public static function findBySlug($tcSlug)
+    {
+        return User::model()->findByAttributes(array('Slug'=>md5(strtolower($tcSlug))));
+    }
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -36,6 +43,8 @@ class User extends PlinthModel
 	{
 		return parent::model($className);
 	}
+
+    public $slug = array('DisplayName');
 
 	/**
 	 * @return string the associated database table name
