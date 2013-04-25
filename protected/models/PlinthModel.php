@@ -50,7 +50,10 @@ abstract class PlinthModel extends CActiveRecord
     public function setAttributes($taValues, $tlSafeOnly=true, $tlCaseInsensitive=false)
 	{
 		if(!is_array($taValues))
+        {
 			return;
+        }
+
 		$laAttributes = $tlSafeOnly ? $this->getSafeAttributeNames() : $this->attributeNames();
 		$laAttributes= array_flip(array_combine($laAttributes, $tlCaseInsensitive ? array_map('strtolower', $laAttributes) : $laAttributes));
 		foreach ($taValues as $lcKey => $loValue) 
