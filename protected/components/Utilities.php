@@ -487,6 +487,16 @@
 			return $loLinks['Twitter'];
 		}
 
+        /**
+         * Authenticates in as the application and attempts to get the Authentication URL
+         **/
+        public static function getFacebookAuthenticationURL($tcCallbackURL = NULL)
+        {
+            $loLinks =  Yii::app()->getModule('UserManagement')->getModule('OAuth')->getOAuthProviderLinks();
+
+            return $loLinks['Facebook'];
+        }
+
 		// TODO: Refactor Twitter to separate class
 		// TODO: Add an expiry time to OAuthUser which will force a recheck of the connection
 		/**
