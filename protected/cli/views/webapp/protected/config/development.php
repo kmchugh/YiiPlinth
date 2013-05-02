@@ -22,9 +22,6 @@ return array(
             // ImageMagick setup path
             'params'=>array('directory'=>'/opt/local/bin'),
         ),
-        'errorHandler'=>array(
-            'errorAction'=>'site/error',
-        ),
     ),
 );
 

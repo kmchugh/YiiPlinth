@@ -41,8 +41,22 @@ return array(
             'class'=>'CDbCache',
             'connectionID'=>'db',
         ),
+        'errorHandler'=>array(
+            'errorAction'=>'error/error',
+        ),
         'user'=>array(
             'defaultProfileImageURI'=>'/images/profiles/defaultProfile-215.png',
+        ),
+        'layoutMap'=>array(
+            'class'=>'YIIPlinth.components.LayoutMapManager',
+            'map'=>array(
+                // Default layout,theme, and style
+                '/'=>array(
+                    'layout'=>'//layouts/default',
+                    'theme'=>'default',
+                    'style'=>'/home.less',
+                ),
+            ),
         ),
         'log'=>array(
             'class'=>'CLogRouter',
