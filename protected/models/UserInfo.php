@@ -28,6 +28,25 @@
  */
 class UserInfo extends PlinthModel
 {
+
+    /**
+     * Creates a new UserInfo for the User
+     */
+    public static function create($toUser)
+    {
+        $loUserInfo = $toUser->userInfo;
+        if (is_null($loUserInfo))
+        {
+            $loUserInfo = new UserInfo();
+            $loUserInfo->UserID = $toUser->UserID;
+            $loUserInfo->FirstName = $toUser->DisplayName;
+
+            $loUserInfo->save();
+            $toUser->userInfo = $loUserInfo;
+        }
+        return $loUserInfo;
+    }
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -58,15 +77,13 @@ class UserInfo extends PlinthModel
 	public function rules()
 	{
 		return array(
-			array('UserID, CreatedDate, ModifiedDate, Rowversion', 'length', 'max'=>20),
+			array('UserID, CreatedDate, ModifiedDate, Rowversion, CountryID', 'length', 'max'=>20),
 			array('FirstName, LastName', 'length', 'max'=>255),
 			array('UserURL', 'length', 'max'=>40),
 			array('Featured', 'boolean'),
 			array('UserURL', 'required'),
 			array('ProfileImageURI', 'file', 
 					'types'=>'png, gif, jpg, jpeg', 
-					'maxSize'=>1024 * 200,
-					'tooLarge' => 'The maximum file size should be 200kb',
 					'wrongType' => 'Only .png, .gif, .jpg, and .jpeg are allowed',
 					'allowEmpty' => true),
 			array('Description', 'safe'),
@@ -143,4 +160,15 @@ class UserInfo extends PlinthModel
 			'criteria'=>$criteria,
 		));
 	}
+
+    /**
+     * @return string the profile image for the user
+     */
+    public function getUserProfileURI()
+    {
+        return !is_null($this->ProfileImageURI) ?
+            $this->ProfileImageURI :
+            Yii::app()->user->defaultProfileImageURI;
+
+    }
 }

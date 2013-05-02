@@ -64,7 +64,7 @@ class OAuthModule extends CWebModule
 			$this->onRetrieveOAuthProviderLinks($loEvent);
 
 			$lcOutput = $toEvent->sender->widget('YIIPlinth.modules.UserManagement.modules.OAuth.widgets.oauthProviders.OAuthProviders', array('OAuthLinks'=>$loEvent->params['OAuthLinks']), true);
-			$toEvent->params['form'] = preg_replace('/<form/', $lcOutput.'<form', $toEvent->params['form'], 1);
+            $toEvent->params['form'] = preg_replace('/<span class="oauth"\/>/', $lcOutput, $toEvent->params['form'], 1);
 		}
 	}
 

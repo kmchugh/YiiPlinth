@@ -2,9 +2,11 @@
 
 require_once(dirname(dirname(__FILE__)).'/components/lessc.inc.php');
 
-class DefaultController extends Controller
+class DefaultController extends PlinthController
 {
 	private $m_cCachePath;
+
+    protected $forceTrailingSlash = false;
 
 	/**
 	 * Initialises the DefaultController

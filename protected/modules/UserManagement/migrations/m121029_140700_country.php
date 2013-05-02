@@ -28,7 +28,7 @@ class m121029_140700_country extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 		$this->createIndex('UQ_{{Country}}_Name', "{{Country}}", 'Name', true);
 

@@ -8,6 +8,7 @@ class Registration extends CWidget
 {
     public $submenu;
     public $ajaxLink = true;
+    public $redirect = '/login';
 
     public function init()
     {
@@ -34,7 +35,7 @@ class Registration extends CWidget
             if($loModel->validate() && $loModel->register())
             {
                 Yii::app()->user->setFlash('formMessage', 'An email has been sent to '.$loModel->email.' with your account details');
-                Yii::app()->getController()->redirect('/login');
+                Yii::app()->getController()->redirect($this->redirect);
             }
         }
 

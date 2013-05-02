@@ -15,7 +15,10 @@ class RequestHooks
 			{
 				Yii::app()->theme = 'mobile';
 			}
-			Yii::app()->session['theme'] = Yii::app()->theme->name;
+            if (!is_null(Yii::app()->theme))
+            {
+			    Yii::app()->session['theme'] = Yii::app()->theme->name;
+            }
 		}
 	}
 }

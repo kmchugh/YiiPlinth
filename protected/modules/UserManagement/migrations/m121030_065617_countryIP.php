@@ -20,7 +20,7 @@ class m121030_065617_countryIP extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 		$this->addForeignKey('FK_{{CountryIPv4}}_UserID', '{{CountryIPv4}}', 'CountryID',
 					'{{Country}}', 'CountryID', 'NO ACTION', 'NO ACTION');
@@ -59,13 +59,13 @@ class m121030_065617_countryIP extends CDbMigration
 		if (!self::$g_oCountryLookup)
 		{
 			self::$g_oCountryLookup = $this->getDbConnection()->createCommand()
-			->select('CountryID, ISOCode')
+			->select('CountryID, ISOCode, FIPSCode, InternetCode')
 			->from('{{Country}}')->queryAll();
 		}
 
 		foreach (self::$g_oCountryLookup as $laCountry)
 		{
-			if ($laCountry['ISOCode'] === $tcCountryCode)
+			if ($laCountry['ISOCode'] === $tcCountryCode || $laCountry['FIPSCode'] === $tcCountryCode || $laCountry['InternetCode'] === $tcCountryCode)
 			{
 				return $laCountry['CountryID'];
 			}

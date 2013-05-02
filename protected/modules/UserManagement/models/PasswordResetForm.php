@@ -43,27 +43,25 @@ class PasswordResetForm extends CFormModel
 			$loUser = User::model()->findByAttributes(array('Email' => $this->email));
 			if (!is_null($loUser))
 			{
-				$lcPassword = substr(Utilities::getStringGUID(), 0, 10);
-				$loUser->resetPassword($lcPassword);
-				if ($loUser->save())
-				{
-					$loEvent = new CEvent($this, array("user"=>$loUser));
-					Yii::app()->getModule('UserManagement')->onPasswordReset($loEvent);
-
-					// Send the user an email
-					$loEmail = new YiiMailMessage;
-					$loEmail->view = '//mail/resetPassword';
-                				$loEmail->layout = '//layouts/mail';
-					$loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-					$loEmail->subject = 'BOOM!  Your account, retrieved.';
-					$loEmail->addTo($loUser->Email);
-					$loEmail->from = Yii::app()->params['adminEmail'];
-					Yii::app()->mail->send($loEmail);
-				}
-				else
-				{
-					$this->addErrors($loUser->getErrors());
-				}
+                // Create a new token
+                $loToken = new ChangePasswordToken();
+                $loToken->UserGUID = $loUser->GUID;
+                if ($loToken->save())
+                {
+                    // Send the user an email with a link to change password
+                    $loEmail = new YiiMailMessage;
+                    $loEmail->view = '//mail/resetPassword';
+                    $loEmail->layout = '//layouts/mail';
+                    $loEmail->setBody(array('title'=>Utilities::getString('Change your password'),'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
+                    $loEmail->subject = Utilities::getString('reset_password_email_subject');
+                    $loEmail->addTo($loUser->Email);
+                    $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
+                    Yii::app()->mail->send($loEmail);
+                }
+                else
+                {
+                    $this->addErrors($loToken->getErrors());
+                }
 			}
 			else
 			{

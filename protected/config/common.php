@@ -10,8 +10,11 @@ return array(
     // autoloading model and component classes
     'import'=>array(
         'YIIPlinth.models.*',
+        'YIIPlinth.models.behaviours.*',
         'YIIPlinth.components.*',
         'YIIPlinth.controllers.*',
+        'YIIPlinth.widgets.*',
+        'YIIPlinth.helpers.*',
         'YIIPlinth.extensions.Session.*',
         'YIIPlinth.extensions.Mail.*',
     ),
@@ -31,6 +34,9 @@ return array(
                     ),
                 ),
             ),
+        'Contact'=>array(
+                'class'=>'YIIPlinth.modules.Contact.ContactModule',
+            ),
         'LessCSS'=>array(
             'class'=>'YIIPlinth.modules.LessCSS.LessCSSModule',
             ),
@@ -47,6 +53,7 @@ return array(
             'sessionName'=>'PHPSESSID',
             'class'=>'YIIPlinth.extensions.Session.PlinthDBSession',
             'connectionID'=>'db',
+            'timeout'=>86400,
             'sessionTableName'=>'Session'
             ),
         'db'=>array(

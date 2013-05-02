@@ -4,11 +4,13 @@
  * Base controller class.  This should be the base class
  * for any Plinth controllers
  */
-class PlinthController extends Controller
+class PlinthController extends CController
 {
 	private $m_aProperties;
 
 	public $theme;
+
+    protected $forceTrailingSlash = true;
 
 	/**
 	 * Initialises the Controller and sets the user language for this controller
@@ -16,6 +18,27 @@ class PlinthController extends Controller
 	function init()
 	{
 		parent::init();
+
+        if ($this->forceTrailingSlash)
+        {
+            // Force a trailing slash
+            $lcRequestURI = Yii::app()->request->requestUri;
+            if (false === strpos($lcRequestURI, '?') && '/' !== substr($lcRequestURI, strlen($lcRequestURI) - 1, 1))
+            {
+                yii::app()->request->redirect("{$lcRequestURI}/", true, 301);
+            }
+            elseif ('/' !== substr($lcRequestURI, strpos($lcRequestURI, '?') - 1, 1))
+            {
+                yii::app()->request->redirect(substr($lcRequestURI, 0, strpos($lcRequestURI, '?')) . '/' . substr($lcRequestURI, strpos($lcRequestURI, '?')), true, 301);
+            }
+        }
+
+        // Update the page title if needed
+        $lcPageTitle=ucfirst(basename($this->getId()));
+        $this->setPageTitle(
+            ($this->getAction()!==null && strcasecmp($this->getAction()->getId(),$this->defaultAction)) ?
+                ucfirst($this->getAction()->getId()).' '.$lcPageTitle :
+                $lcPageTitle);
 
 		if (isset($this->theme))
 		{
@@ -30,7 +53,7 @@ class PlinthController extends Controller
 		}
 		Yii::app()->language = isset(Yii::app()->session['_lang']) ?  Yii::app()->session['_lang'] : Yii::app()->request->getPreferredLanguage();
 
-		// TODO : Update the timezßone based on user preference/location
+		// TODO : Update the timezone based on user preference/location
 	}
 
 	/**
@@ -48,7 +71,7 @@ class PlinthController extends Controller
 
 	/**
 	 * Sets the property specified by tcName to the value taValue.  This value
-	 * can only be retrieved by getProeprty
+	 * can only be retrieved by getProperty
 	 * @param String $tcName the property to set
 	 * @param String $toValue the value of the property
 	 */

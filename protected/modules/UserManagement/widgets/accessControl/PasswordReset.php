@@ -30,8 +30,8 @@ class PasswordReset extends CWidget
             // validate user input and redirect to the previous page if valid
             if($loModel->validate() && $loModel->resetPassword())
             {
-                Yii::app()->user->setFlash('formMessage', 'An email has been sent to '.$loModel->email.' with your account details');
-                Yii::app()->getController()->redirect('login');
+                Yii::app()->user->setFlash('formMessage', 'An email has been sent to '.$loModel->email.' with a reset link');
+                Yii::app()->getController()->redirect('/login');
             }
         }
         // display the login form

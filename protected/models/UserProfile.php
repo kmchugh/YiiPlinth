@@ -13,6 +13,7 @@ class UserProfile extends CFormModel
 	public $featured;
 	public $userInfoID;
 	public $userID;
+    public $userURL;
 	public $GUID;
 
 	//public $fbUserName;
@@ -64,17 +65,17 @@ class UserProfile extends CFormModel
 					$this->featured = $this->m_oUserInfo->Featured;
 					$this->userInfoID = $this->m_oUserInfo->UserInfoID;
 					$this->userID = $this->m_oUser->UserID;
+                    $this->userURL = $this->m_oUserInfo->UserURL;
 					$this->GUID = $this->m_oUser->GUID;
 
 					if ($this->country === null || $this->country === '')
 					{
-						$this->country = $this->getDefaultCountry();
+						$this->country = CountryIPv4::getCountryForIP(Yii::app()->request->userHostAddress);
 					}
 				}
 				else
 				{
-					$this->m_oUserInfo = new UserInfo();
-					$this->m_oUserInfo->UserID = $this->m_oUser->UserID;
+                    $this->m_oUserInfo = UserInfo::create($toUser);
 				}
 			}
 		}
@@ -150,7 +151,7 @@ class UserProfile extends CFormModel
 			// Update the Info and validate
 			$this->m_oUserInfo->setAttributes(array(
 				'Description' => $this->description,
-				'Country' => $this->country,
+				'CountryID' => $this->country,
 				'ProfileImageURI' => $this->profileImageURI
 				));
 
@@ -168,31 +169,7 @@ class UserProfile extends CFormModel
 		return parent::beforeValidate();
 	}
 
-	private function getDefaultCountry()
-	{
-		$lnIPAddress = Yii::app()->request->userHostAddress;
-
-    	if ($lnIPAddress === '')
-    	{
-    		$lnIPAddress = 0;
-    	}
-    	else
-    	{
-    		$lnIPAddress = explode('.', $lnIPAddress);
-    		$lnIPAddress = ($lnIPAddress[3] + $lnIPAddress[2] * 256 +
-    			$lnIPAddress[1] * 256 * 256 +
-    			$lnIPAddress[0] * 256 * 256 * 256);
-    	}
-
-		$loCountry = CountryIP::model()->find(array(
-			'condition'=>':ipAddress BETWEEN StartIP AND EndIP',
-			'params'=>array(':ipAddress'=>$lnIPAddress),
-			));
-		return $loCountry !== null ? $loCountry->Country : null;
-	}
-
-
-	public function rules()
+    public function rules()
 	{
 		return array(
 			array('displayName', 'required'),

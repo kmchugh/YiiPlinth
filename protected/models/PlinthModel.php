@@ -10,36 +10,24 @@
 **/
 abstract class PlinthModel extends CActiveRecord
 {
-	/**
-	* Occurs before validation happens on the record.  This method ensures the GUID and modified/created properties
-	* are populated correctly.
-	**/
-	protected function beforeValidate()
-	{
-		$loUser = Yii::app()->user;
-		$lcUser = !is_null($loUser) && $loUser->hasState('GUID') ? $loUser->GUID : "SYSTEM";
-		if ($this->getIsNewRecord())
-		{
-			// Set the created date and created user
-			$this->CreatedDate = $this->ModifiedDate = $this->Rowversion = Utilities::getTimestamp();
-			$this->CreatedBy = $this->ModifiedBy = $lcUser;
+    protected $slug = null;
 
-			if ($this->hasAttribute('GUID') && is_null($this->GUID))
-			{
-				$this->GUID = Utilities::getStringGUID();
-			}
+    public function __construct($tcScenario = 'insert')
+    {
+        parent::__construct($tcScenario);
 
-		}
-		else
-		{
-			$this->ModifiedDate = $this->Rowversion = Utilities::getTimestamp();
-			$this->ModifiedBy = $lcUser;
-		}
+        if (!is_null($this->slug))
+        {
+            $loBehaviour = new SlugBehaviour();
+            $loBehaviour->slug = $this->slug;
+            $this->attachBehavior("sluggable", $loBehaviour);
+        }
 
-		return parent::beforeValidate();
-	}
+        $this->attachBehavior("history", new HistoryBehaviour());
+    }
 
-	// TODO: Override this to make use of multiple connections/dbs.  
+
+    // TODO: Override this to make use of multiple connections/dbs.
 	public function getDbConnection()
 	{
 		return parent::getDbConnection();
@@ -53,10 +41,19 @@ abstract class PlinthModel extends CActiveRecord
 		return is_null($this->CreatedBy) || $this->CreatedBy === Yii::app()->user->GUID;
 	}
 
-	public function setAttributes($taValues, $tlSafeOnly=true, $tlCaseInsensitive=false)
+    /**
+     * Sets the attributes of the model from an associative array.
+     * @param $taValues the associative array to set the values from
+     * @param bool $tlSafeOnly true for only safe values
+     * @param bool $tlCaseInsensitive true for allowing case insentitivity on attribute name checking
+     */
+    public function setAttributes($taValues, $tlSafeOnly=true, $tlCaseInsensitive=false)
 	{
 		if(!is_array($taValues))
+        {
 			return;
+        }
+
 		$laAttributes = $tlSafeOnly ? $this->getSafeAttributeNames() : $this->attributeNames();
 		$laAttributes= array_flip(array_combine($laAttributes, $tlCaseInsensitive ? array_map('strtolower', $laAttributes) : $laAttributes));
 		foreach ($taValues as $lcKey => $loValue) 

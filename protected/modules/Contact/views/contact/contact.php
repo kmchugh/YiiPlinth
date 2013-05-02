@@ -1,0 +1,1 @@
+<?php $this->widget('Contact.widgets.contact.Contact');?>

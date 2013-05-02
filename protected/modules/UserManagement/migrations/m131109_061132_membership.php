@@ -21,7 +21,7 @@ class m131109_061132_membership extends CDbMigration
             'CreatedBy'=>'guid',
             'ModifiedDate'=>'datetime',
             'ModifiedBy'=>'guid',
-            'RowVersion'=>'datetime',
+            'Rowversion'=>'datetime',
 			));
 
 		$this->createIndex('IX_{{Membership}}_ParentGroupID', '{{Membership}}', 'ParentGroupID', false);

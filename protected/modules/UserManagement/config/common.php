@@ -7,6 +7,8 @@ return array(
 		'user'=>array(
 			'class'=>'YIIPlinth.modules.UserManagement.components.PlinthWebUser',
 			'allowAutoLogin'=>true,
+            'autoRenewCookie'=>true,
+            'authTimeout'=>31557600,
 			'loginUrl'=>'/login',
 			),
 		'urlManager'=>array(
@@ -25,6 +27,10 @@ return array(
 
 				'/retrieveEmail'=>'UserManagement/access/RetrieveEmail',
 				'/site/retrieveEmail'=>'UserManagement/access/RetrieveEmail',
+
+                '/changePassword'=>'UserManagement/access/ChangePassword',
+                '/site/changePassword'=>'UserManagement/access/ChangePassword',
+                '/changePassword/token/<token:.*>'=>'UserManagement/access/ChangePassword/token/<token>',
 				),
 			),
 	),

@@ -8,6 +8,7 @@
  * @property string $GUID
  * @property string $Email
  * @property string $DisplayName
+ * @property string $Slug
  * @property string $Password
  * @property boolean $Locked
  * @property string $StartDate
@@ -27,6 +28,12 @@
  */
 class User extends PlinthModel
 {
+    // TODO: Refactor this to PlinthModel
+    public static function findBySlug($tcSlug)
+    {
+        return User::model()->findByAttributes(array('Slug'=>md5(strtolower($tcSlug))));
+    }
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -36,6 +43,8 @@ class User extends PlinthModel
 	{
 		return parent::model($className);
 	}
+
+    public $slug = array('DisplayName');
 
 	/**
 	 * @return string the associated database table name
@@ -185,28 +194,36 @@ class User extends PlinthModel
 	public static function create($tcEmail)
 	{
 		$lcPassword = substr(Utilities::getStringGUID(), 0, 10);
-            	$loUser = new User;
-	           $loUser->setAttributes(
-	                array(
-	                'Email' => $tcEmail,
-	                'DisplayName' => substr($tcEmail, 0, strpos($tcEmail, '@')),
-	                'StartDate' => Utilities::getTimeStamp(),
-	                ), false);
-            	$loUser->resetPassword($lcPassword);
-	            if ($loUser->save())
-	            {
-	                // Send the user an email
-	                $loEmail = new YiiMailMessage;
-	                $loEmail->view = '//mail/userRegistration';
-	                $loEmail->layout = '//layouts/mail';
-	                $loEmail->setBody(array('userModel'=>$loUser, 'password' => $lcPassword), 'text/html');
-	                $loEmail->subject = 'Welcome to YouCommentate.  Time to start calling it as you see it!';
-	                $loEmail->addTo($loUser->Email);
-	                $loEmail->from = Yii::app()->params['adminEmail'];
-	                Yii::app()->mail->send($loEmail);
+        $loUser = new User;
+        $loUser->setAttributes(
+            array(
+                'Email' => $tcEmail,
+                'DisplayName' => substr($tcEmail, 0, strpos($tcEmail, '@')),
+                'StartDate' => Utilities::getTimeStamp(),
+            ), false);
+        $loUser->resetPassword($lcPassword);
+        if ($loUser->save())
+        {
+            // Create a token to allow the user to set their own password
+            // Create a new token
+            $loToken = new ChangePasswordToken();
+            $loToken->UserGUID = $loUser->GUID;
+            if ($loToken->save())
+            {
+                // Send the user an email with a link to change password
+                $loEmail = new YiiMailMessage;
+                $loEmail->view = '//mail/userRegistration';
+                $loEmail->layout = '//layouts/mail';
+                $loEmail->setBody(array('title'=>Utilities::getString('User account created'), 'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
+                $loEmail->setSubject(Utilities::getString('registration_email_subject'));
+                $loEmail->addTo($loUser->Email);
+                $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
+                Yii::app()->mail->send($loEmail);
+            }
 
-	                // Once a User record is created, create a User Profile
-	            }
-	            return $loUser;
+            // Once a User record is created, create a User Profile
+            $loUserInfo = UserInfo::create($loUser);
+        }
+        return $loUser;
 	}
 }

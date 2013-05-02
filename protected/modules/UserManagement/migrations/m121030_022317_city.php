@@ -20,7 +20,7 @@ class m121030_022317_city extends CDbMigration
 			'CreatedBy'=>'guid',
 			'ModifiedDate'=>'datetime',
 			'ModifiedBy'=>'guid',
-			'RowVersion'=>'datetime',
+			'Rowversion'=>'datetime',
 			));
 		$this->addForeignKey('FK_{{City}}_CountryID', '{{City}}', 'CountryID',
 					'{{Country}}', 'CountryID', 'NO ACTION', 'NO ACTION');

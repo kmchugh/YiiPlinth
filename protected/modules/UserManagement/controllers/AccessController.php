@@ -34,6 +34,14 @@ class AccessController extends PlinthController
 		$this->render('passwordReset');
 	}
 
+    /**
+     * Displays the change password page
+     */
+    public function actionChangePassword()
+    {
+        $this->render('changePassword');
+    }
+
 	/**
 	 * Displays the registration page
 	 */

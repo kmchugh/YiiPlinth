@@ -40,7 +40,8 @@ class SignIn extends CWidget
                     Yii::app()->getController()->redirect('/?requestType=mobile');
                 }
                 Utilities::setCallbackURL(NULL);
-                Yii::app()->getController()->redirect($lcURL);
+                // TODO: Update this to redirect to the last location unless the last location was in user management then redirect to /
+                Yii::app()->getController()->redirect('/');
             }
         }
 
