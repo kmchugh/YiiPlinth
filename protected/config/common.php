@@ -14,6 +14,7 @@ return array(
         'YIIPlinth.components.*',
         'YIIPlinth.controllers.*',
         'YIIPlinth.widgets.*',
+        'YIIPlinth.helpers.*',
         'YIIPlinth.extensions.Session.*',
         'YIIPlinth.extensions.Mail.*',
     ),

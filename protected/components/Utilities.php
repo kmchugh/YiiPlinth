@@ -85,6 +85,41 @@
 		}
 
         /**
+         * Gets a path relative from the $tcFrom directory to the $tcTo directory
+         * @param $tcFrom the directory to start from
+         * @param $tcTo the destination directory
+         */
+        public static function getRelativePath($tcFrom, $tcTo)
+        {
+            $laFrom=explode(DIRECTORY_SEPARATOR, realpath($tcFrom));
+            $laTo=explode(DIRECTORY_SEPARATOR, realpath($tcTo));
+            $lnFrom=count($laFrom);
+            $lnTo=count($laTo);
+
+            $lnCounter=0;
+            for (;$lnCounter<$lnFrom && $lnCounter<$lnTo;$lnCounter++)
+            {
+                // Find where the paths deviate
+                if ($laFrom[$lnCounter]!==$laTo[$lnCounter])
+                {
+                    break;
+                }
+            }
+
+            // Update the from
+            for ($i=$lnCounter;$i<$lnFrom;$i++)
+            {
+                $laFrom[$i]='..';
+            }
+            for ($i=$lnCounter;$i<$lnTo;$i++)
+            {
+                $laFrom[]=$laTo[$i];
+            }
+
+            return implode(DIRECTORY_SEPARATOR,array_slice($laFrom, $lnCounter));
+        }
+
+        /**
          * Returns a url suitable for use in URLS
          * @param $tcURL the url to encode
          */
