@@ -1,8 +1,15 @@
 <?php
+/**
+ * Class WebAppCommand Creates a web application template for the developer
+ */
 class WebAppCommand extends CConsoleCommand
 {
     private $m_cApplicationPath;
 
+    /**
+     * Displays the user help
+     * @return string
+     */
     public function getHelp()
     {
         return <<<EOD
@@ -19,6 +26,10 @@ PARAMETERS
 EOD;
     }
 
+    /**
+     * Runs the command
+     * @param array $taArgs the arguments for the command
+     */
     public function run($taArgs)
     {
         if (!isset($taArgs[0]))
@@ -47,15 +58,26 @@ EOD;
             // Copy the Files
             $this->copyFiles($laList);
             // Finally update the permissions
-            //$this->setPermissions($lcAppPath);
+            $this->setPermissions($this->m_cApplicationPath);
+
+            echo "\nYour application has been created successfully under {realpath($this->m_cApplicationPath)}.\n";
         }
     }
 
+    /**
+     * Gets the location of the templates to copy for the web application
+     * @return string the template path
+     */
     private function getTemplateDir()
     {
         return realpath(dirname(__FILE__).'/../views/webapp');
     }
 
+    /**
+     * Modifies the list of files to include callbacks that will be used to modify the files as
+     * they are copied
+     * @param $taFileList the list of files
+     */
     private function addfileModificationCallbacks(&$taFileList)
     {
         $taFileList['index.php']['callback']=array($this,'generateIndex');
@@ -66,11 +88,23 @@ EOD;
 
     }
 
+    /**
+     * Sets the permissions for the application directories
+     * @param $tcAppDirectory the application directory
+     */
     private function setPermissions($tcAppDirectory)
     {
-
+        @chmod($tcAppDirectory.'/assets',0777);
+        @chmod($tcAppDirectory.'/protected/runtime',0777);
+        @chmod($tcAppDirectory.'/protected/yiic',0755);
     }
 
+    /**
+     * Modifies the index.php file to include the correct paths to YiiPlinth and Yii
+     * @param $tcSource the source file name
+     * @param $taParams parameters
+     * @return mixed the content to write to the user template
+     */
     public function generateIndex($tcSource, $taParams)
     {
         $lcContent=file_get_contents($tcSource);
@@ -86,6 +120,12 @@ EOD;
         return $lcContent;
     }
 
+    /**
+     * Modifies the yiic.php file to include the correct paths to YiiPlinth and Yii
+     * @param $tcSource the source file name
+     * @param $taParams parameters
+     * @return mixed the content to write to the user template
+     */
     public function generateYiic($tcSource, $taParams)
     {
         $lcContent=file_get_contents($tcSource);
@@ -101,6 +141,12 @@ EOD;
         return $lcContent;
     }
 
+    /**
+     * Modifies the configuration files to include the correct paths and settings
+     * @param $tcSource the source file name
+     * @param $taParams parameters
+     * @return mixed the content to write to the user template
+     */
     public function generateCommonConfig($tcSource, $taParams)
     {
         $lcContent=file_get_contents($tcSource);
@@ -133,6 +179,5 @@ EOD;
         $lcContent = preg_replace('/APPLICATION_NAME/', $lcAppName, $lcContent);
         return $lcContent;
     }
-
 }
 ?>
