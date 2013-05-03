@@ -1,5 +1,5 @@
 <?php
-// TODO: Move this controller to YiiPlinth and default searching of controllers to include YiiPlinth
+// TODO: Log the errors that occur if they are not already being logged
 class ErrorController extends Controller
 {
     /**
