@@ -14,7 +14,7 @@ class WebAppCommand extends CConsoleCommand
     {
         return <<<EOD
 USAGE
-  yiic webapp <app-path> [<vcs>]
+  yiic webapp <app-path>
 
 DESCRIPTION
   This command generates an YiiPlinth Web Application at the specified location.

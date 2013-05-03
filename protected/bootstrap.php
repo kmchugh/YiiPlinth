@@ -1,5 +1,5 @@
 <?php
-	// TODO: Detemine timezone based on user location
+	// TODO: Determine timezone based on user location
 	date_default_timezone_set('America/Los_Angeles');
 
 	require_once(dirname(__FILE__) . '/components/Utilities.php');
@@ -82,14 +82,16 @@
 
 			if(isset($toConfig))
 			{
-				$loApp=Yii::createConsoleApplication($toConfig);
-				$loApp->commandRunner->addCommands(YII_PATH.'/cli/commands');
+                $loApp=Yii::createConsoleApplication($toConfig);
+                $loApp->commandRunner->addCommands(Yii::getPathOfAlias('YIIPlinth.cli.commands'));
+				$loApp->commandRunner->addCommands(dirname($tcYII).'/cli/commands');
 				$loEnv=@getenv('YII_CONSOLE_COMMANDS');
 				if(!empty($loEnv))
 					$loApp->commandRunner->addCommands($loEnv);
 			}
 			else
 			{
+                echo "HERE!!!";
 				$loApp=Yii::createConsoleApplication(array('basePath'=>dirname($tcYII).'/cli'));
 			}
 			$loApp->run();
