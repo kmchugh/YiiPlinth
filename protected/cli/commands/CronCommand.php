@@ -119,7 +119,7 @@ EOD;
         echo 'Creating Cron Task'."\n";
         // Make the crontab directory if it does not exist
 
-        $loCron = new Crontab('AppTasks', $this->getJobsDirectory());
+        $loCron = new Crontab('AppTasks', $this->getJobsDirectory(), '');
 
         $loCron->addApplicationJob('yiic', 'cron', array(), '*/1');
         $loCron->saveCronFile();
@@ -132,7 +132,7 @@ EOD;
         // TODO: implement this for Windows as well
         echo 'Removing Cron Task'."\n";
 
-        $loCron = new Crontab('AppTasks', $this->getJobsDirectory());
+        $loCron = new Crontab('AppTasks', $this->getJobsDirectory(), '');
         $loCron->eraseJobs();
         $loCron->saveCronFile();
         $loCron->saveToCrontab();
