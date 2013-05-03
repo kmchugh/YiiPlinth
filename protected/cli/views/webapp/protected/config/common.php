@@ -54,7 +54,11 @@ return array(
                 '/'=>array(
                     'layout'=>'//layouts/default',
                     'theme'=>'default',
-                    'style'=>'/home.less',
+                    'style'=>'/default.less',
+                ),
+                '/error/'=>array(
+                    'layout'=>'//layouts/error',
+                    'style'=>'/errorPage.less',
                 ),
             ),
         ),

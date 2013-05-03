@@ -71,30 +71,6 @@
 		 * @param  string $tcYII    the file being started usually yii or yiic
 		 * @param  array $toConfig the configuration of the application
 		 */
-		private function startConsole1($tcYII, $toConfig)
-		{
-			defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
-			defined('YII_DEBUG') or define('YII_DEBUG',true);
-
-			require_once(dirname($tcYII).DIRECTORY_SEPARATOR.'yii.php');
-
-			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
-
-			if(isset($toConfig))
-			{
-				$loApp=Yii::createConsoleApplication($toConfig);
-				$loApp->commandRunner->addCommands(YII_PATH.DIRECTORY_SEPARATOR.'cli'.DIRECTORY_SEPARATOR.'commands');
-				$loEnv=@getenv('YII_CONSOLE_COMMANDS');
-				if(!empty($loEnv))
-					$loApp->commandRunner->addCommands($loEnv);
-			}
-			else
-			{
-				$loApp=Yii::createConsoleApplication(array('basePath'=>dirname($tcYII).DIRECTORY_SEPARATOR.'cli'));
-			}
-			$loApp->run();
-		}
-
 		private function startConsole($tcYII, $toConfig)
 		{
 			defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
