@@ -8,7 +8,7 @@ Getting Started
 -
 
 * Create and navigate to the the project directory
-* Download the latest stable version of [http://www.yiiframework.com/download/] (1.1.\*)
+* Download the latest stable version of the [Yii Framework] (http://www.yiiframework.com/download/)
 * Clone YiiPlinth:
 ```git clone git@github.com:kmchugh/YiiPlinth.git YiiPlinth```
 * Create your web project:
