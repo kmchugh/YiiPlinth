@@ -13,7 +13,7 @@ class PlinthConsoleApplication extends CConsoleApplication
     public function getThemeManager()
     {
         $loManager =  $this->getComponent('themeManager');
-        $loManager->setBasePath('../themes');
+        $loManager->setBasePath(Yii::getPathOfAlias('application').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'themes');
         return $loManager;
     }
 
