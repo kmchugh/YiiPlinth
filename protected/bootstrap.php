@@ -77,12 +77,13 @@
 			defined('YII_DEBUG') or define('YII_DEBUG',true);
 
 			require_once(dirname($tcYII).'/yii.php');
+            require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'PlinthConsoleApplication.php');
 
 			YiiBase::setPathOfAlias('YIIPlinth', dirname(__FILE__));
 
 			if(isset($toConfig))
 			{
-                $loApp=Yii::createConsoleApplication($toConfig);
+                $loApp=Yii::createApplication('PlinthConsoleApplication', $toConfig);
                 $loApp->commandRunner->addCommands(Yii::getPathOfAlias('YIIPlinth.cli.commands'));
 				$loApp->commandRunner->addCommands(dirname($tcYII).'/cli/commands');
 				$loEnv=@getenv('YII_CONSOLE_COMMANDS');
@@ -91,8 +92,7 @@
 			}
 			else
 			{
-                echo "HERE!!!";
-				$loApp=Yii::createConsoleApplication(array('basePath'=>dirname($tcYII).'/cli'));
+				$loApp=Yii::createApplication('PlinthConsoleApplication', array('basePath'=>dirname($tcYII).'/cli'));
 			}
 			$loApp->run();
 		}

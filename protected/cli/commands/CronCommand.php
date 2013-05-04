@@ -165,7 +165,7 @@ EOD;
                 $lcDirectory = $tcPath.DIRECTORY_SEPARATOR.$lcFile;
                 if (is_dir($lcDirectory) && is_numeric($lcFile))
                 {
-                    if (intval($lcFile) % ($tnCounter+1) == 0)
+                    if (($tnCounter+1) % intval($lcFile)  == 0)
                     {
                         // Need to execute this directory
                         $this->executeCommands($lcDirectory);

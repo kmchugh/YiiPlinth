@@ -51,14 +51,13 @@ class ContactForm extends CFormModel
     {
         if (!$this->hasErrors())
         {
-            $loEmail = new YiiMailMessage();
-            $loEmail->view = '//mail/defaultEmail';
-            $loEmail->layout = '//layouts/mail';
-            $loEmail->setBody(array('tcContent'=>"Name: {$this->name}.  Email: {$this->email}<br/><br/>".$this->body));
-            $loEmail->subject=$this->subject;
-            $loEmail->addTo(Yii::app()->params['adminEmail']);
-            $loEmail->from =Yii::app()->params['adminEmail'];
-            Yii::app()->mail->send($loEmail);
+            $loEmail = new PlinthMail(Yii::app()->params['adminEmail'],
+                $this->subject,
+                array('tcContent'=>"Name: {$this->name}.  Email: {$this->email}<br/><br/>".$this->body),
+                '//mail/defaultEmail',
+                '//layouts/mail'
+            );
+            $loEmail->send();
         }
         return !$this->hasErrors();
     }

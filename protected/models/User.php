@@ -211,14 +211,13 @@ class User extends PlinthModel
             if ($loToken->save())
             {
                 // Send the user an email with a link to change password
-                $loEmail = new YiiMailMessage;
-                $loEmail->view = '//mail/userRegistration';
-                $loEmail->layout = '//layouts/mail';
-                $loEmail->setBody(array('title'=>Utilities::getString('User account created'), 'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
-                $loEmail->setSubject(Utilities::getString('registration_email_subject'));
-                $loEmail->addTo($loUser->Email);
-                $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
-                Yii::app()->mail->send($loEmail);
+                $loEmail = new PlinthMail($loUser->Email,
+                    Utilities::getString('registration_email_subject'),
+                    array('title'=>Utilities::getString('User account created'), 'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))),
+                    '//mail/userRegistration',
+                    '//layouts/mail'
+                );
+                $loEmail->send();
             }
 
             // Once a User record is created, create a User Profile

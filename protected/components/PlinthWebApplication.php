@@ -5,6 +5,41 @@
 
 class PlinthWebApplication extends CWebApplication
 {
+/*
+ *
+ *  // TODO: Check if this should be implemented
+    protected function registerCoreComponents()
+    {
+        parent::registerCoreComponents();
+
+        $loComponents=array(
+            'session'=>array(
+                'class'=>'CHttpSession',
+            ),
+            'assetManager'=>array(
+                'class'=>'CAssetManager',
+            ),
+            'user'=>array(
+                'class'=>'CWebUser',
+            ),
+            'themeManager'=>array(
+                'class'=>'CThemeManager',
+            ),
+            'authManager'=>array(
+                'class'=>'CPhpAuthManager',
+            ),
+            'clientScript'=>array(
+                'class'=>'CClientScript',
+            ),
+            'widgetFactory'=>array(
+                'class'=>'CWidgetFactory',
+            ),
+        );
+
+        $this->setComponents($components);
+    }
+
+*/
 
     /**
      * Creates a controller instance based on a route.
