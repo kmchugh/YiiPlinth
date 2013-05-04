@@ -5,6 +5,8 @@
 class WebAppCommand extends CConsoleCommand
 {
     private $m_cApplicationPath;
+    private $m_cGitRoot = NULL;
+
 
     /**
      * Displays the user help
@@ -60,8 +62,64 @@ EOD;
             // Finally update the permissions
             $this->setPermissions($this->m_cApplicationPath);
 
-            echo "\nYour application has been created successfully under {realpath($this->m_cApplicationPath)}.\n";
+            // Install dromos
+            $this->includeGitProject('kmchugh/dromos', 'javascript/libs/dromos');
+
+            // Install effortlesss
+            $this->includeGitProject('kmchugh/effort.less', 'css/effort.less');
+
+            $this->updateGitSubmodules();
+
+
+            echo "\nYour application has been created successfully under ".realpath($this->m_cApplicationPath).".\n";
         }
+    }
+
+
+    /**
+     * Gets the git root for the current directory
+     * @return null|string
+     */
+    private function findGitRoot()
+    {
+        if (is_null($this->m_cGitRoot))
+        {
+            $this->m_cGitRoot = system('git rev-parse --show-toplevel');
+        }
+        return $this->m_cGitRoot;
+    }
+
+    /**
+     * Downloads the specified project from Github
+     * @param $tcProjectID the github project id without .git
+     * @param $tcLocation the location to put the project relative to the new project directory.
+     */
+    private function includeGitProject($tcProjectID, $tcLocation)
+    {
+        $lcGitRoot = $this->findGitRoot();
+        $lcDirectoryRoot =  '.'.DIRECTORY_SEPARATOR.basename($this->m_cApplicationPath).DIRECTORY_SEPARATOR.$tcLocation;
+
+        if (!file_exists(dirname($lcDirectoryRoot)))
+        {
+            mkdir(dirname($lcDirectoryRoot), 0777, true);
+        }
+        $lcPath = realpath('.');
+        $lcRelativePath = Utilities::getRelativePath($lcGitRoot, $this->m_cApplicationPath);
+        chdir($lcGitRoot);
+        echo system("git submodule add git@github.com:".$tcProjectID.'.git '.$lcRelativePath.DIRECTORY_SEPARATOR.$tcLocation);
+        chdir($lcPath);
+    }
+
+    /**
+     * Updates the git submodule projects
+     */
+    private function updateGitSubmodules()
+    {
+        $lcGitRoot = $this->findGitRoot();
+        $lcPath = realpath('.');
+        chdir($lcGitRoot);
+        echo system("git submodule update --recursive --init");
+        chdir($lcPath);
     }
 
     /**
@@ -154,19 +212,20 @@ EOD;
         $lcAppName = basename($this->m_cApplicationPath);
 
         // Configure the DB
-        if ($this->confirm("Configure the database?"))
+        if ($this->confirm("Configure the database?", true))
         {
-            $lcInput = $this->prompt("Enter your connection string (mysql:host=127.0.0.1;dbname=mydb):");
+            $lcDefault = "mysql:host=127.0.0.1;dbname={$lcAppName}";
+            $lcInput = $this->prompt("Enter your connection string:", $lcDefault);
             if ($lcInput !== false)
             {
                 $lcContent = preg_replace('/CONNECTION_STRING/', $lcInput, $lcContent);
 
-                $lcInput = $this->prompt("Enter the database username for your application:");
+                $lcInput = $this->prompt("Enter the database username for your application:", "dbuser");
                 if ($lcInput !== false)
                 {
                     $lcContent = preg_replace('/DB_USER/', $lcInput, $lcContent);
 
-                    $lcInput = $this->prompt("Enter the database password for your application:");
+                    $lcInput = $this->prompt("Enter the database password for your application:", "dbpassword");
                     if ($lcInput !== false)
                     {
                         $lcContent = preg_replace('/DB_PASSWORD/', $lcInput, $lcContent);
