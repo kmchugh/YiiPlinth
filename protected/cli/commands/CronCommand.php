@@ -196,6 +196,7 @@ EOD;
                     {
                         $this->usageError("Task [$lcFileName] does not extend CronTask");
                     }
+                    Yii::trace("Executing cron task : $lcFileName");
                     $loTask->execute();
                 }
             }

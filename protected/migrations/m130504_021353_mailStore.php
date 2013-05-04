@@ -14,7 +14,7 @@ class m130504_021353_mailStore extends CDbMigration
             'Subject'=>'string',
             'To'=>'long_string',
             'From'=>'code_null',
-            'Parameters'=>text,
+            'Parameters'=>'text',
             'Hash'=>'code',
             'CreatedDate'=>'datetime',
             'CreatedBy'=>'guid',
