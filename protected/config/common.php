@@ -16,7 +16,7 @@ return array(
         'YIIPlinth.widgets.*',
         'YIIPlinth.helpers.*',
         'YIIPlinth.extensions.Session.*',
-        'YIIPlinth.extensions.EMail.*',
+        'YIIPlinth.extensions.Email.*',
     ),
 
     'onBeginRequest'=>array('RequestHooks', 'beginRequest'),
