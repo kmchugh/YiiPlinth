@@ -12,6 +12,9 @@ class HTMLForm extends CActiveForm
     // The title of the form
     public $title = '';
 
+    // A note for the form
+    public $note = '';
+
     // The list of fields to be rendered
     public $fields = array();
 
