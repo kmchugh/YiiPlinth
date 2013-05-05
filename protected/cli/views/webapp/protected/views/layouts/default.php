@@ -1,12 +1,15 @@
 <?php
+Yii::app()->clientScript->registerScriptFile('/javascript/libs/dromos/dromos.bootstrap.js', CClientScript::POS_HEAD);
 $this->beginContent('//layouts/webpage');
 ?>
 <div class="page">
-    <header><h1><?php echo $this->pageTitle;?></h1></header>
+    <?php  $this->renderPartial('//site/_header');?>
+
     <section class="body">
         <?php echo $content; ?>
     </section>
-    <footer><small>Copyright &copy; <?php echo @date('Y').' '.Yii::app()->name; ?>, All rights reserved.</small></footer>
+
+    <?php  $this->renderPartial('//site/_footer');?>
 </div>
 <?php $this->endContent(); ?>
 

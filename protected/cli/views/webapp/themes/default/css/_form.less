@@ -1,0 +1,667 @@
+/**
+* Styling for input and forms
+**/
+
+
+.popupForm(@width: 50%)
+{
+  position: absolute;
+
+  .reset(@width);
+
+  > h1, .note, label{display: none;}
+}
+
+  /**
+  * reset rule to ensure unwanted margin and padding is removed
+  **/
+.reset(@width : 100%)
+{
+  width: @width;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+header nav .ajaxLinkWindow
+{
+  @width: 340px;
+  .popupForm(@width);
+  margin-left: (@width -65px) * -1;
+  padding-top: 22px;
+
+  .content
+  {
+    .form
+    {
+      > h1{display: none;}
+
+      form
+      {
+        font-size: 1.2em;
+
+        .oauthProviders{.twitter, .facebook{background-position: 3em center;}}
+      }
+    }
+    padding: 5px 10px;
+    #effortless > #background > .rounded(3px, 0, 3px, 3px);
+    background: @grey_1;
+    #effortless > #shadow > .drop(4px, 4px, 3px, 3px, fadeout(@grey, 75));
+  }
+
+  &.login
+  {
+    .content .form .buttons
+    {
+      width: 40%;
+      text-align: left;
+    }
+  }
+}
+
+/**
+* Default styling for all elements
+**/
+input, select, textarea, keygen
+{
+  color: @grey_;
+  #effortless > #background > .rounded(3px);
+  border: none;
+  padding: .5em .5em;
+}
+
+// Force border-box for search input
+input[type="search"]
+{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+
+form .button, form button, form input[type="submit"], form input[type="button"], form input[type="reset"]
+{
+  font-size: 1em;
+}
+
+form
+{
+  .formLayout(red, @grey, @grey_1);
+}
+
+.formLayout(@errorColour :  red, @textColour : @text-darker, @backgroundColour : @background-darkest)
+{
+  background-color: @backgroundColour;
+  padding: .5em;
+
+  h1, .note, label{display: none;}
+
+  span.required{color: @errorColour;}
+
+  > fieldset
+  {
+    color: @text-darker;
+    margin-top: @gutterSize/2;
+    margin-bottom: @gutterSize/2;
+  }
+
+  .links
+  {
+    text-align: center;
+    margin-top: 2em;
+
+    a
+    {
+      padding: .25em @gutterSize/2;
+
+      color: @green;
+      &:hover{color: @green_3;}
+    }
+  }
+
+  .buttons
+  {
+    padding-top: @gutterSize/2;
+    padding-left: @gutterSize/2;
+
+    .button, button
+    {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  .note, .hint
+  {
+    margin-bottom: 1em;
+    margin-top: .5em;
+    font-style: italic;
+    font-size: .8em;
+  }
+
+  .flash-success
+  {
+    background: @yellow_1;
+    padding: .25em .5em;
+    color: @grey_2;
+    font-size: .9em;
+    margin: 3.5em 0 .5em 0;
+    clear: both;
+  }
+
+  .field
+  {
+    padding: .25em @gutterSize/2;
+
+    select, input, textarea, keygen
+    {
+      display: block;
+      width: 100%;
+    }
+
+    a{padding: 0;}
+
+    &.error
+    {
+      > input
+      {
+        background-image: url('/images/icons/error.png');
+        background-repeat: no-repeat;
+        background-position: center right;
+      }
+      .errorMessage
+      {
+        #effortless > #border > .rounded(2px, solid, red);
+        font-weight: bold;
+        background: beige;
+        color: red;
+        padding: .25em .5em;
+        margin: .25em 0 0 0;
+        display: inline-block;
+        text-align: left;
+        font-size: .8em;
+        background: none;
+        border: none;
+        font-weight: normal;
+      }
+    }
+
+    .note
+    {
+      text-align: right;
+      display: block;
+    }
+  }
+}
+
+// Basic oauth styling
+
+.oauth
+{
+  border-top: 1px solid @grey_2;
+  margin-top: 2.5em;
+  padding-left: 0;
+  padding-right: 0;
+
+  label
+  {
+    margin: -.6em auto .5em auto;
+    width: 3em;
+    background: @grey_1;
+    display: block!important;
+    text-align: center;
+    color: @grey_2;
+  }
+
+  .oauthProviders
+  {
+    padding: 1em 0 0 0;
+
+    > a
+    {
+      .secondaryFont;
+      display: block;
+      margin: .25em 0;
+      text-align: center;
+      text-decoration: none;
+      padding: 0;
+      line-height: 42px;
+      color: @white;
+      #effortless > #background > .rounded(3px);
+
+      &.twitter
+      {
+        background: @blue-twitter url('/images/social_login/twitter-icon.png') no-repeat 2em center;
+        border: 1px solid darken(@blue-twitter, 10);
+
+        &:hover{border: 1px solid lighten(@blue-twitter, 40);}
+      }
+
+      &.facebook
+      {
+        background: @blue-facebook url('/images/social_login/fb-icon.png') no-repeat 2em center;
+
+        border: 1px solid darken(@blue-facebook, 10);
+
+        &:hover{border: 1px solid lighten(@blue-facebook, 40);}
+      }
+    }
+  }
+}
+
+.form.login
+{
+  .linkField
+  {
+    float: right;
+    display: inline;
+    text-align: right;
+    padding-top: 1em;
+    font-size: .9em;
+    padding-left: 0;
+
+    a
+    {
+      padding-right: 0;
+    }
+  }
+
+  .buttons
+  {
+    margin-top: 0;
+    float: left;
+  }
+}
+
+.captcha
+{
+  margin-top: .25em;
+
+  a{text-decoration: none;}
+
+  background: @white;
+  #effortless > #background > .rounded(3px);
+  border: none;
+  padding: .25em .5em .5em .5em!important;
+
+  .hint
+  {
+    .reset;
+    text-align: left;
+    font-style: normal;
+    color: @grey_2;
+  }
+
+  input
+  {
+    width: 94%!important;
+    border: 1px solid @grey_2;
+  }
+
+  .image
+  {
+    .reset;
+    text-align: left;
+
+    img
+    {
+      width: 50%;
+      display: inline-block;
+      border: none;
+      margin: 1em 0 0 25%;
+    }
+
+    a
+    {
+      display: inline-block;
+      background: transparent url('images/icons/refresh.png') no-repeat center;
+      overflow: hidden;
+      #effortless > #dimension > .size(20px);
+      padding-top: 1em;
+      vertical-align: top;
+      float: right;
+      margin: 0;
+      line-height: 3em;
+    }
+  }
+}
+
+
+
+/*
+
+
+.ajaxLinkWindow
+{
+  @loginWidth: 320px;
+
+  &.login
+  {
+    .standAloneFormContainer();
+  }
+
+  &.register
+  {
+    .oauth, .links{display: none;}
+  }
+
+  .login
+  {
+    .singleForm(@loginWidth);
+  }
+}
+
+
+
+
+.oauthProviders
+{
+  #effortless > #background > .rounded(0, 0, @corner-radius, @corner-radius);
+
+  a
+  {
+    color: @background;
+    margin: @gutterSize/2;
+    #effortless > #dimension > .size(40px);
+    padding-top: 40px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    border: 1px solid black;
+
+    &:hover
+    {
+      border: 1px solid white;
+    }
+  }
+
+  .twitter
+  {
+    color: @white;
+    background: @blue-twitter url('/images/social_login/twitter-icon.png') no-repeat top left;
+  }
+
+  .facebook
+  {
+    color: @white;
+    background: @blue-facebook url('/images/social_login/fb-icon.png') no-repeat top left;
+  }
+}
+
+
+
+
+form
+{
+  .errorMessage
+  {
+    text-align: left;
+    font-size: .8em;
+    background: none;
+    border: none;
+    font-weight: normal;
+    color: red;
+  }
+
+}
+
+.standAloneFormContainer
+{
+  position: absolute;
+
+  padding-top: 22px;
+
+  .content
+  {
+    margin-left: (@loginWidth -45px) * -1;
+    width: @loginWidth + 20px;
+    padding: 5px 10px;
+    #effortless > #background > .rounded(3px, 0, 3px, 3px);
+    background: @grey_1;
+    #effortless > #shadow > .drop(4px, 4px, 3px, 3px, fadeout(@grey, 75));
+  }
+}
+
+.singleForm(@formWidth: 320px)
+{
+  .reset(@formWidth);
+
+  > *{.reset;}
+
+  > h1, .note, label{display: none;}
+
+  form
+  {
+    background: transparent;
+
+    button, .button
+    {
+      #effortless > #shadow > .hard(fadeout(@grey, 75));
+    }
+
+    .captcha
+    {
+      margin-top: .25em;
+
+      a{text-decoration: none;}
+
+      background: @white;
+      #effortless > #background > .rounded(3px);
+      border: none;
+      padding: .25em .5em .5em .5em!important;
+
+      .hint
+      {
+        .reset;
+        text-align: left;
+        font-style: normal;
+      }
+
+      input
+      {
+        width: 94%!important;
+        border: 1px solid @grey_2;
+      }
+
+      .image
+      {
+        .reset;
+        text-align: left;
+
+        img
+        {
+          width: 50%;
+          display: inline-block;
+          border: none;
+          margin: 1em 0 0 25%;
+        }
+
+        a
+        {
+          display: inline-block;
+          background: transparent url('images/icons/refresh.png') no-repeat center;
+          overflow: hidden;
+          #effortless > #dimension > .size(20px);
+          padding-top: 1em;
+          vertical-align: top;
+          float: right;
+          margin: 0;
+          line-height: 3em;
+        }
+      }
+    }
+
+    input
+    {
+      #effortless > .placeholder(@grey);
+    }
+  }
+
+
+  .hint
+  {
+    color: @grey_2;
+    line-height: 1.1em;
+    font-size: .8em;
+  }
+
+  .fields
+  {
+    .field, .field > *{.reset(@formWidth);}
+
+    .field
+    {
+      &.error
+      {
+        > input
+        {
+          background-image: url('/images/icons/error.png');
+          background-repeat: no-repeat;
+          background-position: center right;
+        }
+      }
+
+      > input {padding: .5em .5em;}
+
+      > label {display: none;}
+    }
+
+    .tandc
+    {
+      .cf;
+
+      input
+      {
+        width: 20px;
+        float: left;
+        margin-top: .25em;
+      }
+
+      label
+      {
+        width: @formWidth - 25px;
+        float: right;
+        display: inline-block;
+        padding-right: 25px;
+
+        a
+        {
+          padding: 0 .25em;
+          text-decoration: none;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  .buttons
+  {
+    .reset(@formWidth);
+    margin-top: .25em;
+    padding-top: .25em;
+
+    > *{.reset(@formWidth);}
+
+    button
+    {
+      background: @green;
+      padding: .6em;
+
+
+      &:hover{background: @green_3;}
+    }
+  }
+
+  .links
+  {
+    clear: both;
+    .reset(@formWidth);
+    margin-top: 1.75em;
+
+    > a
+    {
+      color: @green;
+      text-align: center;
+      .reset(@formWidth);
+      text-decoration: none;
+      font-weight:normal;
+
+      &:hover{color: @green_3;}
+    }
+  }
+
+  .oauthProviders
+  {
+    .reset(@formWidth);
+
+    > a
+    {
+      .secondaryFont();
+      margin: .25em 0;
+      .reset(@formWidth);
+      text-align: center;
+      text-decoration: none;
+      padding: 0;
+      line-height: 42px;
+      font-weight: normal;
+      font-size: .9em;
+      background-position: 3em center;
+      #effortless > #background > .rounded(3px);
+
+      &.twitter
+      {
+        border: 1px solid darken(@blue-twitter, 10);
+
+        &:hover{border: 1px solid lighten(@blue-twitter, 40);}
+      }
+
+      &.facebook
+      {
+        border: 1px solid darken(@blue-facebook, 10);
+
+        &:hover{border: 1px solid lighten(@blue-facebook, 40);}
+      }
+    }
+  }
+
+  .form form .flash-success
+  {
+    clear: both;
+    text-align: center;
+    color: @green;
+    border-color: @green;
+    background: @green_1;
+  }
+
+  &.login
+  {
+    @buttonWidth : 100px;
+
+    .fields > .field > a
+    {
+      width: @formWidth - @buttonWidth;
+      float: right;
+      text-align: right;
+      padding: .75em 0 0 0;
+      text-decoration: none;
+      font-weight: normal;
+      font-size: .9em;
+    }
+
+    .buttons
+    {
+      margin-top: -40px;
+      .cf;
+
+      button
+      {
+        width: @buttonWidth;
+        float: left;
+      }
+    }
+  }
+}
+
+*/
+

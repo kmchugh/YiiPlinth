@@ -65,11 +65,10 @@ EOD;
             // Install dromos
             $this->includeGitProject('kmchugh/dromos', 'javascript/libs/dromos');
 
-            // Install effortlesss
+            // Install effortless
             $this->includeGitProject('kmchugh/effort.less', 'css/effort.less');
 
             $this->updateGitSubmodules();
-
 
             echo "\nYour application has been created successfully under ".realpath($this->m_cApplicationPath).".\n";
         }
@@ -188,10 +187,10 @@ EOD;
     {
         $lcContent=file_get_contents($tcSource);
         // Get the relative directory of the bootstrap from the application directory
-        $lcBootstrap = Utilities::getRelativePath($this->m_cApplicationPath, YIIPLINTH_FRAMEWORK.'protected'.DIRECTORY_SEPARATOR.'bootstrap.php');
+        $lcBootstrap = Utilities::getRelativePath($this->m_cApplicationPath.DIRECTORY_SEPARATOR.'protected'.DIRECTORY_SEPARATOR, YIIPLINTH_FRAMEWORK.'protected'.DIRECTORY_SEPARATOR.'bootstrap.php');
 
         // Get the relative directory of yiic from the application directory
-        $lcYii = Utilities::getRelativePath($this->m_cApplicationPath, YII_FRAMEWORK.'framework'.DIRECTORY_SEPARATOR.'yii.php');
+        $lcYii = Utilities::getRelativePath($this->m_cApplicationPath.DIRECTORY_SEPARATOR.'protected'.DIRECTORY_SEPARATOR, YII_FRAMEWORK.'framework'.DIRECTORY_SEPARATOR.'yii.php');
 
         // Replace the directories
         $lcContent = preg_replace('/YIIC_BOOTSTRAP/', $lcBootstrap, $lcContent);

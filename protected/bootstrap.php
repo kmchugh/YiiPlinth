@@ -20,7 +20,8 @@
 			}
 
 			$lcYII=$taOptions['yii'];
-			$llConsole = basename(strtolower($lcYII), '.php') === 'yiic';
+
+			$llConsole = basename($_SERVER[PHP_SELF], '.php') === 'yiic';
 
 			$tcConfigType = is_null($tcConfigType) ?
 				($llConsole ? 'console' :

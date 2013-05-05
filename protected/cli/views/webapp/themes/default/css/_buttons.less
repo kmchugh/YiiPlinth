@@ -1,0 +1,108 @@
+/**
+* Default button styling for this theme
+**/
+
+// Make sure text is antialased
+input, .button, button{#effortless > #text > .antialiased;}
+
+// Order is important, reverse buttons must come before buttons
+.reverse button, .reverse .button
+{
+  background-color: @white;
+  color: @blue;
+  &:hover
+  {
+    background-color: @blue_2;
+  }
+}
+
+  /**
+  * Default button styles
+  **/
+button, .button, input[type="button"], input[type="reset"], input[type="submit"]
+{
+  #effortless > #background > .rounded(3px);
+  border: none;
+  color: @white;
+  padding: .5em 1em;
+  font-weight: 100;
+  font-size: 1.6em;
+  background-color: @blue;
+  vertical-align: bottom;
+  // Text Shadow
+  #effortless > #shadow > .hard(fadeout(@text-colour, 75), 1px);
+
+  &:hover{background-color: @blue_2;}
+
+  &.yellow
+  {
+    background-color: @yellow;
+    color: @white;
+    &:hover{background-color: @yellow_3;}
+  }
+
+  &.red
+  {
+    background-color: @red;
+    color: @white;
+    &:hover{background-color: @red_3;}
+  }
+
+  &.green, &[type="submit"]
+  {
+    background-color: @green;
+    color: @white;
+    &:hover{background-color: @green_3;}
+  }
+}
+
+.buttonGreen
+{
+  .button;
+  background-color: @green;
+  color: @white;
+  &:hover{background-color: @green_3;}
+}
+
+a.button.callout
+{
+  padding: .7em .75em;
+}
+
+.callout
+{
+  color: @white;
+  #effortless > #border > .rounded(1px, solid, fadeout(@white, 50), 6px);
+  #effortless > #shadow > .glow(fadeout(@black, 20), 35px);
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  font-size: 2.4em;
+
+}
+
+.callout(blue)
+{
+  .callout;
+  background-color: @blue;
+  border-color: @blue_2;
+
+  &:hover{background-color: @blue_3;}
+}
+
+.callout(green)
+{
+  .callout;
+  background-color: @green;
+  border-color: @green_2;
+
+  &:hover{background-color: @green_3;}
+}
+
+.callout(yellow)
+{
+  .callout;
+  background-color: @yellow;
+  border-color: @yellow_2;
+
+  &:hover{background-color: @yellow_3;}
+}
