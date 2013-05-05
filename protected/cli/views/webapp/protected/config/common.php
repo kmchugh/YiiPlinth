@@ -60,6 +60,7 @@ return array(
                     'layout'=>'//layouts/error',
                     'style'=>'/errorPage.less',
                 ),
+                '/site/page'=>array('style'=>'/templateView.less'),
             ),
         ),
         'log'=>array(

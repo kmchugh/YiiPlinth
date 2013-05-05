@@ -1,8 +1,7 @@
 @import "_common.less";
 
-
-//.colourPalette.orange{.paletteEntry(@orange);}
-//.colourPalette.grey{.paletteEntry(@grey);}
+.colourPalette.orange{.paletteEntry(@orange);}
+.colourPalette.grey{.paletteEntry(@grey);}
 
 .forms
 {
@@ -124,59 +123,59 @@
   background : @colour;
   color: contrast(@colour, @text, @white);
 }
-/*
+  /*
 
-.paragraphs .column
-{
-  > h1
+  .paragraphs .column
   {
-    background-color: @orange;
-    padding: .5em .25em;
+    > h1
+    {
+      background-color: @orange;
+      padding: .5em .25em;
+    }
+
+    h2
+    {
+      background-color: @orange;
+      padding: .5em .25em;
+    }
   }
 
-  h2
+  .gridView, .lists
   {
-    background-color: @orange;
-    padding: .5em .25em;
-  }
-}
+    > section
+    {
+      background: @orange;
+    }
 
-.gridView, .lists
-{
-  > section
+    .column
+    {
+      min-height: 3em;
+      line-height: 3em;
+      text-align: center;
+      border-left: 1px solid @black;
+      border-right: 1px solid @black;
+      color: @white;
+      background-color: @orange;
+    }
+
+    .whole{background: @red;}
+    .half{background: @red_4;}
+    .third{background: @red_3;}
+    .quarter{background: @green_3;}
+    .twoThirds{background: @green_4;}
+    .threeQuarters{background: @brown;}
+    .six{background: @brown_4;}
+    .ten{background: @blue_3;}
+  }
+
+  .lists
   {
-    background: @orange;
+    .half
+    {
+      text-align: left;
+      line-height: 1.5em;
+      background-color: @background;
+      color: @text;
+    }
   }
-
-  .column
-  {
-    min-height: 3em;
-    line-height: 3em;
-    text-align: center;
-    border-left: 1px solid @black;
-    border-right: 1px solid @black;
-    color: @white;
-    background-color: @orange;
-  }
-
-  .whole{background: @red;}
-  .half{background: @red_4;}
-  .third{background: @red_3;}
-  .quarter{background: @green_3;}
-  .twoThirds{background: @green_4;}
-  .threeQuarters{background: @brown;}
-  .six{background: @brown_4;}
-  .ten{background: @blue_3;}
-}
-
-.lists
-{
-  .half
-  {
-    text-align: left;
-    line-height: 1.5em;
-    background-color: @background;
-    color: @text;
-  }
-}
-*/
+  */

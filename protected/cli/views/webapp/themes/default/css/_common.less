@@ -5,7 +5,6 @@
 //@import "_buttons.less";
 //@import "_form.less";
 
-
 html
 {
   color: @text;
@@ -13,74 +12,65 @@ html
 
 .page
 {
-  > header
-  {
-
-  }
-
-  > .body
-  {
-
-  }
-
-  > footer
-  {
-
-  }
-}
-
-/*
-.page
-{
   // Rules for default header
   > header
   {
-    color: @grey_3;
     padding-top: 1.5em;
-    padding-bottom: 2em;
+    padding-bottom: 0;
+    border-bottom: 2px solid @orange;
+    margin-bottom: 1em;
 
-    .ajaxLink
+    > section
     {
-      &:hover
-      {
-        #effortless > #background > .rounded(3px, 3px, 0, 0);
-        background: @grey_1;
-        height: 46px;
-        position: relative;
-        margin-bottom: -20px;
-      }
+      padding-top: 0;
+      padding-bottom: 0;
     }
 
     .logo
     {
-      #effortless > #dimension > .size(267px, 53px);  //Image if 49px, but using 53px because of decender on tagline text
       background: transparent url('/images/header_logo.png') no-repeat top left;
       margin-right: 1em;
       display: inline-block;
       vertical-align: bottom;
+
+      > a
+      {
+        padding: 0;
+        display: block;
+
+        img
+        {
+          #effortless > #dimension > .size(128px, 128px);
+          display: block;
+        }
+      }
     }
 
-    .column > label{vertical-align: bottom;}
+    h1
+    {
+      font-size: 4em;
+      padding: .75em 0 .25em 0;
+      margin-bottom: 0;
+      text-align: right;
+    }
 
     nav
     {
       text-align: right;
-      padding-top: 31px;
+      padding-top: 1em;
 
       // Head links are unique
       > a
       {
         font-size: 1.4em;
-        padding: 4px 1.75em 0 1.75em;
+        padding: 4px 0 0 1.75em;
         color: @grey;
 
-        &:hover
-        {
-          color: @grey_3;
-        }
+        &:hover{color: @grey_3;}
       }
     }
   }
+
 
   // Rules for default footer
   > footer
@@ -163,11 +153,10 @@ html
 
   }
 }
-*/
 
-/**
-* Default Links
-**/
+  /**
+  * Default Links
+  **/
 a
 {
   cursor: pointer;
