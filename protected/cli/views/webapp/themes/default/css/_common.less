@@ -2,12 +2,14 @@
 @import "_dimension.less";
 @import "_colour.less";
 @import "_typography.less";
-//@import "_buttons.less";
-//@import "_form.less";
+@import "_buttons.less";
+@import "_form.less";
 
 html
 {
   color: @text;
+
+  > body{border-top: 5px solid @orange;}
 }
 
 .page
@@ -75,88 +77,26 @@ html
   // Rules for default footer
   > footer
   {
-    padding: .75em 0 0 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: @orange;
 
-    .links a
+    > section{margin: 0 auto;}
+
+    // Copyright line at the bottom of the page
+    > .copyright
     {
-      font-size: 1.3em;
-      color: @grey_4;
-
-      &:hover
-      {
-        color: @grey;
-      }
+      width: 100%;
+      background: @grey_1;
+      color: @grey;
     }
-
-    .social
-    {
-      list-style: none;
-      text-align: right;
-
-      > li
-      {
-        display: inline-block;
-        padding: 0;
-        margin: 0;
-
-        a
-        {
-          #effortless > #dimension > .size(25px);
-          margin: 0;
-          padding: 0;
-          vertical-align: bottom;
-          background: transparent url('/images/buttons/button-social-icons.png') no-repeat;
-        }
-
-        &.twitter a
-        {
-          background-position: -80px -10px;
-
-          &:hover{background-position: -80px -45px;}
-        }
-
-        &.facebook a
-        {
-          background-position: -10px -10px;
-
-          &:hover{background-position: -10px -45px;}
-        }
-
-        &.linkedin a
-        {
-          background-position: -45px -10px;
-
-          &:hover{background-position: -45px -45px;}
-        }
-
-        &.ytube a
-        {
-          background-position: -115px -10px;
-
-          &:hover{background-position: -115px -45px;}
-        }
-      }
-    }
-
-  }
-
-  // Copyright line at the bottom of the page
-  > .copyright
-  {
-    background: @grey_1;
-    display: block;
-    font-size: 1.2em;
-    text-align: center;
-    color: @grey_3;
-    padding: 1em 0;
-    margin-top: 1em;
-
   }
 }
 
-  /**
-  * Default Links
-  **/
+/**
+* Default Links
+**/
 a
 {
   cursor: pointer;
@@ -164,7 +104,7 @@ a
   display: inline-block;
   padding: .25em .5em;
   color: @orange;
-  font-weight: normal;
+  font-weight: bold;
 
   &:hover{color: @orange_3;}
 
@@ -194,8 +134,8 @@ a
 
   a
   {
-    color: @black;
+    color: @grey;
 
-    &:hover{color: @grey;};
+    &:hover{color: @grey_3;}
   }
 }

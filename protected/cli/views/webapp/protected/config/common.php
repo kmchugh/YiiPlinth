@@ -61,6 +61,9 @@ return array(
                     'style'=>'/errorPage.less',
                 ),
                 '/site/page'=>array('style'=>'/templateView.less'),
+                '/UserManagement/'=>array(
+                    'layout'=>'//layouts/formPage',
+                    'style'=>'/empty.less',),
             ),
         ),
         'log'=>array(

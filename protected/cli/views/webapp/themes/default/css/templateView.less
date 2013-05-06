@@ -42,7 +42,9 @@
 {
   >h1
   {
-    margin-bottom: 0;
+    margin: 1em 0 .25em 0;
+    padding: .25em .5em;
+    background-color: @grey_1;
   }
 
   >section
@@ -60,6 +62,14 @@
   padding-bottom: 1em;
 
   .headerFont > h1, .defaultFont > h1, .impactFont > h1{margin: .5em 0 0 0;}
+}
+
+.buttons
+{
+  > section > div
+  {
+    padding-bottom: 1em;
+  }
 }
 
 .fontSizes
@@ -123,59 +133,54 @@
   background : @colour;
   color: contrast(@colour, @text, @white);
 }
-  /*
 
-  .paragraphs .column
+.paragraphs .column
+{
+  background-color: @orange_4;
+  padding: .5em .25em;
+}
+
+h2
+{
+  background-color: @orange_3;
+  padding: .5em .25em;
+}
+
+.gridView, .lists
+{
+  > section
   {
-    > h1
-    {
-      background-color: @orange;
-      padding: .5em .25em;
-    }
-
-    h2
-    {
-      background-color: @orange;
-      padding: .5em .25em;
-    }
+    background: @orange;
   }
 
-  .gridView, .lists
+  .column
   {
-    > section
-    {
-      background: @orange;
-    }
-
-    .column
-    {
-      min-height: 3em;
-      line-height: 3em;
-      text-align: center;
-      border-left: 1px solid @black;
-      border-right: 1px solid @black;
-      color: @white;
-      background-color: @orange;
-    }
-
-    .whole{background: @red;}
-    .half{background: @red_4;}
-    .third{background: @red_3;}
-    .quarter{background: @green_3;}
-    .twoThirds{background: @green_4;}
-    .threeQuarters{background: @brown;}
-    .six{background: @brown_4;}
-    .ten{background: @blue_3;}
+    min-height: 3em;
+    line-height: 3em;
+    text-align: center;
+    border-left: 1px solid @black;
+    border-right: 1px solid @black;
+    background-color: @white;
   }
 
-  .lists
+  .whole{background: @orange_4;}
+  .half{background: @orange_3;}
+  .third{background: @orange_2;}
+  .twoThirds{background: @orange_1;}
+  .quarter{background: @orange_1;}
+
+  .threeQuarters{background: @grey_1;}
+  .six{background: @grey_2;}
+  .ten{background: @grey_3;}
+}
+
+.lists
+{
+  .half
   {
-    .half
-    {
-      text-align: left;
-      line-height: 1.5em;
-      background-color: @background;
-      color: @text;
-    }
+    text-align: left;
+    line-height: 1.5em;
+    background-color: @background;
+    color: @text;
   }
-  */
+}

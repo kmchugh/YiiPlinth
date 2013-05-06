@@ -1,517 +1,144 @@
-/**
-* Styling for input and forms
-**/
-
-
-.popupForm(@width: 50%)
-{
-  position: absolute;
-
-  .reset(@width);
-
-  > h1, .note, label{display: none;}
-}
-
   /**
-  * reset rule to ensure unwanted margin and padding is removed
+  * Default styling for all elements
   **/
-.reset(@width : 100%)
-{
-  width: @width;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-}
-
-header nav .ajaxLinkWindow
-{
-  @width: 340px;
-  .popupForm(@width);
-  margin-left: (@width -65px) * -1;
-  padding-top: 22px;
-
-  .content
+  input, select, textarea, keygen
   {
-    .form
-    {
-      > h1{display: none;}
-
-      form
-      {
-        font-size: 1.2em;
-
-        .oauthProviders{.twitter, .facebook{background-position: 3em center;}}
-      }
-    }
-    padding: 5px 10px;
-    #effortless > #background > .rounded(3px, 0, 3px, 3px);
-    background: @grey_1;
-    #effortless > #shadow > .drop(4px, 4px, 3px, 3px, fadeout(@grey, 75));
-  }
-
-  &.login
-  {
-    .content .form .buttons
-    {
-      width: 40%;
-      text-align: left;
-    }
-  }
-}
-
-/**
-* Default styling for all elements
-**/
-input, select, textarea, keygen
-{
-  color: @grey_;
-  #effortless > #background > .rounded(3px);
-  border: none;
-  padding: .5em .5em;
-}
-
-// Force border-box for search input
-input[type="search"]
-{
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-
-
-form .button, form button, form input[type="submit"], form input[type="button"], form input[type="reset"]
-{
-  font-size: 1em;
-}
-
-form
-{
-  .formLayout(red, @grey, @grey_1);
-}
-
-.formLayout(@errorColour :  red, @textColour : @text-darker, @backgroundColour : @background-darkest)
-{
-  background-color: @backgroundColour;
-  padding: .5em;
-
-  h1, .note, label{display: none;}
-
-  span.required{color: @errorColour;}
-
-  > fieldset
-  {
-    color: @text-darker;
-    margin-top: @gutterSize/2;
-    margin-bottom: @gutterSize/2;
-  }
-
-  .links
-  {
-    text-align: center;
-    margin-top: 2em;
-
-    a
-    {
-      padding: .25em @gutterSize/2;
-
-      color: @green;
-      &:hover{color: @green_3;}
-    }
-  }
-
-  .buttons
-  {
-    padding-top: @gutterSize/2;
-    padding-left: @gutterSize/2;
-
-    .button, button
-    {
-      display: block;
-      width: 100%;
-    }
-  }
-
-  .note, .hint
-  {
-    margin-bottom: 1em;
-    margin-top: .5em;
-    font-style: italic;
-    font-size: .8em;
-  }
-
-  .flash-success
-  {
-    background: @yellow_1;
-    padding: .25em .5em;
-    color: @grey_2;
-    font-size: .9em;
-    margin: 3.5em 0 .5em 0;
-    clear: both;
-  }
-
-  .field
-  {
-    padding: .25em @gutterSize/2;
-
-    select, input, textarea, keygen
-    {
-      display: block;
-      width: 100%;
-    }
-
-    a{padding: 0;}
-
-    &.error
-    {
-      > input
-      {
-        background-image: url('/images/icons/error.png');
-        background-repeat: no-repeat;
-        background-position: center right;
-      }
-      .errorMessage
-      {
-        #effortless > #border > .rounded(2px, solid, red);
-        font-weight: bold;
-        background: beige;
-        color: red;
-        padding: .25em .5em;
-        margin: .25em 0 0 0;
-        display: inline-block;
-        text-align: left;
-        font-size: .8em;
-        background: none;
-        border: none;
-        font-weight: normal;
-      }
-    }
-
-    .note
-    {
-      text-align: right;
-      display: block;
-    }
-  }
-}
-
-// Basic oauth styling
-
-.oauth
-{
-  border-top: 1px solid @grey_2;
-  margin-top: 2.5em;
-  padding-left: 0;
-  padding-right: 0;
-
-  label
-  {
-    margin: -.6em auto .5em auto;
-    width: 3em;
-    background: @grey_1;
-    display: block!important;
-    text-align: center;
-    color: @grey_2;
-  }
-
-  .oauthProviders
-  {
-    padding: 1em 0 0 0;
-
-    > a
-    {
-      .secondaryFont;
-      display: block;
-      margin: .25em 0;
-      text-align: center;
-      text-decoration: none;
-      padding: 0;
-      line-height: 42px;
-      color: @white;
-      #effortless > #background > .rounded(3px);
-
-      &.twitter
-      {
-        background: @blue-twitter url('/images/social_login/twitter-icon.png') no-repeat 2em center;
-        border: 1px solid darken(@blue-twitter, 10);
-
-        &:hover{border: 1px solid lighten(@blue-twitter, 40);}
-      }
-
-      &.facebook
-      {
-        background: @blue-facebook url('/images/social_login/fb-icon.png') no-repeat 2em center;
-
-        border: 1px solid darken(@blue-facebook, 10);
-
-        &:hover{border: 1px solid lighten(@blue-facebook, 40);}
-      }
-    }
-  }
-}
-
-.form.login
-{
-  .linkField
-  {
-    float: right;
-    display: inline;
-    text-align: right;
-    padding-top: 1em;
-    font-size: .9em;
-    padding-left: 0;
-
-    a
-    {
-      padding-right: 0;
-    }
-  }
-
-  .buttons
-  {
-    margin-top: 0;
-    float: left;
-  }
-}
-
-.captcha
-{
-  margin-top: .25em;
-
-  a{text-decoration: none;}
-
-  background: @white;
-  #effortless > #background > .rounded(3px);
-  border: none;
-  padding: .25em .5em .5em .5em!important;
-
-  .hint
-  {
-    .reset;
-    text-align: left;
-    font-style: normal;
-    color: @grey_2;
-  }
-
-  input
-  {
-    width: 94%!important;
-    border: 1px solid @grey_2;
-  }
-
-  .image
-  {
-    .reset;
-    text-align: left;
-
-    img
-    {
-      width: 50%;
-      display: inline-block;
-      border: none;
-      margin: 1em 0 0 25%;
-    }
-
-    a
-    {
-      display: inline-block;
-      background: transparent url('images/icons/refresh.png') no-repeat center;
-      overflow: hidden;
-      #effortless > #dimension > .size(20px);
-      padding-top: 1em;
-      vertical-align: top;
-      float: right;
-      margin: 0;
-      line-height: 3em;
-    }
-  }
-}
-
-
-
-/*
-
-
-.ajaxLinkWindow
-{
-  @loginWidth: 320px;
-
-  &.login
-  {
-    .standAloneFormContainer();
-  }
-
-  &.register
-  {
-    .oauth, .links{display: none;}
-  }
-
-  .login
-  {
-    .singleForm(@loginWidth);
-  }
-}
-
-
-
-
-.oauthProviders
-{
-  #effortless > #background > .rounded(0, 0, @corner-radius, @corner-radius);
-
-  a
-  {
-    color: @background;
-    margin: @gutterSize/2;
-    #effortless > #dimension > .size(40px);
-    padding-top: 40px;
-    padding-bottom: 0px;
-    overflow: hidden;
-    border: 1px solid black;
-
-    &:hover
-    {
-      border: 1px solid white;
-    }
-  }
-
-  .twitter
-  {
-    color: @white;
-    background: @blue-twitter url('/images/social_login/twitter-icon.png') no-repeat top left;
-  }
-
-  .facebook
-  {
-    color: @white;
-    background: @blue-facebook url('/images/social_login/fb-icon.png') no-repeat top left;
-  }
-}
-
-
-
-
-form
-{
-  .errorMessage
-  {
-    text-align: left;
-    font-size: .8em;
-    background: none;
+    color: @black;
+    #effortless > #background > .rounded(3px);
     border: none;
-    font-weight: normal;
-    color: red;
+    padding: .5em .5em;
   }
 
-}
-
-.standAloneFormContainer
-{
-  position: absolute;
-
-  padding-top: 22px;
-
-  .content
+  // Force border-box for search input
+  input[type="search"]
   {
-    margin-left: (@loginWidth -45px) * -1;
-    width: @loginWidth + 20px;
-    padding: 5px 10px;
-    #effortless > #background > .rounded(3px, 0, 3px, 3px);
-    background: @grey_1;
-    #effortless > #shadow > .drop(4px, 4px, 3px, 3px, fadeout(@grey, 75));
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
   }
-}
 
-.singleForm(@formWidth: 320px)
-{
-  .reset(@formWidth);
 
-  > *{.reset;}
+    /**
+  * Styling for input and forms
+  **/
 
-  > h1, .note, label{display: none;}
+  form .button, form button, form input[type="submit"], form input[type="button"], form input[type="reset"]
+  {
+    font-size: 1em;
+  }
 
   form
   {
-    background: transparent;
+    .formLayout(red, @grey, @grey_2);
+  }
 
-    button, .button
+
+
+  .formLayout(@errorColour :  red, @textColour : @text-darker, @backgroundColour : @background-darkest)
+  {
+    #effortless > #background > .rounded(@backgroundColour);
+    padding: .5em;
+
+    span.required{color: @errorColour;}
+
+    > fieldset
     {
-      #effortless > #shadow > .hard(fadeout(@grey, 75));
+      color: @text-darker;
+      margin-top: @gutterSize/2;
+      margin-bottom: @gutterSize/2;
     }
 
-    .captcha
+    .links
     {
-      margin-top: .25em;
+      text-align: center;
+      margin-top: 2em;
 
-      a{text-decoration: none;}
-
-      background: @white;
-      #effortless > #background > .rounded(3px);
-      border: none;
-      padding: .25em .5em .5em .5em!important;
-
-      .hint
+      a
       {
-        .reset;
-        text-align: left;
-        font-style: normal;
+        padding: .25em @gutterSize/2;
+        color: @green;
+
+        &:hover{color: @green_3;}
       }
+    }
 
-      input
+    .buttons
+    {
+      padding-top: @gutterSize/2;
+      padding-right: @gutterSize/2;
+      text-align: right;
+
+      button, .button
       {
-        width: 94%!important;
-        border: 1px solid @grey_2;
-      }
+        .buttonGrey;
 
-      .image
-      {
-        .reset;
-        text-align: left;
-
-        img
+        &[type="submit"]
         {
-          width: 50%;
-          display: inline-block;
-          border: none;
-          margin: 1em 0 0 25%;
-        }
-
-        a
-        {
-          display: inline-block;
-          background: transparent url('images/icons/refresh.png') no-repeat center;
-          overflow: hidden;
-          #effortless > #dimension > .size(20px);
-          padding-top: 1em;
-          vertical-align: top;
-          float: right;
-          margin: 0;
-          line-height: 3em;
+          .buttonOrange;
         }
       }
     }
 
-    input
+    .note, .hint
     {
-      #effortless > .placeholder(@grey);
+      margin-bottom: 1em;
+      margin-top: .5em;
+      font-style: italic;
+      font-size: .8em;
     }
-  }
 
-
-  .hint
-  {
-    color: @grey_2;
-    line-height: 1.1em;
-    font-size: .8em;
-  }
-
-  .fields
-  {
-    .field, .field > *{.reset(@formWidth);}
+    .flash-success
+    {
+      background: @orange_1;
+      padding: .25em .5em;
+      color: @grey_2;
+      font-size: .9em;
+      margin: 3.5em 0 .5em 0;
+      clear: both;
+    }
 
     .field
     {
+      padding: .25em @gutterSize/2 .5em @gutterSize/2;
+
+      > label
+      {
+        display: block;
+        font-weight: bold;
+      }
+
+      select, input, textarea, keygen
+      {
+        display: block;
+        width: 100%;
+      }
+
+      .radioItem, .checkItem
+      {
+        padding: 0 2em 0 0;
+
+        > input
+        {
+          display: inline-block;
+          float: left;
+          width: auto;
+        }
+
+        > label{margin-left: 1em;}
+      }
+
+      a
+      {
+        padding: 0;
+        color: @orange_1;
+        font-weight: bold;
+
+        &:hover
+        {
+          color: @orange;
+        }
+      }
+
       &.error
       {
         > input
@@ -520,148 +147,134 @@ form
           background-repeat: no-repeat;
           background-position: center right;
         }
+        .errorMessage
+        {
+          #effortless > #border > .rounded(2px, solid, red);
+          font-weight: bold;
+          background: @grey_1;
+          color: red;
+          padding: .25em .5em;
+          margin: .25em 0 0 0;
+          display: inline-block;
+          text-align: left;
+          font-size: .8em;
+          background: none;
+          border: none;
+          font-weight: normal;
+        }
       }
 
-      > input {padding: .5em .5em;}
+      .note
+      {
+        text-align: right;
+        display: block;
+      }
 
-      > label {display: none;}
+      &:hover
+      {
+        background-color: @grey_1;
+      }
     }
 
-    .tandc
+    .imageUpload
     {
-      .cf;
-
-      input
+      > *
       {
-        width: 20px;
-        float: left;
-        margin-top: .25em;
+        display: inline-block;
+        vertical-align: top;
       }
 
-      label
+      .preview
       {
-        width: @formWidth - 25px;
-        float: right;
-        display: inline-block;
-        padding-right: 25px;
+        width: 20%;
+        float: left;
 
-        a
+        img
         {
-          padding: 0 .25em;
-          text-decoration: none;
-          font-weight: normal;
+          min-height: 2em;
+          float: left;
+          width: 100%;
+          #effortless > #background > .rounded(3px);
+        }
+      }
+
+      .input
+      {
+        width: 79%;
+        margin: 0;
+
+        .fakeFile
+        {
+          width: 100%;
+
+          > *
+          {
+            display: inline-block;
+            vertical-align: top;
+          }
+
+          input{width: 74%;}
+
+          .button
+          {
+            padding: .5em .5em .2em .5em;
+            float:right;
+            width: 24%;
+            .buttonOrange;
+            text-align: center;
+          }
+        }
+
+        &:hover .button{background-color: @orange_3;}
+      }
+    }
+  }
+
+  header .ajaxLinkWindow
+  {
+    @width: 320px;
+    .popupForm(@width);
+    margin-left: (@width *-.75);
+    text-align: left;
+
+    .content
+    {
+      .form
+      {
+        font-size: .8em;
+        > h1, fieldset > .note{display: none;}
+
+        form
+        {
+          background-color: @grey_1;
+
+          a
+          {
+            color: @orange;
+            &:hover{color: @orange_3;}
+          }
         }
       }
     }
   }
 
-  .buttons
+
+  .popupForm(@width: 50%)
   {
-    .reset(@formWidth);
-    margin-top: .25em;
-    padding-top: .25em;
+    position: absolute;
 
-    > *{.reset(@formWidth);}
-
-    button
-    {
-      background: @green;
-      padding: .6em;
-
-
-      &:hover{background: @green_3;}
-    }
+    .reset(@width);
   }
 
-  .links
+    /**
+    * reset rule to ensure unwanted margin and padding is removed
+    **/
+  .reset(@width : 100%)
   {
-    clear: both;
-    .reset(@formWidth);
-    margin-top: 1.75em;
-
-    > a
-    {
-      color: @green;
-      text-align: center;
-      .reset(@formWidth);
-      text-decoration: none;
-      font-weight:normal;
-
-      &:hover{color: @green_3;}
-    }
+    width: @width;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
-
-  .oauthProviders
-  {
-    .reset(@formWidth);
-
-    > a
-    {
-      .secondaryFont();
-      margin: .25em 0;
-      .reset(@formWidth);
-      text-align: center;
-      text-decoration: none;
-      padding: 0;
-      line-height: 42px;
-      font-weight: normal;
-      font-size: .9em;
-      background-position: 3em center;
-      #effortless > #background > .rounded(3px);
-
-      &.twitter
-      {
-        border: 1px solid darken(@blue-twitter, 10);
-
-        &:hover{border: 1px solid lighten(@blue-twitter, 40);}
-      }
-
-      &.facebook
-      {
-        border: 1px solid darken(@blue-facebook, 10);
-
-        &:hover{border: 1px solid lighten(@blue-facebook, 40);}
-      }
-    }
-  }
-
-  .form form .flash-success
-  {
-    clear: both;
-    text-align: center;
-    color: @green;
-    border-color: @green;
-    background: @green_1;
-  }
-
-  &.login
-  {
-    @buttonWidth : 100px;
-
-    .fields > .field > a
-    {
-      width: @formWidth - @buttonWidth;
-      float: right;
-      text-align: right;
-      padding: .75em 0 0 0;
-      text-decoration: none;
-      font-weight: normal;
-      font-size: .9em;
-    }
-
-    .buttons
-    {
-      margin-top: -40px;
-      .cf;
-
-      button
-      {
-        width: @buttonWidth;
-        float: left;
-      }
-    }
-  }
-}
-
-*/
 
