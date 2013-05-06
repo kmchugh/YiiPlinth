@@ -1,108 +1,77 @@
-/**
-* Default button styling for this theme
-**/
-
-// Make sure text is antialased
-input, .button, button{#effortless > #text > .antialiased;}
-
-// Order is important, reverse buttons must come before buttons
-.reverse button, .reverse .button
-{
-  background-color: @white;
-  color: @blue;
-  &:hover
-  {
-    background-color: @blue_2;
-  }
-}
-
   /**
-  * Default button styles
-  **/
-button, .button, input[type="button"], input[type="reset"], input[type="submit"]
-{
-  #effortless > #background > .rounded(3px);
-  border: none;
-  color: @white;
-  padding: .5em 1em;
-  font-weight: 100;
-  font-size: 1.6em;
-  background-color: @blue;
-  vertical-align: bottom;
-  // Text Shadow
-  #effortless > #shadow > .hard(fadeout(@text-colour, 75), 1px);
+    * Default button styling for this theme
+    **/
 
-  &:hover{background-color: @blue_2;}
+  // Make sure text is antialased
+  input, .button, button{#effortless > #text > .antialiased;}
 
-  &.yellow
+  // Order is important, reverse buttons must come before buttons
+  .reverse button, .reverse .button
   {
-    background-color: @yellow;
-    color: @white;
-    &:hover{background-color: @yellow_3;}
+    background-color: @grey_2;
+    color: @grey;
+    #effortless > #shadow > .letterpress(@grey_1, -1px);
+    &:hover
+    {
+      background-color: @grey_1;
+      color: @grey_3;
+    }
+
+    &.orange
+    {
+      background-color: @orange_4;
+    }
   }
 
-  &.red
+    /**
+    * Default button styles
+    **/
+  button, .button, input[type="button"], input[type="reset"], input[type="submit"]
   {
-    background-color: @red;
+    #effortless > #background > .rounded(3px);
+    border: none;
     color: @white;
-    &:hover{background-color: @red_3;}
+    padding: .75em 1em .5em 1em;
+    font-weight: 100;
+    font-size: 1.6em;
+    background-color: @grey_1;
+    vertical-align: bottom;
+    // Text Shadow
+    #effortless > #shadow > .letterpress(@grey_4, -1px);
+    border: 1px solid @grey_1;
+
+    &:hover
+    {
+      background-color: @grey_2;
+      color: @grey_1;
+    }
+
+    &.grey
+    {
+      background-color: @grey_3;
+      &:hover{background-color: @grey_1;}
+    }
+
+    &.orange
+    {
+      background-color: @orange;
+      &:hover{background-color: @orange_3;}
+      border: 1px solid @orange_2;
+    }
   }
 
-  &.green, &[type="submit"]
+  .buttonOrange
   {
-    background-color: @green;
+    .button;
+    background-color: @orange;
     color: @white;
-    &:hover{background-color: @green_3;}
+    &:hover{background-color: @orange_3;}
   }
-}
 
-.buttonGreen
-{
-  .button;
-  background-color: @green;
-  color: @white;
-  &:hover{background-color: @green_3;}
-}
-
-a.button.callout
-{
-  padding: .7em .75em;
-}
-
-.callout
-{
-  color: @white;
-  #effortless > #border > .rounded(1px, solid, fadeout(@white, 50), 6px);
-  #effortless > #shadow > .glow(fadeout(@black, 20), 35px);
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  font-size: 2.4em;
-
-}
-
-.callout(blue)
-{
-  .callout;
-  background-color: @blue;
-  border-color: @blue_2;
-
-  &:hover{background-color: @blue_3;}
-}
-
-.callout(green)
-{
-  .callout;
-  background-color: @green;
-  border-color: @green_2;
-
-  &:hover{background-color: @green_3;}
-}
-
-.callout(yellow)
-{
-  .callout;
-  background-color: @yellow;
-  border-color: @yellow_2;
-
-  &:hover{background-color: @yellow_3;}
-}
+  .buttonGrey
+  {
+    .button;
+    background-color: @grey;
+    color: @white;
+    &:hover{background-color: @grey_3;}
+  }

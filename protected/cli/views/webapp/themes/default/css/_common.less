@@ -2,172 +2,102 @@
 @import "_dimension.less";
 @import "_colour.less";
 @import "_typography.less";
-//@import "_buttons.less";
-//@import "_form.less";
-
+@import "_buttons.less";
+@import "_form.less";
 
 html
 {
   color: @text;
+
+  > body{border-top: 5px solid @orange;}
 }
 
-.page
-{
-  > header
-  {
-
-  }
-
-  > .body
-  {
-
-  }
-
-  > footer
-  {
-
-  }
-}
-
-/*
 .page
 {
   // Rules for default header
   > header
   {
-    color: @grey_3;
     padding-top: 1.5em;
-    padding-bottom: 2em;
+    padding-bottom: 0;
+    border-bottom: 2px solid @orange;
+    margin-bottom: 1em;
 
-    .ajaxLink
+    > section
     {
-      &:hover
-      {
-        #effortless > #background > .rounded(3px, 3px, 0, 0);
-        background: @grey_1;
-        height: 46px;
-        position: relative;
-        margin-bottom: -20px;
-      }
+      padding-top: 0;
+      padding-bottom: 0;
     }
 
     .logo
     {
-      #effortless > #dimension > .size(267px, 53px);  //Image if 49px, but using 53px because of decender on tagline text
       background: transparent url('/images/header_logo.png') no-repeat top left;
       margin-right: 1em;
       display: inline-block;
       vertical-align: bottom;
+
+      > a
+      {
+        padding: 0;
+        display: block;
+
+        img
+        {
+          #effortless > #dimension > .size(128px, 128px);
+          display: block;
+        }
+      }
     }
 
-    .column > label{vertical-align: bottom;}
+    h1
+    {
+      font-size: 4em;
+      padding: .75em 0 .25em 0;
+      margin-bottom: 0;
+      text-align: right;
+    }
 
     nav
     {
       text-align: right;
-      padding-top: 31px;
+      padding-top: 1em;
 
       // Head links are unique
       > a
       {
         font-size: 1.4em;
-        padding: 4px 1.75em 0 1.75em;
+        padding: 4px 0 0 1.75em;
         color: @grey;
 
-        &:hover
-        {
-          color: @grey_3;
-        }
+        &:hover{color: @grey_3;}
       }
     }
   }
+
 
   // Rules for default footer
   > footer
   {
-    padding: .75em 0 0 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: @orange;
 
-    .links a
+    > section{margin: 0 auto;}
+
+    // Copyright line at the bottom of the page
+    > .copyright
     {
-      font-size: 1.3em;
-      color: @grey_4;
-
-      &:hover
-      {
-        color: @grey;
-      }
+      width: 100%;
+      background: @grey_1;
+      color: @grey;
     }
-
-    .social
-    {
-      list-style: none;
-      text-align: right;
-
-      > li
-      {
-        display: inline-block;
-        padding: 0;
-        margin: 0;
-
-        a
-        {
-          #effortless > #dimension > .size(25px);
-          margin: 0;
-          padding: 0;
-          vertical-align: bottom;
-          background: transparent url('/images/buttons/button-social-icons.png') no-repeat;
-        }
-
-        &.twitter a
-        {
-          background-position: -80px -10px;
-
-          &:hover{background-position: -80px -45px;}
-        }
-
-        &.facebook a
-        {
-          background-position: -10px -10px;
-
-          &:hover{background-position: -10px -45px;}
-        }
-
-        &.linkedin a
-        {
-          background-position: -45px -10px;
-
-          &:hover{background-position: -45px -45px;}
-        }
-
-        &.ytube a
-        {
-          background-position: -115px -10px;
-
-          &:hover{background-position: -115px -45px;}
-        }
-      }
-    }
-
-  }
-
-  // Copyright line at the bottom of the page
-  > .copyright
-  {
-    background: @grey_1;
-    display: block;
-    font-size: 1.2em;
-    text-align: center;
-    color: @grey_3;
-    padding: 1em 0;
-    margin-top: 1em;
-
   }
 }
-*/
 
-/**
-* Default Links
-**/
+
+  /**
+  * Default Links
+  **/
 a
 {
   cursor: pointer;
@@ -175,7 +105,7 @@ a
   display: inline-block;
   padding: .25em .5em;
   color: @orange;
-  font-weight: normal;
+  font-weight: bold;
 
   &:hover{color: @orange_3;}
 
@@ -205,8 +135,8 @@ a
 
   a
   {
-    color: @black;
+    color: @grey;
 
-    &:hover{color: @grey;};
+    &:hover{color: @grey_3;}
   }
 }

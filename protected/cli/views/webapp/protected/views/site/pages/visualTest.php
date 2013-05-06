@@ -387,25 +387,17 @@
             <h1>Buttons</h1>
             <button>Default</button>
 
-            <button class="red">.red</button>
+            <button class="orange">.orange</button>
 
-            <button class="brown">.brown</button>
-
-            <button class="blue">.blue</button>
-
-            <button class="green">.green</button>
+            <button class="grey">.grey</button>
 
             <h1>Anchor Buttons</h1>
 
             <a class="button">Default</a>
 
-            <a class="button red">.red</a>
+            <a class="button orange">.orange</a>
 
-            <a class="button brown">.brown</a>
-
-            <a class="button blue">.blue</a>
-
-            <a class="button green">.green</a>
+            <a class="button grey">.grey</a>
 
         </div>
 
@@ -413,25 +405,18 @@
             <h1>.reverse Buttons</h1>
             <button>Default</button>
 
-            <button class="red">.red</button>
+            <button class="orange">.orange</button>
 
-            <button class="brown">.brown</button>
-
-            <button class="blue">.blue</button>
-
-            <button class="green">.green</button>
+            <button class="grey">.grey</button>
 
             <h1>Anchor Buttons</h1>
 
             <a class="button">Default</a>
 
-            <a class="button red">.red</a>
+            <a class="button orange">.orange</a>
 
-            <a class="button brown">.brown</a>
+            <a class="button grey">.grey</a>
 
-            <a class="button blue">.blue</a>
-
-            <a class="button green">.green</a>
         </div>
     </section>
 </section>
