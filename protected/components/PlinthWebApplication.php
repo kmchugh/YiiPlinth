@@ -74,6 +74,7 @@ class PlinthWebApplication extends CWebApplication
         }
         $tcRoute.='/';
         $lcControllerID='';
+
         while(($lnPos=strpos($tcRoute,'/'))!==false)
         {
             $lcID=!$this->getUrlManager()->caseSensitive ?

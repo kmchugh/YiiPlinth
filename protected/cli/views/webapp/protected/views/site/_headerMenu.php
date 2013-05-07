@@ -14,18 +14,26 @@ echo PlinthHTML::link(Utilities::getString('Contact Us'), '/site/contact', null)
 <?php
 if (Yii::app()->user->isGuest)
 {
-    echo PlinthHTML::link(
-        Utilities::getString('Sign in'), '/login',
-        array(
-            'dromos-module'=>'ajaxlink/dromos.ajaxlink',
-            'dromos-config'=>'loginConfig',
-        ));
-    echo PlinthHTML::link(
-        Utilities::getString('Register'), '/register',
-        array(
-            'dromos-module'=>'ajaxlink/dromos.ajaxlink',
-            'dromos-config'=>'loginConfig',
-        ));
+    if (!isset($tlLinkWindow) || $tlLinkWindow !== false)
+    {
+        echo PlinthHTML::link(
+            Utilities::getString('Sign in'), '/login',
+            array(
+                'dromos-module'=>'ajaxlink/dromos.ajaxlink',
+                'dromos-config'=>'loginConfig',
+            ));
+        echo PlinthHTML::link(
+            Utilities::getString('Register'), '/register',
+            array(
+                'dromos-module'=>'ajaxlink/dromos.ajaxlink',
+                'dromos-config'=>'loginConfig',
+            ));
+    }
+    else
+    {
+        echo PlinthHTML::link(Utilities::getString('Sign in'), 'Sign in', null);
+        echo PlinthHTML::link(Utilities::getString('Register'), 'Register', null);
+    }
 }
 else
 {

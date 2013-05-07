@@ -1,3 +1,61 @@
 @import "_common.less";
 
+.page .body > section
+{
+  background-color: @grey_1;
+
+  .column
+  {
+    padding: 1em 2em;
+
+    > ul
+    {
+      list-style: none;
+      text-align: center;
+
+      > li a
+      {
+        display: block;
+        &:hover{background-color: @orange_1;}
+      }
+    }
+  }
+
+  a > h1{color: @orange;}
+
+  > header
+  {
+    padding-top: @gutterSize;
+    padding-bottom: @gutterSize;
+    background-color: @grey_2;
+
+    .column
+    {
+      background: @grey_1;
+      #effortless > #background > .rounded(3px);
+      border: 1px solid @grey_2;
+      min-height: 32em;
+
+    }
+
+    .nav
+    {
+      .reverse;
+      border: none;
+
+    }
+  }
+
+  &.main
+  {
+    padding-top: 2em;
+  }
+
+  > footer
+  {
+    background-color: green;
+  }
+
+}
+
 

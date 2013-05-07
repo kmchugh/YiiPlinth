@@ -1,6 +1,6 @@
 <?php
 /**
-* This is the default configuration for the UserManagement module
+* This is the default configuration for the LessCSS module
 */
 return array(
     'components'=>array(

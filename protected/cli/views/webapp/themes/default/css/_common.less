@@ -8,8 +8,14 @@
 html
 {
   color: @text;
+  height: 100%;
+  background-color: @grey_1;
 
-  > body{border-top: 5px solid @orange;}
+  > body
+  {
+    background-color: @background;
+    border-top: 5px solid @orange;
+  }
 }
 
 .page
@@ -71,6 +77,11 @@ html
         &:hover{color: @grey_3;}
       }
     }
+  }
+
+  > section.body
+  {
+    min-height: 300px;
   }
 
 
@@ -138,4 +149,14 @@ a
 
     &:hover{color: @grey_3;}
   }
+}
+
+code
+{
+  background-color: white;
+  display: block;
+  padding: .75em 1em;
+  margin: .5em 0;
+  color: @grey;
+  font-size: 1.4em;
 }
