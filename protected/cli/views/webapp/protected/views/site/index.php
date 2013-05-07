@@ -134,7 +134,7 @@
             </p>
             <p>
                 The .less engine currently does not detect dependencies, this means that when you modify an include file you
-                must also modify the main file, or you can remove the cached version of the files by browsing to <a href="<?php echo Yii::app()->createUrl('/LessCss/default/clearCache'); ?>">Clear CSS Cache</a> (Keep this link handy)
+                must also modify the main file, or you can remove the cached version of the files by browsing to <a href="<?php echo Yii::app()->createUrl('/LessCSS/default/clearCache'); ?>">Clear CSS Cache</a> (Keep this link handy)
             </p>
         </div>
     </div>
