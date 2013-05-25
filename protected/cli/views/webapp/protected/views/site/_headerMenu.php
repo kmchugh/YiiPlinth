@@ -31,8 +31,8 @@ if (Yii::app()->user->isGuest)
     }
     else
     {
-        echo PlinthHTML::link(Utilities::getString('Sign in'), 'Sign in', null);
-        echo PlinthHTML::link(Utilities::getString('Register'), 'Register', null);
+        echo PlinthHTML::link(Utilities::getString('Sign in'), '/login', null);
+        echo PlinthHTML::link(Utilities::getString('Register'), '/register', null);
     }
 }
 else
