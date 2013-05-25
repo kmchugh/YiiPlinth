@@ -99,7 +99,7 @@
 
         <p>
             Open your common.php configuration file.  It will be found at:<br/>
-            <small><strong><?php echo Yii::getPathOfAlias('application.config.common.php'); ?></strong></small><br/><br/>
+            <small><strong><?php echo Yii::getPathOfAlias('application.config').PATH_SEPARATOR.'common.php'; ?></strong></small><br/><br/>
 
             Then find the components section and add the following (replacing <strong>app-email@mysite.com</strong> and <strong>mypassword</strong> with appropriate content):
 
