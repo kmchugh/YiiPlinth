@@ -60,6 +60,10 @@ return array(
                     'layout'=>'//layouts/error',
                     'style'=>'/errorPage.less',
                 ),
+                '/Contact/'=>array(
+                    'layout'=>'//layouts/formPage',
+                    'style'=>'/formPage.less',
+                ),
                 '/site/page'=>array('style'=>'/templateView.less'),
                 '/UserManagement/'=>array(
                     'layout'=>'//layouts/formPage',

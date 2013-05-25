@@ -14,7 +14,7 @@ class PlinthHTML extends CHtml
 	 */
 	public static function link($tcText,$tcURL='#',$taHTMLOptions=array())
 	{
-		if (Utilities::isCurrentURL($tcURL))
+        if (Utilities::isCurrentURL($tcURL))
 		{
 			$taHTMLOptions['class'] = isset($taHTMLOptions['class']) ? $taHTMLOptions['class'].' active' : 'active';
 		}
