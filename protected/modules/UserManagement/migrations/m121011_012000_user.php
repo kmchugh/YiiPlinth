@@ -11,7 +11,7 @@ class m121011_012000_user extends CDbMigration
 
 	public function safeDown()
 	{
-		$this->addColumn('{{User}}', 'Anonymous');
+		$this->addColumn('{{User}}', 'Anonymous', 'boolean');
 
 		$this->update('{{User}}', 
 			array(

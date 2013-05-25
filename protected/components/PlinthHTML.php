@@ -93,7 +93,7 @@ class PlinthHTML extends CHtml
 		// Add the colour palette and colour to the options
 		$taHTMLOptions['class'] = "colourPalette $tcColourName".(isset($taHTMLOptions['class']) ? ' '.$taHTMLOptions['class'] : '');
 
-		$lcContent = '<span class="lighten">@'.$tcColourName.'_4</span><span class="lighter">@'.$tcColourName.'_3</span><span class="lightest">@'.$tcColourName.'_2</span><span class="white">@'.$tcColourName.'_1</span><span class="normal">@'.$tcColourName.' - #'.$tcColour.'</span>';
+		$lcContent = '<span class="lighten">@'.$tcColourName.'_4</span><span class="lighter">@'.$tcColourName.'_3</span><span class="lightest">@'.$tcColourName.'_2</span><span class="white">@'.$tcColourName.'_1</span><span class="normal">@'.$tcColourName.' - #'.$tcColour.'</span><span class="darken">@'.$tcColourName.'_6</span><span class="darker">@'.$tcColourName.'_5</span>';
 
 		return self::tag('div', $taHTMLOptions, $lcContent);
 	}
