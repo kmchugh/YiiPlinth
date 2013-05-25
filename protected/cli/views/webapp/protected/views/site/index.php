@@ -11,10 +11,10 @@
                 <li><a href="#updateDB">Update the database</a></li>
                 <li><a href="#emailSupport">Set up email support</a></li>
                 <li><a href="#automationSupport">Start up automation</a></li>
-                <li><a href="#register">Register an account</a></li>
                 <li><a href="#stylePage">Check out the style</a></li>
                 <li><a href="#oauthSupport">Turn on OAuth (optional)</a></li>
                 <li><a href="#errorSupport">Customise errors (optional)</a></li>
+                <li><a href="#register">Register an account</a></li>
             </ul>
         </div>
     </header>
@@ -99,7 +99,7 @@
 
         <p>
             Open your common.php configuration file.  It will be found at:<br/>
-            <small><strong><?php echo Yii::getPathOfAlias('application.config').PATH_SEPARATOR.'common.php'; ?></strong></small><br/><br/>
+            <small><strong><?php echo Yii::getPathOfAlias('application.config.common.php'); ?></strong></small><br/><br/>
 
             Then find the components section and add the following (replacing <strong>app-email@mysite.com</strong> and <strong>mypassword</strong> with appropriate content):
 
@@ -244,18 +244,51 @@
 
 <div>
     <div class="column twoThirds">
-        <a id="register"><h1>Register an account</h1></a>
-        <p>Finally get yourself registered for your own app.  Be your first user.
-            Click <a href="<?php echo Yii::app()->createUrl('/register/'); ?>">this</a> link or use the menu items in the header or footer of the page.
+        <a id="errorSupport"><h1>Customise errors</h1></a>
+        <p>Customise the errors that your users see.</p>
+        <p>
+            Any error that occurs will direct the user to the ErrorController.  This controller
+            will look for the appropriate error view by checking for the appropriate views.
+
+            The views will be in the folder:
+             <pre><code>
+                     // Default Views
+                     {Project Folder}/protected/views/error/
+
+                     // Theme specific
+                     {Project Folder}/themes/{Theme Name}/error/
+                 </code></pre>
+        </p>
+        <p>
+            The Controller will first attempt to match the error with a view.  For example if the error was 404 - Not Found, then the
+            Controller will look to render a file called error_404.php.  If error_404 does not exist then the Controller will look to render
+            the error type view.  Using the same 404, the Controller would look for a view file called error_4__.php.  Finally if that file
+            also did not exist, then the Controller would attempt to render the generic error file, error.php
         </p>
     </div>
 
     <div class="column third reverse">
         <h1>Resources</h1>
         <ul>
+            <li><a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">HTTP Status Codes</a></li>
+        </ul>
+    </div>
+</div>
+
+<div>
+    <div class="column third reverse">
+        <h1>Resources</h1>
+        <ul>
             <li><a href="<?php echo Yii::app()->createUrl('/register/'); ?>">Register</a></li>
         </ul>
     </div>
+    <div class="column twoThirds">
+        <a id="register"><h1>Register an account</h1></a>
+        <p>Finally get yourself registered for your own app.  Be your first user.
+            Click <a href="<?php echo Yii::app()->createUrl('/register/'); ?>">this</a> link or use the menu items in the header or footer of the page.
+        </p>
+    </div>
+
 </div>
 
 </section>
