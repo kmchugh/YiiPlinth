@@ -22,6 +22,8 @@ class PlinthMySQLSchema extends CMysqlSchema
         'datetime_null' => 'bigint(20) unsigned NULL',
         'decimal' => 'decimal',
         'description'=>'varchar(500) NULL',
+        'double'=>'DOUBLE PRECISION NOT NULL',
+        'double_nuull'=>'DOUBLE PRECISION NULL',
         'guid'=> 'varchar(40) NOT NULL',
         'guid_null'=>'varchar(40) NULL',
         'float' => 'float NOT NULL',
