@@ -16,7 +16,7 @@ class GoogleAnalytics
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', '".$this->key."', '".Yii::app()->request->serverName."');
-  ga('send', 'pageview');" ,CClientScript::POS_END);
+  ga('send', 'pageview');" ,CClientScript::POS_HEAD);
 
 
 
