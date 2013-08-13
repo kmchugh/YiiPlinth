@@ -35,7 +35,7 @@ class m131213_023019_group extends CDbMigration
 	public function safeDown()
 	{
 		
-		$this->dropTable('{{GroupTypeID}}');
+		$this->dropTable('{{GroupType}}');
 		$this->dropColumn('{{Group}}','ProfileImageURI');
 		$this->dropColumn('{{Group}}','GroupURL');
 		$this->dropColumn('{{Group}}','GroupTypeID');
