@@ -14,7 +14,7 @@ class SlugBehaviour
      */
     public function beforeValidate($toEvent)
     {
-        $this->getOwner()->{$this->slugColumn} = md5($this->generateSlug());
+        $this->getOwner()->{$this->slugColumn} = $this->generateSlug();
     }
 
     /**
@@ -41,9 +41,14 @@ class SlugBehaviour
                     $laValues[] = $this->getOwner()->{$loColumn};
                 }
             }
-            return trim(preg_replace('@[\s!<>,^{}:;|`_\?=\\\+\*/%&#]+@', '-', is_array($laValues) ? implode('-', $laValues) : $laValues));
+            return $this->slugFromValue(is_array($laValues) ? implode('-', $laValues) : $laValues);
         }
         return '';
+    }
+
+    public function slugFromValue($tcValue)
+    {
+        return trim(preg_replace('@[\s!<>,^{}:;|`_\?=\\\+\*/%&#]+@', '-', strtolower($tcValue)));
     }
 }
 

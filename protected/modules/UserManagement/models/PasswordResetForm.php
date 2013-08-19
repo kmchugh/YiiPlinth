@@ -48,15 +48,16 @@ class PasswordResetForm extends CFormModel
                 $loToken->UserGUID = $loUser->GUID;
                 if ($loToken->save())
                 {
-                    // Send the user an email with a link to change password
-                    $loEmail = new YiiMailMessage;
-                    $loEmail->view = '//mail/resetPassword';
-                    $loEmail->layout = '//layouts/mail';
-                    $loEmail->setBody(array('title'=>Utilities::getString('Change your password'),'userModel'=>$loUser, 'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))), 'text/html');
-                    $loEmail->subject = Utilities::getString('reset_password_email_subject');
-                    $loEmail->addTo($loUser->Email);
-                    $loEmail->setFrom(array(Yii::app()->params['adminEmail'] => Yii::app()->params['adminName']));
-                    Yii::app()->mail->send($loEmail);
+                    $loEmail = new PlinthMail($loUser->Email,
+                        Utilities::getString('reset_password_email_subject'),
+                        array(
+                            'title'=>Utilities::getString('Change your password'),
+                            'userModel'=>$loUser,
+                            'resetURL'=>Yii::app()->createAbsoluteUrl('changePassword',array('token'=>$loToken->Token))),
+                        '//mail/resetPassword',
+                        '//layouts/mail'
+                        );
+                    $loEmail->send();
                 }
                 else
                 {

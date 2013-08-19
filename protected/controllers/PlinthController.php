@@ -19,7 +19,8 @@ class PlinthController extends CController
 	{
 		parent::init();
 
-        if ($this->forceTrailingSlash)
+        // Can only redirect on a get request
+        if ($this->forceTrailingSlash && strtolower($_SERVER['REQUEST_METHOD']) === 'get')
         {
             // Force a trailing slash
             $lcRequestURI = Yii::app()->request->requestUri;

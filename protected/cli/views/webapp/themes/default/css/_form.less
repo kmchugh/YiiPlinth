@@ -1,0 +1,280 @@
+  /**
+  * Default styling for all elements
+  **/
+  input, select, textarea, keygen
+  {
+    color: @black;
+    #effortless > #background > .rounded(3px);
+    border: none;
+    padding: .5em .5em;
+  }
+
+  // Force border-box for search input
+  input[type="search"]
+  {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+
+    /**
+  * Styling for input and forms
+  **/
+
+  form .button, form button, form input[type="submit"], form input[type="button"], form input[type="reset"]
+  {
+    font-size: 1em;
+  }
+
+  form
+  {
+    .formLayout(red, @grey, @grey_2);
+  }
+
+
+
+  .formLayout(@errorColour :  red, @textColour : @text-darker, @backgroundColour : @background-darkest)
+  {
+    #effortless > #background > .rounded(@backgroundColour);
+    padding: .5em;
+
+    span.required{color: @errorColour;}
+
+    > fieldset
+    {
+      color: @text-darker;
+      margin-top: @gutterSize/2;
+      margin-bottom: @gutterSize/2;
+    }
+
+    .links
+    {
+      text-align: center;
+      margin-top: 2em;
+
+      a
+      {
+        padding: .25em @gutterSize/2;
+        color: @green;
+
+        &:hover{color: @green_3;}
+      }
+    }
+
+    .buttons
+    {
+      padding-top: @gutterSize/2;
+      padding-right: @gutterSize/2;
+      text-align: right;
+
+      button, .button
+      {
+        .buttonGrey;
+
+        &[type="submit"]
+        {
+          .buttonOrange;
+        }
+      }
+    }
+
+    .note, .hint
+    {
+      margin-bottom: 1em;
+      margin-top: .5em;
+      font-style: italic;
+      font-size: .8em;
+    }
+
+    .flash-success
+    {
+      background: @orange_1;
+      padding: .25em .5em;
+      color: @grey_2;
+      font-size: .9em;
+      margin: 3.5em 0 .5em 0;
+      clear: both;
+    }
+
+    .field
+    {
+      padding: .25em @gutterSize/2 .5em @gutterSize/2;
+
+      > label
+      {
+        display: block;
+        font-weight: bold;
+      }
+
+      select, input, textarea, keygen
+      {
+        display: block;
+        width: 100%;
+      }
+
+      .radioItem, .checkItem
+      {
+        padding: 0 2em 0 0;
+
+        > input
+        {
+          display: inline-block;
+          float: left;
+          width: auto;
+        }
+
+        > label{margin-left: 1em;}
+      }
+
+      a
+      {
+        padding: 0;
+        color: @orange_1;
+        font-weight: bold;
+
+        &:hover
+        {
+          color: @orange;
+        }
+      }
+
+      &.error
+      {
+        > input
+        {
+          background-image: url('/images/icons/error.png');
+          background-repeat: no-repeat;
+          background-position: center right;
+        }
+        .errorMessage
+        {
+          #effortless > #border > .rounded(2px, solid, red);
+          font-weight: bold;
+          background: @grey_1;
+          color: red;
+          padding: .25em .5em;
+          margin: .25em 0 0 0;
+          display: inline-block;
+          text-align: left;
+          font-size: .8em;
+          background: none;
+          border: none;
+          font-weight: normal;
+        }
+      }
+
+      .note
+      {
+        text-align: right;
+        display: block;
+      }
+
+      &:hover
+      {
+        background-color: @grey_1;
+      }
+    }
+
+    .imageUpload
+    {
+      > *
+      {
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .preview
+      {
+        width: 20%;
+        float: left;
+
+        img
+        {
+          min-height: 2em;
+          float: left;
+          width: 100%;
+          #effortless > #background > .rounded(3px);
+        }
+      }
+
+      .input
+      {
+        width: 79%;
+        margin: 0;
+
+        .fakeFile
+        {
+          width: 100%;
+
+          > *
+          {
+            display: inline-block;
+            vertical-align: top;
+          }
+
+          input{width: 74%;}
+
+          .button
+          {
+            padding: .5em .5em .2em .5em;
+            float:right;
+            width: 24%;
+            .buttonOrange;
+            text-align: center;
+          }
+        }
+
+        &:hover .button{background-color: @orange_3;}
+      }
+    }
+  }
+
+  header .ajaxLinkWindow
+  {
+    @width: 320px;
+    .popupForm(@width);
+    margin-left: (@width *-.75);
+    text-align: left;
+
+    .content
+    {
+      .form
+      {
+        font-size: .8em;
+        > h1, fieldset > .note{display: none;}
+
+        form
+        {
+          background-color: @grey_1;
+
+          a
+          {
+            color: @orange;
+            &:hover{color: @orange_3;}
+          }
+        }
+      }
+    }
+  }
+
+
+  .popupForm(@width: 50%)
+  {
+    position: absolute;
+
+    .reset(@width);
+  }
+
+    /**
+    * reset rule to ensure unwanted margin and padding is removed
+    **/
+  .reset(@width : 100%)
+  {
+    width: @width;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+

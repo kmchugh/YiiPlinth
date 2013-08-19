@@ -1,0 +1,21 @@
+/**
+* Used for alternative layout styles
+**/
+.twoColumnFixedLiquid(@fixedWidth: 100px)
+{
+  > *:first-child
+  {
+    float: left;
+    width: 100%;
+    .cf;
+
+    > * {margin-left: @fixedWidth;}
+  }
+
+  > .fixed
+  {
+    margin-left: -100%;
+    width: @fixedWidth;
+    float: left;
+  }
+}

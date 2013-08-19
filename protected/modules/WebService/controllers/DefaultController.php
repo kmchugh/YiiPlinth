@@ -148,8 +148,18 @@ class DefaultController extends PlinthController
 					$laData = $_GET;
 					break;
 				case 'post':
-					$laData = CJSON::decode(isset($_POST['json']) ?
-						$_POST['json'] : file_get_contents('php://input'), true);
+					$laData = CJSON::decode(
+                        isset($_POST['json']) ? $_POST['json'] :
+                            (isset($_POST['JSON']) ? $_POST['JSON'] :
+                                (isset($_POST['JSON_']) ? $_POST['JSON_'] :
+                                    (isset($_POST['JSON ']) ? $_POST['JSON '] :
+                                        (isset($_POST['JSON ']) ? $_POST['JSON '] :
+                                            file_get_contents('php://input')
+                                        )
+                                    )
+                                )
+                            ), true);
+
 					break;
                 case 'put':
                     $laData = CJSON::decode(str_replace("json=", "", rawurldecode(file_get_contents('php://input'))), true);

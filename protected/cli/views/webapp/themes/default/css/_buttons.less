@@ -1,0 +1,77 @@
+  /**
+    * Default button styling for this theme
+    **/
+
+  // Make sure text is antialased
+  input, .button, button{#effortless > #text > .antialiased;}
+
+  // Order is important, reverse buttons must come before buttons
+  .reverse button, .reverse .button
+  {
+    background-color: @grey_2;
+    color: @grey;
+    #effortless > #shadow > .letterpress(@grey_1, -1px);
+    &:hover
+    {
+      background-color: @grey_1;
+      color: @grey_3;
+    }
+
+    &.orange
+    {
+      background-color: @orange_4;
+    }
+  }
+
+    /**
+    * Default button styles
+    **/
+  button, .button, input[type="button"], input[type="reset"], input[type="submit"]
+  {
+    #effortless > #background > .rounded(3px);
+    border: none;
+    color: @white;
+    padding: .75em 1em .5em 1em;
+    font-weight: 100;
+    font-size: 1.6em;
+    background-color: @grey_1;
+    vertical-align: bottom;
+    // Text Shadow
+    #effortless > #shadow > .letterpress(@grey_4, -1px);
+    border: 1px solid @grey_1;
+
+    &:hover
+    {
+      background-color: @grey_2;
+      color: @grey_1;
+    }
+
+    &.grey
+    {
+      background-color: @grey_3;
+      &:hover{background-color: @grey_1;}
+    }
+
+    &.orange
+    {
+      background-color: @orange;
+      &:hover{background-color: @orange_3;}
+      border: 1px solid @orange_2;
+    }
+  }
+
+  .buttonOrange
+  {
+    .button;
+    background-color: @orange;
+    color: @white;
+    &:hover{background-color: @orange_3;}
+  }
+
+  .buttonGrey
+  {
+    .button;
+    background-color: @grey;
+    color: @white;
+    &:hover{background-color: @grey_3;}
+  }

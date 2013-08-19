@@ -1,0 +1,162 @@
+@import "../../_universal.less";
+@import "_dimension.less";
+@import "_colour.less";
+@import "_typography.less";
+@import "_buttons.less";
+@import "_form.less";
+
+html
+{
+  color: @text;
+  height: 100%;
+  background-color: @grey_1;
+
+  > body
+  {
+    background-color: @background;
+    border-top: 5px solid @orange;
+  }
+}
+
+.page
+{
+  // Rules for default header
+  > header
+  {
+    padding-top: 1.5em;
+    padding-bottom: 0;
+    border-bottom: 2px solid @orange;
+    margin-bottom: 1em;
+
+    > section
+    {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .logo
+    {
+      background: transparent url('/images/header_logo.png') no-repeat top left;
+      margin-right: 1em;
+      display: inline-block;
+      vertical-align: bottom;
+
+      > a
+      {
+        padding: 0;
+        display: block;
+
+        img
+        {
+          #effortless > #dimension > .size(128px, 128px);
+          display: block;
+        }
+      }
+    }
+
+    h1
+    {
+      font-size: 4em;
+      padding: .75em 0 .25em 0;
+      margin-bottom: 0;
+      text-align: right;
+    }
+
+    nav
+    {
+      text-align: right;
+      padding-top: 1em;
+
+      // Head links are unique
+      > a
+      {
+        font-size: 1.4em;
+        padding: 4px 0 0 1.75em;
+        color: @grey;
+
+        &:hover{color: @grey_3;}
+      }
+    }
+  }
+
+  > section.body
+  {
+    min-height: 300px;
+  }
+
+
+  // Rules for default footer
+  > footer
+  {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: @orange;
+
+    > section{margin: 0 auto;}
+
+    // Copyright line at the bottom of the page
+    > .copyright
+    {
+      width: 100%;
+      background: @grey_1;
+      color: @grey;
+    }
+  }
+}
+
+/**
+* Default Links
+**/
+a
+{
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  padding: .25em .5em;
+  color: @orange;
+  font-weight: bold;
+
+  &:hover{color: @orange_3;}
+
+  &:focus
+  {
+    position: relative;
+    top: 1px;
+  }
+
+  > *{cursor: pointer;}
+}
+
+// Columnar text layout
+.textColumn2{#effortless > #layout > .textColumns(2);}
+.textColumn3{#effortless > #layout > .textColumns(3);}
+.textColumn4{#effortless > #layout > .textColumns(4);}
+
+// Columnar text layout with dividing rule
+.textColumnRule3{#effortless > #layout > .textColumns(3, solid, @grey_1);}
+.textColumnRule4{#effortless > #layout > .textColumns(4, solid, @grey_1);}
+
+// Colour focus reversal
+.reverse
+{
+  background-color: @orange;
+  color: @white;
+
+  a
+  {
+    color: @grey;
+
+    &:hover{color: @grey_3;}
+  }
+}
+
+code
+{
+  background-color: white;
+  display: block;
+  padding: .75em 1em;
+  margin: .5em 0;
+  color: @grey;
+  font-size: 1.4em;
+}

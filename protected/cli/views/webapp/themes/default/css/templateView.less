@@ -1,0 +1,188 @@
+@import "_common.less";
+
+.colourPalette.orange{.paletteEntry(@orange);}
+.colourPalette.grey{.paletteEntry(@grey);}
+
+.forms
+{
+  .column
+  {
+    &:first-child > div{background-color: @grey_1;}
+
+    > div
+    {
+      > h2
+      {
+        margin: .25em 0;
+      }
+
+      > label
+      {
+        width: 50%;
+        display: inline-block;
+      }
+
+      > input, > select, > textarea, > keygen{width: 50%;}
+    }
+
+  }
+}
+
+.grid:first-child
+{
+  padding-top: 0;
+
+  > h1
+  {
+    margin-top: 0em;
+  }
+}
+
+.grid
+{
+  >h1
+  {
+    margin: 1em 0 .25em 0;
+    padding: .25em .5em;
+    background-color: @grey_1;
+  }
+
+  >section
+  {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+}
+
+.fonts
+{
+  text-align: center;
+  background: @orange;
+  padding-top: .5em;
+  padding-bottom: 1em;
+
+  .headerFont > h1, .defaultFont > h1, .impactFont > h1{margin: .5em 0 0 0;}
+}
+
+.buttons
+{
+  > section > div
+  {
+    padding-bottom: 1em;
+  }
+}
+
+.fontSizes
+{
+  padding-top: 0;
+  padding-bottom: 1em;
+
+  > div
+  {
+    padding-top: 1em;
+    padding-bottom: 1em;
+
+    > label
+    {
+      width: 29%;
+      display: inline-block;
+    }
+
+    > span
+    {
+      width: 70%;
+      h1, h2, h3, h4, h5, h6{margin: 0;}
+    }
+
+    h2 {background-color: transparent;}
+  }
+}
+
+.paletteEntry(@colour)
+{
+  background: @white;
+  .column(half);
+
+  > span
+  {
+    min-height:2em;
+    text-align: center;
+    line-height: 2em;
+    font-size: 1.2em;
+    width: 25%;
+  }
+
+  .lighten{.cpSpan(mix(@colour, white, 72.5%));}
+  .lighter{.cpSpan(mix(@colour, white, 51%));}
+  .lightest{.cpSpan(mix(@colour, white, 31.5%));}
+  .white{.cpSpan(mix(@colour, white, 12%));}
+  .normal{.cpSpan(@colour);}
+
+  .normal
+  {
+    min-height: 6em;
+    width: 100%;
+    text-align: center;
+    line-height: 6em;
+    display: block;
+  }
+
+  &.major{.column(whole);}
+}
+
+.cpSpan(@colour)
+{
+  background : @colour;
+  color: contrast(@colour, @text, @white);
+}
+
+.paragraphs .column
+{
+  background-color: @orange_4;
+  padding: .5em .25em;
+}
+
+h2
+{
+  background-color: @orange_3;
+  padding: .5em .25em;
+}
+
+.gridView, .lists
+{
+  > section
+  {
+    background: @orange;
+  }
+
+  .column
+  {
+    min-height: 3em;
+    line-height: 3em;
+    text-align: center;
+    border-left: 1px solid @black;
+    border-right: 1px solid @black;
+    background-color: @white;
+  }
+
+  .whole{background: @orange_4;}
+  .half{background: @orange_3;}
+  .third{background: @orange_2;}
+  .twoThirds{background: @orange_1;}
+  .quarter{background: @orange_1;}
+
+  .threeQuarters{background: @grey_1;}
+  .six{background: @grey_2;}
+  .ten{background: @grey_3;}
+}
+
+.lists
+{
+  .half
+  {
+    text-align: left;
+    line-height: 1.5em;
+    background-color: @background;
+    color: @text;
+  }
+}

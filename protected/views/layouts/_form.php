@@ -1,11 +1,19 @@
 <div class="form<?php echo count($this->containerClass) > 0 ? ' '.$this->containerClass : ''; ?>">
     <?php
         // Form title if needed
-        if (count($this->title) > 0)
+        if (strlen($this->title) > 0)
         {
             ?>
             <h1><?php echo $this->title;?></h1>
             <?php
+        }
+
+        // Form note if needed
+        if (strlen($this->note) > 0)
+        {
+            ?>
+            <p class="note"><?php echo $this->note;?></p>
+        <?php
         }
     ?>
     <?php
