@@ -19,8 +19,6 @@ return array(
         'YIIPlinth.extensions.Email.*',
     ),
 
-    'onBeginRequest'=>array('RequestHooks', 'beginRequest'),
-
     'modules'=>array(
         // Note gii should not be available in the runtime environment
         'UserManagement'=>array(

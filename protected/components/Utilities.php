@@ -295,9 +295,13 @@
 		/**
 		* Outputs the contents of the variable
 		**/
-		public static function printVar($toVariable)
+		public static function printVar($toVariable, $tlReturn = false)
 		{
-			echo '<pre>'.((is_null($toVariable) || !isset($toVariable)) ? 'NULL' : print_r($toVariable, 1)).'</pre>';
+            if ($tlReturn)
+            {
+                return ((is_null($toVariable) || !isset($toVariable)) ? 'NULL' : print_r($toVariable, 1));
+            }
+            echo '<pre>'.((is_null($toVariable) || !isset($toVariable)) ? 'NULL' : print_r($toVariable, 1)).'</pre>';
 		}
 
 		/**

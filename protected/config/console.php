@@ -8,6 +8,7 @@ return array(
     'import'=>array(
         'YIIPlinth.extensions.crontab.*',
     ),
+
 	'commandMap'=>array(
 		'dbsync'=>array(
 			'class'=>'YIIPlinth.cli.commands.DBSyncCommand',

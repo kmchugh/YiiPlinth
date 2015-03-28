@@ -89,7 +89,9 @@
 				$loApp->commandRunner->addCommands(dirname($tcYII).'/cli/commands');
 				$loEnv=@getenv('YII_CONSOLE_COMMANDS');
 				if(!empty($loEnv))
+                {
 					$loApp->commandRunner->addCommands($loEnv);
+                }
 			}
 			else
 			{

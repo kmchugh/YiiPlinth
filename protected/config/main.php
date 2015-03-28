@@ -7,4 +7,6 @@ return array(
 	'preload'=>array('log'),
 
 	'theme'=>'classic',
+
+    'onBeginRequest'=>array('RequestHooks', 'beginRequest'),
 );
